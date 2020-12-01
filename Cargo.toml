@@ -1,4 +1,6 @@
-[workspace]
-members = [
-    "day1",
-]
+[package]
+name = "aoc"
+version = "0.1.0"
+authors = ["Ross MacArthur <ross@macarthur.io>"]
+edition = "2018"
+publish = false
