@@ -1,7 +1,7 @@
 use aoc::day01::*;
 
 fn main() {
-    let input = input();
+    let input = default_input();
 
     println!("Part 1:");
     let (a, b) = solve_sum_two(&input).unwrap();
