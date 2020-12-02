@@ -6,6 +6,7 @@ edition = "2018"
 publish = false
 
 [dependencies]
+clap = { version = "3.0.0-beta.2", default-features = false, features = ["derive", "std"] }
 rand = "0.7.3"
 regex = "1.4.2"
 regex-macro = "0.1.1"

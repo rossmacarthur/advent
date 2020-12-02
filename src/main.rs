@@ -1,5 +1,6 @@
-use std::env;
 use std::process;
+
+use clap::{AppSettings, Clap};
 
 fn day01() {
     use advent::day01::*;
@@ -31,21 +32,20 @@ fn day02() {
     println!("  The number of valid passwords is: {}", valid);
 }
 
+#[derive(Debug, Clap)]
+#[clap(global_setting = AppSettings::DisableVersion)]
+struct Opt {
+    #[clap(name = "DAY")]
+    day: Option<u32>,
+}
+
 fn main() {
-    let owned_args: Vec<String> = env::args().skip(1).collect();
-    let args: Vec<&str> = owned_args.iter().map(|s| s.as_str()).collect();
-    let day: u32 = match args.as_slice() {
-        [a] => a.parse().unwrap(),
-        _ => {
-            eprintln!("expected a single 'day' argument, got: {:?}", args);
-            process::exit(1);
-        }
-    };
+    let Opt { day } = Opt::parse();
     match day {
-        1 => day01(),
-        2 => day02(),
-        d => {
-            eprintln!("unknown day: {}", d);
+        Some(1) => day01(),
+        Some(2) | None => day02(),
+        Some(d) => {
+            eprintln!("Error: unknown day `{}`", d);
             process::exit(2);
         }
     }
