@@ -4,36 +4,24 @@ use regex_macro::regex;
 
 const INPUT: &str = include_str!("day02.txt");
 
-pub fn default_input() -> Vec<Element> {
-    Element::parse_multiple(INPUT)
+pub fn default_input() -> Vec<Element<'static>> {
+    let re = regex!(r"(?P<lower>\d+)-(?P<upper>\d+)\s(?P<letter>.):\s(?P<password>.*)");
+    re.captures_iter(INPUT)
+        .map(|caps| Element {
+            lower: caps["lower"].parse().unwrap(),
+            upper: caps["upper"].parse().unwrap(),
+            letter: caps["letter"].parse().unwrap(),
+            password: caps.name("password").unwrap().as_str(),
+        })
+        .collect()
 }
 
 #[derive(Debug)]
-pub struct Element {
+pub struct Element<'i> {
     lower: usize,
     upper: usize,
     letter: char,
-    password: String,
-}
-
-impl Element {
-    fn parse_multiple(input: &str) -> Vec<Self> {
-        let re = regex!(r"(?P<lower>\d+)-(?P<upper>\d+)\s(?P<letter>.):\s(?P<password>.*)");
-        re.captures_iter(input)
-            .map(|caps| {
-                let lower = caps["lower"].parse().unwrap();
-                let upper = caps["upper"].parse().unwrap();
-                let letter = caps["letter"].parse().unwrap();
-                let password = caps["password"].to_string();
-                Self {
-                    lower,
-                    upper,
-                    letter,
-                    password,
-                }
-            })
-            .collect()
-    }
+    password: &'i str,
 }
 
 pub fn valid_with_count_policy(elements: &[Element]) -> usize {
