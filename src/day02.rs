@@ -2,7 +2,7 @@ use std::str;
 
 use regex_macro::regex;
 
-const INPUT: &str = include_str!("day02.txt");
+const INPUT: &str = include_str!("input/day02.txt");
 
 pub fn default_input() -> Vec<Element<'static>> {
     let re = regex!(r"(?P<lower>\d+)-(?P<upper>\d+)\s(?P<letter>.):\s(?P<password>.*)");

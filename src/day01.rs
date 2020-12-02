@@ -2,7 +2,7 @@ use std::cmp::Ordering::*;
 
 use rand::Rng;
 
-const INPUT: &str = include_str!("day01.txt");
+const INPUT: &str = include_str!("input/day01.txt");
 
 const SUM: u32 = 2020;
 
