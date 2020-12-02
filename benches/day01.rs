@@ -1,6 +1,6 @@
 use criterion::{criterion_group, criterion_main, BatchSize, Criterion};
 
-use aoc::day01::*;
+use advent::day01::*;
 
 fn bench_sum_two_default(c: &mut Criterion) {
     let input = default_input();

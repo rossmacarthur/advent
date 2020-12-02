@@ -2,7 +2,7 @@ use std::env;
 use std::process;
 
 fn day01() {
-    use aoc::day01::*;
+    use advent::day01::*;
 
     let input = default_input();
 
@@ -18,7 +18,7 @@ fn day01() {
 }
 
 fn day02() {
-    use aoc::day02::*;
+    use advent::day02::*;
 
     let input = default_input();
 
