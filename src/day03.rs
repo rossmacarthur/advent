@@ -61,5 +61,5 @@ pub fn count_trees_many_slopes(input: &Input) -> usize {
     [(1, 1), (3, 1), (5, 1), (7, 1), (1, 2)]
         .iter()
         .map(|&(right, down)| count_trees_for_slope(input, right, down))
-        .fold(1, |acc, trees| acc * trees)
+        .product()
 }
