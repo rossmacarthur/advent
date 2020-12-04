@@ -50,6 +50,20 @@ fn day03() {
     println!("  Each number of trees multiplied together is {}", trees);
 }
 
+fn day04() {
+    use advent::day04::*;
+
+    let input = default_input();
+
+    println!("Part 1:");
+    let result = part1(&input);
+    println!("  The number of valid passports is: {}", result);
+
+    println!("Part 2:");
+    let result = part2(&input);
+    println!("  The number of valid passports is: {}", result);
+}
+
 ////////////////////////////////////////////////////////////////////////////////
 // Command line interface
 ////////////////////////////////////////////////////////////////////////////////
@@ -66,7 +80,8 @@ fn main() {
     match day {
         Some(1) => day01(),
         Some(2) => day02(),
-        Some(3) | None => day03(),
+        Some(3) => day03(),
+        Some(4) | None => day04(),
         Some(d) => {
             eprintln!("Error: unknown day `{}`", d);
             process::exit(2);
