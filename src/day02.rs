@@ -24,7 +24,7 @@ pub struct Element<'i> {
     password: &'i str,
 }
 
-pub fn valid_with_count_policy(elements: &[Element]) -> usize {
+pub fn part1(elements: &[Element]) -> usize {
     elements
         .iter()
         .filter(|e| {
@@ -34,7 +34,7 @@ pub fn valid_with_count_policy(elements: &[Element]) -> usize {
         .count()
 }
 
-pub fn valid_with_position_policy(elements: &[Element]) -> usize {
+pub fn part2(elements: &[Element]) -> usize {
     elements
         .iter()
         .filter(|e| {

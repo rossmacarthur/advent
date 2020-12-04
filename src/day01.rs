@@ -17,7 +17,8 @@ pub fn random_input(count: usize) -> Vec<u32> {
     input
 }
 
-pub fn solve_sum_two(mut numbers: Vec<u32>) -> Option<(u32, u32)> {
+pub fn part1(input: &[u32]) -> Option<u32> {
+    let mut numbers = input.to_vec();
     numbers.sort_unstable();
     let mut left = 0;
     let mut right = numbers.len() - 1;
@@ -32,13 +33,14 @@ pub fn solve_sum_two(mut numbers: Vec<u32>) -> Option<(u32, u32)> {
             Greater => {
                 right -= 1;
             }
-            Equal => return Some((a, b)),
+            Equal => return Some(a * b),
         }
     }
     None
 }
 
-pub fn solve_sum_three(mut numbers: Vec<u32>) -> Option<(u32, u32, u32)> {
+pub fn part2(input: &[u32]) -> Option<u32> {
+    let mut numbers = input.to_vec();
     numbers.sort_unstable();
     for i in 0..numbers.len() - 2 {
         let mut left = i + 1;
@@ -55,7 +57,7 @@ pub fn solve_sum_three(mut numbers: Vec<u32>) -> Option<(u32, u32, u32)> {
                 Greater => {
                     right -= 1;
                 }
-                Equal => return Some((a, b, c)),
+                Equal => return Some(a * b * c),
             }
         }
     }
