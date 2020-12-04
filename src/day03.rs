@@ -53,11 +53,11 @@ pub fn count_trees_for_slope(input: &Input, right: usize, down: usize) -> usize 
     trees
 }
 
-pub fn count_trees_single_slope(input: &Input) -> usize {
+pub fn part1(input: &Input) -> usize {
     count_trees_for_slope(input, 3, 1)
 }
 
-pub fn count_trees_many_slopes(input: &Input) -> usize {
+pub fn part2(input: &Input) -> usize {
     [(1, 1), (3, 1), (5, 1), (7, 1), (1, 2)]
         .iter()
         .map(|&(right, down)| count_trees_for_slope(input, right, down))

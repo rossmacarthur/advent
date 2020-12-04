@@ -2,71 +2,16 @@ use std::process;
 
 use clap::{AppSettings, Clap};
 
-////////////////////////////////////////////////////////////////////////////////
-// Days
-////////////////////////////////////////////////////////////////////////////////
-
-fn day01() {
-    use advent::day01::*;
-
-    let input = default_input();
-
-    println!("Part 1:");
-    let (a, b) = solve_sum_two(input.clone()).unwrap();
-    println!("  The numbers are: {}, {}", a, b);
-    println!("  Multiplied together: {}", a * b);
-
-    println!("Part 2:");
-    let (a, b, c) = solve_sum_three(input).unwrap();
-    println!("  The numbers are: {}, {}, {}", a, b, c);
-    println!("  Multiplied together: {}", a * b * c);
+macro_rules! run {
+    ($path:path) => {{
+        use $path::*;
+        let input = default_input();
+        let result = part1(&input);
+        println!("Part 1: {:?}", result);
+        let result = part2(&input);
+        println!("Part 2: {:?}", result);
+    }};
 }
-
-fn day02() {
-    use advent::day02::*;
-
-    let input = default_input();
-
-    println!("Part 1:");
-    let valid = valid_with_count_policy(&input);
-    println!("  The number of valid passwords is: {}", valid);
-
-    println!("Part 2:");
-    let valid = valid_with_position_policy(&input);
-    println!("  The number of valid passwords is: {}", valid);
-}
-
-fn day03() {
-    use advent::day03::*;
-
-    let input = default_input();
-
-    println!("Part 1:");
-    let trees = count_trees_single_slope(&input);
-    println!("  The number of trees is {}", trees);
-
-    println!("Part 2:");
-    let trees = count_trees_many_slopes(&input);
-    println!("  Each number of trees multiplied together is {}", trees);
-}
-
-fn day04() {
-    use advent::day04::*;
-
-    let input = default_input();
-
-    println!("Part 1:");
-    let result = part1(&input);
-    println!("  The number of valid passports is: {}", result);
-
-    println!("Part 2:");
-    let result = part2(&input);
-    println!("  The number of valid passports is: {}", result);
-}
-
-////////////////////////////////////////////////////////////////////////////////
-// Command line interface
-////////////////////////////////////////////////////////////////////////////////
 
 #[derive(Debug, Clap)]
 #[clap(global_setting = AppSettings::DisableVersion)]
@@ -78,10 +23,10 @@ struct Opt {
 fn main() {
     let Opt { day } = Opt::parse();
     match day {
-        Some(1) => day01(),
-        Some(2) => day02(),
-        Some(3) => day03(),
-        Some(4) | None => day04(),
+        Some(1) => run!(advent::day01),
+        Some(2) => run!(advent::day02),
+        Some(3) => run!(advent::day03),
+        Some(4) | None => run!(advent::day04),
         Some(d) => {
             eprintln!("Error: unknown day `{}`", d);
             process::exit(2);
