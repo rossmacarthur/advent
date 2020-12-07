@@ -17,13 +17,5 @@ regex-macro = "0.1.1"
 criterion = "0.3.3"
 
 [[bench]]
-name = "day01"
-harness = false
-
-[[bench]]
-name = "day02"
-harness = false
-
-[[bench]]
-name = "day05"
+name = "year2020"
 harness = false
