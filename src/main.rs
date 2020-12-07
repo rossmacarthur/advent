@@ -2,6 +2,9 @@ use std::process;
 
 use clap::{AppSettings, Clap};
 
+use advent::year2019;
+use advent::year2020;
+
 macro_rules! run {
     ($path:path) => {{
         use $path::*;
@@ -27,14 +30,21 @@ fn main() {
     let Opt { year, day } = Opt::parse();
 
     match year {
+        2019 => match day {
+            Some(1) | None => run!(year2019::day01),
+            Some(d) => {
+                eprintln!("Error: unknown day `{}` for year `{}`", d, year);
+                process::exit(2);
+            }
+        },
         2020 => match day {
-            Some(1) => run!(advent::year2020::day01),
-            Some(2) => run!(advent::year2020::day02),
-            Some(3) => run!(advent::year2020::day03),
-            Some(4) => run!(advent::year2020::day04),
-            Some(5) => run!(advent::year2020::day05),
-            Some(6) => run!(advent::year2020::day06),
-            Some(7) | None => run!(advent::year2020::day07),
+            Some(1) => run!(year2020::day01),
+            Some(2) => run!(year2020::day02),
+            Some(3) => run!(year2020::day03),
+            Some(4) => run!(year2020::day04),
+            Some(5) => run!(year2020::day05),
+            Some(6) => run!(year2020::day06),
+            Some(7) | None => run!(year2020::day07),
             Some(d) => {
                 eprintln!("Error: unknown day `{}` for year `{}`", d, year);
                 process::exit(2);
