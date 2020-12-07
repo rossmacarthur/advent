@@ -2,7 +2,7 @@ use std::collections::HashSet;
 
 use reduce::Reduce;
 
-const INPUT: &str = include_str!("../input/2020/06.txt");
+const INPUT: &str = include_str!("../../input/2020/06.txt");
 
 pub fn default_input() -> Vec<Vec<HashSet<char>>> {
     INPUT

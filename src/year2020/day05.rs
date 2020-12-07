@@ -1,4 +1,4 @@
-const INPUT: &str = include_str!("../input/2020/05.txt");
+const INPUT: &str = include_str!("../../input/2020/05.txt");
 
 pub fn default_input() -> Vec<usize> {
     INPUT

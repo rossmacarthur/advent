@@ -2,7 +2,7 @@ use std::collections::{HashMap, HashSet};
 
 use regex_macro::regex;
 
-const INPUT: &str = include_str!("../input/2020/07.txt");
+const INPUT: &str = include_str!("../../input/2020/07.txt");
 const COLOR: &str = "shiny gold";
 
 type Rules<'a> = HashMap<&'a str, Vec<(&'a str, usize)>>;

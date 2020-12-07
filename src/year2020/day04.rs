@@ -1,7 +1,7 @@
 use itertools::Itertools;
 use regex_macro::regex;
 
-const INPUT: &str = include_str!("../input/2020/04.txt");
+const INPUT: &str = include_str!("../../input/2020/04.txt");
 
 pub fn default_input() -> Vec<String> {
     INPUT

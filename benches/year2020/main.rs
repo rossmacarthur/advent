@@ -1,0 +1,9 @@
+mod day01;
+mod day02;
+mod day05;
+
+criterion::criterion_main!(
+    crate::day01::benches,
+    crate::day02::benches,
+    crate::day05::benches
+);

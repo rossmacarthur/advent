@@ -1,4 +1,4 @@
-const INPUT: &str = include_str!("../input/2020/03.txt");
+const INPUT: &str = include_str!("../../input/2020/03.txt");
 
 pub fn default_input() -> Input {
     let inner = INPUT
