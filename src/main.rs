@@ -45,7 +45,8 @@ fn main() {
             Some(4) => run!(year2020::day04),
             Some(5) => run!(year2020::day05),
             Some(6) => run!(year2020::day06),
-            Some(7) | None => run!(year2020::day07),
+            Some(7) => run!(year2020::day07),
+            Some(8) | None => run!(year2020::day08),
             Some(d) => {
                 eprintln!("Error: unknown day `{}` for year `{}`", d, year);
                 process::exit(2);
