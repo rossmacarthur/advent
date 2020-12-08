@@ -32,7 +32,8 @@ fn main() {
     match year {
         2019 => match day {
             Some(1) => run!(year2019::day01),
-            Some(2) | None => run!(year2019::day02),
+            Some(2) => run!(year2019::day02),
+            Some(3) | None => run!(year2019::day03),
             Some(d) => {
                 eprintln!("Error: unknown day `{}` for year `{}`", d, year);
                 process::exit(2);
