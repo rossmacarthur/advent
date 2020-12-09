@@ -40,7 +40,7 @@ pub fn default_input() -> (Path, Path) {
         .unwrap()
 }
 
-fn distances(path: &Path) -> HashMap<Point, i64> {
+fn distances(path: &[(Direction, i64)]) -> HashMap<Point, i64> {
     let mut points = HashMap::new();
     let mut position = (0, 0);
     let mut distance = 0;

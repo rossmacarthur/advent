@@ -28,20 +28,20 @@ pub fn default_input() -> Rules<'static> {
         .collect()
 }
 
-pub fn part1(rules: &Rules) -> usize {
-    fn find<'a>(
-        reversed: &'a HashMap<&'a str, Vec<&'a str>>,
-        color: &'a str,
-        found: &mut HashSet<&'a str>,
-    ) {
-        if let Some(colors) = reversed.get(color) {
-            for color in colors {
-                found.insert(color);
-                find(reversed, color, found);
-            }
+fn find<'a>(
+    reversed: &'a HashMap<&'a str, Vec<&'a str>>,
+    color: &'a str,
+    found: &mut HashSet<&'a str>,
+) {
+    if let Some(colors) = reversed.get(color) {
+        for color in colors {
+            found.insert(color);
+            find(reversed, color, found);
         }
     }
+}
 
+pub fn part1(rules: &Rules) -> usize {
     let mut reversed = HashMap::new();
     for (color, contains) in rules {
         for (in_color, _) in contains {
@@ -56,13 +56,13 @@ pub fn part1(rules: &Rules) -> usize {
     found.len()
 }
 
-pub fn part2(rules: &Rules) -> u64 {
-    fn count(rules: &Rules, color: &str) -> u64 {
-        rules[color]
-            .iter()
-            .map(|(color, i)| i * (1 + count(rules, color)))
-            .sum()
-    }
+fn count(rules: &Rules, color: &str) -> u64 {
+    rules[color]
+        .iter()
+        .map(|(color, i)| i * (1 + count(rules, color)))
+        .sum()
+}
 
+pub fn part2(rules: &Rules) -> u64 {
     count(rules, COLOR)
 }

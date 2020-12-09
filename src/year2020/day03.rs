@@ -1,7 +1,7 @@
 const INPUT: &str = include_str!("input/day03.txt");
 
-pub fn default_input() -> Input {
-    let inner = INPUT
+pub fn default_input() -> Map {
+    Map(INPUT
         .lines()
         .map(|line| {
             line.chars()
@@ -12,8 +12,7 @@ pub fn default_input() -> Input {
                 })
                 .collect()
         })
-        .collect();
-    Input { inner }
+        .collect())
 }
 
 #[derive(Debug)]
@@ -23,28 +22,26 @@ pub enum Square {
 }
 
 #[derive(Debug)]
-pub struct Input {
-    inner: Vec<Vec<Square>>,
-}
+pub struct Map(Vec<Vec<Square>>);
 
-impl Input {
+impl Map {
     fn lookup(&self, row: usize, col: usize) -> &Square {
-        let row = row % self.inner.len();
-        let col = col % self.inner[0].len();
-        &self.inner[row][col]
+        let row = row % self.0.len();
+        let col = col % self.0[0].len();
+        &self.0[row][col]
     }
 
     fn len(&self) -> usize {
-        self.inner.len()
+        self.0.len()
     }
 }
 
-pub fn count_trees_for_slope(input: &Input, right: usize, down: usize) -> usize {
+pub fn count_trees_for_slope(map: &Map, right: usize, down: usize) -> usize {
     let mut row = 0;
     let mut col = 0;
     let mut trees = 0;
-    while row < input.len() {
-        if let Square::Tree = input.lookup(row, col) {
+    while row < map.len() {
+        if let Square::Tree = map.lookup(row, col) {
             trees += 1;
         }
         row += down;
@@ -53,13 +50,13 @@ pub fn count_trees_for_slope(input: &Input, right: usize, down: usize) -> usize 
     trees
 }
 
-pub fn part1(input: &Input) -> usize {
-    count_trees_for_slope(input, 3, 1)
+pub fn part1(map: &Map) -> usize {
+    count_trees_for_slope(map, 3, 1)
 }
 
-pub fn part2(input: &Input) -> usize {
+pub fn part2(map: &Map) -> usize {
     [(1, 1), (3, 1), (5, 1), (7, 1), (1, 2)]
         .iter()
-        .map(|&(right, down)| count_trees_for_slope(input, right, down))
+        .map(|&(right, down)| count_trees_for_slope(map, right, down))
         .product()
 }

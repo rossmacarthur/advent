@@ -15,7 +15,7 @@ fn has_sum_nums(preamble: &[u64], value: u64) -> bool {
             }
         }
     }
-    return false;
+    false
 }
 
 pub fn part1(input: &[u64]) -> Option<u64> {

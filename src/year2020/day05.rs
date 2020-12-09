@@ -1,3 +1,5 @@
+use itertools::Itertools;
+
 const INPUT: &str = include_str!("input/day05.txt");
 
 pub fn default_input() -> Vec<u64> {
@@ -20,15 +22,14 @@ pub fn default_input() -> Vec<u64> {
 }
 
 pub fn part1(input: &[u64]) -> Option<u64> {
-    input.iter().max().map(|x| *x)
+    input.iter().max().copied()
 }
 
 pub fn part2(input: &[u64]) -> Option<u64> {
     let mut ids = input.to_vec();
     ids.sort_unstable();
-    let mut windows = ids.windows(2);
-    while let Some(&[prev, next]) = windows.next() {
-        if next - prev > 1 {
+    for (curr, next) in ids.iter().tuple_windows() {
+        if next - curr > 1 {
             return Some(next - 1);
         }
     }
