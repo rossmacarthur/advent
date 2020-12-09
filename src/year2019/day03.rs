@@ -5,9 +5,9 @@ use regex_macro::regex;
 
 const INPUT: &str = include_str!("input/day03.txt");
 
-type Path = Vec<(Direction, isize)>;
+type Path = Vec<(Direction, i64)>;
 
-type Point = (isize, isize);
+type Point = (i64, i64);
 
 #[derive(Debug, Clone, Copy)]
 pub enum Direction {
@@ -24,7 +24,7 @@ pub fn default_input() -> (Path, Path) {
             regex!(r"(L|R|D|U)(\d+)")
                 .captures_iter(line)
                 .map(|caps| {
-                    let length: isize = caps[2].parse().unwrap();
+                    let length: i64 = caps[2].parse().unwrap();
                     let direction = match &caps[1] {
                         "L" => Direction::Left,
                         "R" => Direction::Right,
@@ -40,7 +40,7 @@ pub fn default_input() -> (Path, Path) {
         .unwrap()
 }
 
-fn distances(path: &Path) -> HashMap<Point, isize> {
+fn distances(path: &Path) -> HashMap<Point, i64> {
     let mut points = HashMap::new();
     let mut position = (0, 0);
     let mut distance = 0;
@@ -61,11 +61,11 @@ fn distances(path: &Path) -> HashMap<Point, isize> {
     points
 }
 
-fn keys(points: &HashMap<Point, isize>) -> HashSet<Point> {
+fn keys(points: &HashMap<Point, i64>) -> HashSet<Point> {
     points.iter().map(|(k, _)| *k).collect()
 }
 
-pub fn part1((path1, path2): &(Path, Path)) -> isize {
+pub fn part1((path1, path2): &(Path, Path)) -> i64 {
     keys(&distances(&path1))
         .intersection(&keys(&distances(&path2)))
         .map(|(x, y)| x.abs() + y.abs())
@@ -73,7 +73,7 @@ pub fn part1((path1, path2): &(Path, Path)) -> isize {
         .unwrap()
 }
 
-pub fn part2((p1, p2): &(Path, Path)) -> isize {
+pub fn part2((p1, p2): &(Path, Path)) -> i64 {
     let distances1 = distances(p1);
     let distances2 = distances(p2);
     keys(&distances1)

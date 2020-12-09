@@ -4,20 +4,20 @@ use rand::Rng;
 
 const INPUT: &str = include_str!("input/day01.txt");
 
-const SUM: u32 = 2020;
+const SUM: u64 = 2020;
 
-pub fn default_input() -> Vec<u32> {
+pub fn default_input() -> Vec<u64> {
     INPUT.lines().map(|line| line.parse().unwrap()).collect()
 }
 
-pub fn random_input(count: usize) -> Vec<u32> {
+pub fn random_input(count: usize) -> Vec<u64> {
     let mut rng = rand::thread_rng();
     let mut input = vec![0; count];
     rng.fill(input.as_mut_slice());
     input
 }
 
-pub fn part1(input: &[u32]) -> Option<u32> {
+pub fn part1(input: &[u64]) -> Option<u64> {
     let mut numbers = input.to_vec();
     numbers.sort_unstable();
     let mut left = 0;
@@ -39,7 +39,7 @@ pub fn part1(input: &[u32]) -> Option<u32> {
     None
 }
 
-pub fn part2(input: &[u32]) -> Option<u32> {
+pub fn part2(input: &[u64]) -> Option<u64> {
     let mut numbers = input.to_vec();
     numbers.sort_unstable();
     for i in 0..numbers.len() - 2 {

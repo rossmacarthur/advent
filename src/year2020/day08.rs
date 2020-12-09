@@ -12,10 +12,10 @@ pub enum Operation {
 struct ProgramResult {
     is_finite: bool,
     instrs: Vec<usize>,
-    acc: isize,
+    acc: i64,
 }
 
-pub fn default_input() -> Vec<(Operation, isize)> {
+pub fn default_input() -> Vec<(Operation, i64)> {
     INPUT
         .lines()
         .map(|line| {
@@ -33,7 +33,7 @@ pub fn default_input() -> Vec<(Operation, isize)> {
         .collect()
 }
 
-fn exec_boot_code(program: &[(Operation, isize)]) -> ProgramResult {
+fn exec_boot_code(program: &[(Operation, i64)]) -> ProgramResult {
     let mut instrs = Vec::new();
     let mut acc = 0;
     let mut ptr = 0;
@@ -49,7 +49,7 @@ fn exec_boot_code(program: &[(Operation, isize)]) -> ProgramResult {
                 ptr += 1;
             }
             Operation::Jmp => {
-                ptr = (ptr as isize + arg) as usize;
+                ptr = (ptr as i64 + arg) as usize;
             }
         }
     }
@@ -60,11 +60,11 @@ fn exec_boot_code(program: &[(Operation, isize)]) -> ProgramResult {
     }
 }
 
-pub fn part1(program: &[(Operation, isize)]) -> isize {
+pub fn part1(program: &[(Operation, i64)]) -> i64 {
     exec_boot_code(program).acc
 }
 
-pub fn part2(program: &[(Operation, isize)]) -> isize {
+pub fn part2(program: &[(Operation, i64)]) -> i64 {
     let result = exec_boot_code(program);
     for ptr in result.instrs {
         let new_op = match program[ptr].0 {

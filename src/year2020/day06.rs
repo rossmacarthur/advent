@@ -20,7 +20,7 @@ pub fn part1(input: &[Vec<HashSet<char>>]) -> usize {
                 .cloned()
                 .reduce(|acc, person| acc.union(&person).cloned().collect())
                 .map(|set| set.len())
-                .unwrap_or(0)
+                .unwrap()
         })
         .sum()
 }
@@ -34,7 +34,7 @@ pub fn part2(input: &[Vec<HashSet<char>>]) -> usize {
                 .cloned()
                 .reduce(|acc, person| acc.intersection(&person).cloned().collect())
                 .map(|set| set.len())
-                .unwrap_or(0)
+                .unwrap()
         })
         .sum()
 }

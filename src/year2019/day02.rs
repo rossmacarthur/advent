@@ -35,7 +35,7 @@ pub fn part1(input: &[usize]) -> usize {
     program[0]
 }
 
-pub fn part2(input: &[usize]) -> usize {
+pub fn part2(input: &[usize]) -> Option<usize> {
     for noun in 0..input.len() {
         for verb in 0..input.len() {
             let mut program = input.to_vec();
@@ -43,9 +43,9 @@ pub fn part2(input: &[usize]) -> usize {
             program[2] = verb;
             exec_intcode(&mut program);
             if program[0] == 19690720 {
-                return 100 * noun + verb;
+                return Some(100 * noun + verb);
             }
         }
     }
-    panic!("no solution found");
+    None
 }

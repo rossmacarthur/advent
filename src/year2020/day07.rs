@@ -5,7 +5,7 @@ use regex_macro::regex;
 const INPUT: &str = include_str!("input/day07.txt");
 const COLOR: &str = "shiny gold";
 
-type Rules<'a> = HashMap<&'a str, Vec<(&'a str, usize)>>;
+type Rules<'a> = HashMap<&'a str, Vec<(&'a str, u64)>>;
 
 pub fn default_input() -> Rules<'static> {
     INPUT
@@ -56,8 +56,8 @@ pub fn part1(rules: &Rules) -> usize {
     found.len()
 }
 
-pub fn part2(rules: &Rules) -> usize {
-    fn count(rules: &Rules, color: &str) -> usize {
+pub fn part2(rules: &Rules) -> u64 {
+    fn count(rules: &Rules, color: &str) -> u64 {
         rules[color]
             .iter()
             .map(|(color, i)| i * (1 + count(rules, color)))
