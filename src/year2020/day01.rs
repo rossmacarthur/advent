@@ -27,12 +27,8 @@ pub fn part1(input: &[u64]) -> Option<u64> {
         let b = numbers[right];
         let sum = a + b;
         match sum.cmp(&SUM) {
-            Less => {
-                left += 1;
-            }
-            Greater => {
-                right -= 1;
-            }
+            Less => left += 1,
+            Greater => right -= 1,
             Equal => return Some(a * b),
         }
     }
@@ -51,12 +47,8 @@ pub fn part2(input: &[u64]) -> Option<u64> {
             let c = numbers[i];
             let sum = a + b + c;
             match sum.cmp(&SUM) {
-                Less => {
-                    left += 1;
-                }
-                Greater => {
-                    right -= 1;
-                }
+                Less => left += 1,
+                Greater => right -= 1,
                 Equal => return Some(a * b * c),
             }
         }
