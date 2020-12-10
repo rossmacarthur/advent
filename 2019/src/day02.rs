@@ -1,7 +1,11 @@
 const INPUT: &str = include_str!("input/day02.txt");
 
 pub fn default_input() -> Vec<usize> {
-    INPUT.split(',').filter_map(|x| x.parse().ok()).collect()
+    INPUT
+        .trim()
+        .split(',')
+        .map(|x| x.parse().unwrap())
+        .collect()
 }
 
 fn exec_basic<F>(program: &mut Vec<usize>, ptr: usize, f: F) -> usize

@@ -8,8 +8,8 @@ pub fn part1(input: &[u64]) -> u64 {
     input.iter().map(|mass| (mass / 3) - 2).sum()
 }
 
-fn calc_fuel(mass: &u64) -> u64 {
-    if *mass == 0 {
+fn calc_fuel(&mass: &u64) -> u64 {
+    if mass == 0 {
         0
     } else {
         let fuel = (mass / 3).saturating_sub(2);
