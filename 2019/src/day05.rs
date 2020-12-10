@@ -31,13 +31,11 @@ fn exec_intcode(mut program: Vec<i64>, input: i64) -> Option<i64> {
                 }
             }};
         }
-
         macro_rules! param {
             ($i:expr) => {
                 program[param_ptr!($i)]
             };
         }
-
         macro_rules! param_mut {
             ($i:expr) => {
                 &mut program[param_ptr!($i)]

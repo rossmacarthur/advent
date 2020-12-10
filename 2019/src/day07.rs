@@ -24,12 +24,12 @@ enum State {
 }
 
 #[derive(Debug)]
-struct Amplifier {
+struct Computer {
     program: Vec<i64>,
     ptr: usize,
 }
 
-impl Amplifier {
+impl Computer {
     fn new(program: Vec<i64>) -> Self {
         Self { ptr: 0, program }
     }
@@ -50,13 +50,11 @@ impl Amplifier {
                     }
                 }};
             }
-
             macro_rules! param {
                 ($i:expr) => {
                     program[param_ptr!($i)]
                 };
             }
-
             macro_rules! param_mut {
                 ($i:expr) => {
                     &mut program[param_ptr!($i)]
@@ -114,13 +112,13 @@ impl Amplifier {
     }
 }
 
-fn make_amplifiers(input: &[i64], phases: &[i64]) -> Vec<Amplifier> {
+fn make_computers(input: &[i64], phases: &[i64]) -> Vec<Computer> {
     phases
         .iter()
         .map(|&phase| {
-            let mut amplifier = Amplifier::new(input.to_vec());
-            assert_eq!(amplifier.run(phase), State::Waiting);
-            amplifier
+            let mut computer = Computer::new(input.to_vec());
+            assert_eq!(computer.run(phase), State::Waiting);
+            computer
         })
         .collect()
 }
@@ -128,11 +126,11 @@ fn make_amplifiers(input: &[i64], phases: &[i64]) -> Vec<Amplifier> {
 pub fn part1(input: &[i64]) -> i64 {
     (0..=4)
         .permutations(5)
-        .map(|phases| make_amplifiers(input, &phases))
-        .map(|mut amplifiers| {
+        .map(|phases| {
+            let mut computers = make_computers(input, &phases);
             let mut output = 0;
-            for amplifier in amplifiers.iter_mut() {
-                output = match amplifier.run(output) {
+            for computer in computers.iter_mut() {
+                output = match computer.run(output) {
                     State::Yielded(value) => value,
                     _ => panic!("unexpected state"),
                 };
@@ -146,12 +144,12 @@ pub fn part1(input: &[i64]) -> i64 {
 pub fn part2(input: &[i64]) -> i64 {
     (5..=9)
         .permutations(5)
-        .map(|phases| make_amplifiers(input, &phases))
-        .map(|mut amplifiers| {
+        .map(|phases| {
+            let mut computers = make_computers(input, &phases);
             let mut output = 0;
             loop {
-                for amplifier in amplifiers.iter_mut() {
-                    output = match amplifier.run(output) {
+                for computer in computers.iter_mut() {
+                    output = match computer.run(output) {
                         State::Yielded(value) => value,
                         State::Complete => return output,
                         State::Waiting => panic!("unexpected state"),
