@@ -11,3 +11,10 @@ pub fn parse_program(input: &str) -> Vec<i64> {
         .map(|x| x.parse().unwrap())
         .collect()
 }
+
+#[derive(Debug)]
+pub enum State {
+    Waiting,
+    Yielded(i64),
+    Complete,
+}

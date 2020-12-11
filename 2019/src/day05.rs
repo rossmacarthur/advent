@@ -6,84 +6,93 @@ pub fn default_input() -> Vec<i64> {
     parse_program(INPUT)
 }
 
-fn exec_intcode(mut program: Vec<i64>, input: i64) -> Option<i64> {
-    let program = program.as_mut_slice();
-    let mut ptr: usize = 0;
-    let mut output = None;
-    loop {
-        let opcode = program[ptr];
+#[derive(Debug)]
+struct Computer {
+    mem: Vec<i64>,
+    ptr: usize,
+}
 
-        macro_rules! param_ptr {
-            ($i:expr) => {{
-                let ptr = ptr + $i;
-                match opcode / (10i64.pow(1 + $i)) % 10 {
-                    0 => cast(program[ptr]),
-                    1 => ptr,
-                    mode => panic!("unknown mode `{}`", mode),
-                }
-            }};
-        }
-        macro_rules! param {
-            ($i:expr) => {
-                program[param_ptr!($i)]
-            };
-        }
-        macro_rules! param_mut {
-            ($i:expr) => {
-                &mut program[param_ptr!($i)]
-            };
-        }
-
-        match opcode % 100 {
-            1 => {
-                *param_mut!(3) = param!(1) + param!(2);
-                ptr += 4;
-            }
-            2 => {
-                *param_mut!(3) = param!(1) * param!(2);
-                ptr += 4;
-            }
-            3 => {
-                *param_mut!(1) = input;
-                ptr += 2;
-            }
-            4 => {
-                output = Some(param!(1));
-                ptr += 2;
-            }
-            5 => {
-                if param!(1) != 0 {
-                    ptr = cast(param!(2));
-                } else {
-                    ptr += 3;
-                }
-            }
-            6 => {
-                if param!(1) == 0 {
-                    ptr = cast(param!(2));
-                } else {
-                    ptr += 3;
-                }
-            }
-            7 => {
-                *param_mut!(3) = (param!(1) < param!(2)) as i64;
-                ptr += 4;
-            }
-            8 => {
-                *param_mut!(3) = (param!(1) == param!(2)) as i64;
-                ptr += 4;
-            }
-            99 => break,
-            opcode => panic!("unknown opcode `{}`", opcode),
+impl Computer {
+    fn new(program: Vec<i64>) -> Self {
+        Self {
+            mem: program,
+            ptr: 0,
         }
     }
-    output
+
+    fn param_ptr(&self, i: usize) -> usize {
+        let opcode = self.mem[self.ptr];
+        let ptr = self.ptr + i;
+        match opcode / (10i64.pow((1 + i) as u32)) % 10 {
+            0 => cast(self.mem[ptr]),
+            1 => ptr,
+            mode => panic!("unknown mode `{}`", mode),
+        }
+    }
+
+    fn param(&self, i: usize) -> i64 {
+        self.mem[self.param_ptr(i)]
+    }
+
+    fn param_mut(&mut self, i: usize) -> &mut i64 {
+        let ptr = self.param_ptr(i);
+        &mut self.mem.as_mut_slice()[ptr]
+    }
+
+    fn run(&mut self, input: i64) -> i64 {
+        let mut output = None;
+        loop {
+            match self.mem[self.ptr] % 100 {
+                1 => {
+                    *self.param_mut(3) = self.param(1) + self.param(2);
+                    self.ptr += 4;
+                }
+                2 => {
+                    *self.param_mut(3) = self.param(1) * self.param(2);
+                    self.ptr += 4;
+                }
+                3 => {
+                    *self.param_mut(1) = input;
+                    self.ptr += 2;
+                }
+                4 => {
+                    output = Some(self.param(1));
+                    self.ptr += 2;
+                }
+                5 => {
+                    if self.param(1) != 0 {
+                        self.ptr = cast(self.param(2));
+                    } else {
+                        self.ptr += 3;
+                    }
+                }
+                6 => {
+                    if self.param(1) == 0 {
+                        self.ptr = cast(self.param(2));
+                    } else {
+                        self.ptr += 3;
+                    }
+                }
+                7 => {
+                    *self.param_mut(3) = (self.param(1) < self.param(2)) as i64;
+                    self.ptr += 4;
+                }
+                8 => {
+                    *self.param_mut(3) = (self.param(1) == self.param(2)) as i64;
+                    self.ptr += 4;
+                }
+                99 => break,
+                opcode => panic!("unknown opcode `{}`", opcode),
+            }
+        }
+        output.unwrap()
+    }
 }
 
 pub fn part1(input: &[i64]) -> i64 {
-    exec_intcode(input.to_vec(), 1).unwrap()
+    Computer::new(input.to_vec()).run(1)
 }
 
 pub fn part2(input: &[i64]) -> i64 {
-    exec_intcode(input.to_vec(), 5).unwrap()
+    Computer::new(input.to_vec()).run(5)
 }

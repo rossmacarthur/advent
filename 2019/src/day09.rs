@@ -1,18 +1,11 @@
 use std::cmp::max;
 
-use crate::intcode::{cast, parse_program};
+use crate::intcode::{cast, parse_program, State};
 
 const INPUT: &str = include_str!("input/day09.txt");
 
 pub fn default_input() -> Vec<i64> {
     parse_program(INPUT)
-}
-
-#[derive(Debug, PartialEq)]
-enum State {
-    Waiting,
-    Yielded(i64),
-    Complete,
 }
 
 #[derive(Debug)]
