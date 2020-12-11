@@ -7,9 +7,9 @@ macro_rules! run {
         use $path::*;
         let input = default_input();
         let result = part1(&input);
-        println!("Part 1: {:?}", result);
+        println!("Part 1: {}", result);
         let result = part2(&input);
-        println!("Part 2: {:?}", result);
+        println!("Part 2: {}", result);
     }};
 }
 
