@@ -1,19 +1,11 @@
-use std::convert::TryFrom;
-
 use itertools::Itertools;
+
+use crate::intcode::{cast, parse_program};
 
 const INPUT: &str = include_str!("input/day07.txt");
 
 pub fn default_input() -> Vec<i64> {
-    INPUT
-        .trim()
-        .split(',')
-        .map(|x| x.parse().unwrap())
-        .collect()
-}
-
-fn cast(num: i64) -> usize {
-    usize::try_from(num).unwrap()
+    parse_program(INPUT)
 }
 
 #[derive(Debug, PartialEq)]
