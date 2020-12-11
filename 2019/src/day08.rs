@@ -24,28 +24,25 @@ pub fn part1(image: &[u32]) -> usize {
         .unwrap()
 }
 
-pub fn part2(image: &[u32]) {
-    println!(
-        "{}",
-        (0..SIZE)
-            .map(|i| {
-                (0..)
-                    .map(|layer| image[layer * SIZE + i])
-                    .filter(|&layer| layer != 2)
-                    .next()
-                    .unwrap()
-            })
-            .enumerate()
-            .fold(String::new(), |mut s, (i, pixel)| {
-                if i % WIDTH == 0 {
-                    s.push('\n');
-                }
-                s.push_str(match pixel {
-                    0 => "  ",
-                    1 => "██",
-                    _ => panic!("unrecognized pixel value"),
-                });
-                s
-            })
-    );
+pub fn part2(image: &[u32]) -> String {
+    (0..SIZE)
+        .map(|i| {
+            (0..)
+                .map(|layer| image[layer * SIZE + i])
+                .filter(|&layer| layer != 2)
+                .next()
+                .unwrap()
+        })
+        .enumerate()
+        .fold(String::new(), |mut s, (i, pixel)| {
+            if i % WIDTH == 0 {
+                s.push('\n');
+            }
+            s.push_str(match pixel {
+                0 => "  ",
+                1 => "██",
+                _ => panic!("unrecognized pixel value"),
+            });
+            s
+        })
 }
