@@ -128,14 +128,14 @@ pub fn part1(input: &[i64]) -> i64 {
         .permutations(5)
         .map(|phases| {
             let mut computers = make_computers(input, &phases);
-            let mut output = 0;
+            let mut signal = 0;
             for computer in computers.iter_mut() {
-                output = match computer.run(output) {
+                signal = match computer.run(signal) {
                     State::Yielded(value) => value,
                     _ => panic!("unexpected state"),
                 };
             }
-            output
+            signal
         })
         .max()
         .unwrap()
@@ -146,12 +146,12 @@ pub fn part2(input: &[i64]) -> i64 {
         .permutations(5)
         .map(|phases| {
             let mut computers = make_computers(input, &phases);
-            let mut output = 0;
+            let mut signal = 0;
             loop {
                 for computer in computers.iter_mut() {
-                    output = match computer.run(output) {
+                    signal = match computer.run(signal) {
                         State::Yielded(value) => value,
-                        State::Complete => return output,
+                        State::Complete => return signal,
                         State::Waiting => panic!("unexpected state"),
                     };
                 }
