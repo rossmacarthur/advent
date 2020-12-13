@@ -28,7 +28,7 @@ pub fn default_input() -> Grid {
     INPUT
         .lines()
         .enumerate()
-        .map(|(i, line)| {
+        .flat_map(|(i, line)| {
             line.chars()
                 .map(|c| match c {
                     '.' => Position::Floor,
@@ -39,7 +39,6 @@ pub fn default_input() -> Grid {
                 .enumerate()
                 .map(move |(j, pos)| ((i as i32, j as i32), pos))
         })
-        .flatten()
         .collect()
 }
 
