@@ -35,7 +35,8 @@ fn main() {
         Some(9) => run!(advent::day09),
         Some(10) => run!(advent::day10),
         Some(11) => run!(advent::day11),
-        Some(12) | None => run!(advent::day12),
+        Some(12) => run!(advent::day12),
+        Some(13) | None => run!(advent::day13),
         Some(d) => {
             eprintln!("Error: unknown day `{}`", d);
             process::exit(2);
