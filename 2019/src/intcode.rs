@@ -19,3 +19,13 @@ pub enum State {
     Yielded(i64),
     Complete,
 }
+
+impl State {
+    #[track_caller]
+    pub fn unwrap(self) -> i64 {
+        match self {
+            Self::Yielded(output) => output,
+            state => panic!("called `State::unwrap()` on a `{:?}` state", state),
+        }
+    }
+}
