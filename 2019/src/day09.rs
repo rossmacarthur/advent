@@ -9,14 +9,14 @@ pub fn default_input() -> Vec<i64> {
 }
 
 #[derive(Debug)]
-struct Computer {
+pub struct Computer {
     mem: Vec<i64>,
     ptr: usize,
     relative_base: i64,
 }
 
 impl Computer {
-    fn new(program: Vec<i64>) -> Self {
+    pub fn new(program: Vec<i64>) -> Self {
         Self {
             mem: program,
             ptr: 0,
@@ -52,7 +52,7 @@ impl Computer {
         self.mem_get_mut(self.param_ptr(i))
     }
 
-    fn next(&mut self, input: i64) -> State {
+    pub fn next(&mut self, input: i64) -> State {
         let mut input = Some(input);
         loop {
             match self.mem_get(self.ptr) % 100 {
