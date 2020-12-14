@@ -3,7 +3,7 @@ use itertools::Itertools;
 const INPUT: &str = include_str!("input/day10.txt");
 
 pub fn default_input() -> Vec<u64> {
-    let mut joltages: Vec<_> = INPUT.lines().map(|line| line.parse().unwrap()).collect();
+    let mut joltages: Vec<_> = INPUT.lines().map(str::parse).map(Result::unwrap).collect();
     joltages.insert(0, 0);
     joltages.sort_unstable();
     joltages.push(joltages.last().unwrap() + 3);

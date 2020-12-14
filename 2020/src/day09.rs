@@ -4,7 +4,7 @@ const INPUT: &str = include_str!("input/day09.txt");
 const SUM: u64 = 70639851;
 
 pub fn default_input() -> Vec<u64> {
-    INPUT.lines().map(|line| line.parse().unwrap()).collect()
+    INPUT.lines().map(str::parse).map(Result::unwrap).collect()
 }
 
 fn has_sum_nums(preamble: &[u64], value: u64) -> bool {

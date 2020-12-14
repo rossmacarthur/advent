@@ -4,7 +4,8 @@ pub fn default_input() -> Vec<usize> {
     INPUT
         .trim()
         .split(',')
-        .map(|x| x.parse().unwrap())
+        .map(str::parse)
+        .map(Result::unwrap)
         .collect()
 }
 

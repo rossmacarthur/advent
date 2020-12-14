@@ -7,7 +7,7 @@ const INPUT: &str = include_str!("input/day01.txt");
 const SUM: u64 = 2020;
 
 pub fn default_input() -> Vec<u64> {
-    INPUT.lines().map(|line| line.parse().unwrap()).collect()
+    INPUT.lines().map(str::parse).map(Result::unwrap).collect()
 }
 
 pub fn random_input(count: usize) -> Vec<u64> {

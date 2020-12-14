@@ -8,7 +8,8 @@ pub fn parse_program(input: &str) -> Vec<i64> {
     input
         .trim()
         .split(',')
-        .map(|x| x.parse().unwrap())
+        .map(str::parse)
+        .map(Result::unwrap)
         .collect()
 }
 
