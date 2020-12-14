@@ -7,7 +7,8 @@ pub fn default_input() -> Vec<u32> {
     INPUT
         .trim()
         .chars()
-        .map(|c| c.to_digit(10).unwrap())
+        .map(|c| c.to_digit(10))
+        .map(Option::unwrap)
         .collect()
 }
 
@@ -29,8 +30,7 @@ pub fn part2(image: &[u32]) -> String {
         .map(|i| {
             (0..)
                 .map(|layer| image[layer * SIZE + i])
-                .filter(|&layer| layer != 2)
-                .next()
+                .find(|&layer| layer != 2)
                 .unwrap()
         })
         .enumerate()
