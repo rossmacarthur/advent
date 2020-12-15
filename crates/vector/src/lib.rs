@@ -133,7 +133,7 @@ impl Vector {
         }
     }
 
-    pub fn manhattan_distance(&self) -> i64 {
+    pub const fn manhattan_distance(&self) -> i64 {
         self.x.abs() + self.y.abs()
     }
 }
@@ -146,7 +146,7 @@ impl Vector {
 pub struct Angle(i64);
 
 impl Angle {
-    pub fn new(degrees: i64) -> Self {
+    pub const fn new(degrees: i64) -> Self {
         Self(degrees)
     }
 
