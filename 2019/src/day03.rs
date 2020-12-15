@@ -2,20 +2,9 @@ use std::collections::{HashMap, HashSet};
 
 use itertools::Itertools;
 use regex_macro::regex;
+use vector::Vector;
 
 const INPUT: &str = include_str!("input/day03.txt");
-
-type Path = Vec<(Direction, i64)>;
-
-type Point = (i64, i64);
-
-#[derive(Debug, Clone, Copy)]
-pub enum Direction {
-    Left,
-    Right,
-    Down,
-    Up,
-}
 
 pub fn default_input() -> (Path, Path) {
     INPUT
@@ -26,10 +15,10 @@ pub fn default_input() -> (Path, Path) {
                 .map(|caps| {
                     let length: i64 = caps[2].parse().unwrap();
                     let direction = match &caps[1] {
-                        "L" => Direction::Left,
-                        "R" => Direction::Right,
-                        "D" => Direction::Down,
-                        "U" => Direction::Up,
+                        "L" => Vector::new(-1, 0),
+                        "R" => Vector::new(1, 0),
+                        "D" => Vector::new(0, -1),
+                        "U" => Vector::new(0, 1),
                         _ => unreachable!(),
                     };
                     (direction, length)
@@ -40,35 +29,30 @@ pub fn default_input() -> (Path, Path) {
         .unwrap()
 }
 
-fn distances(path: &[(Direction, i64)]) -> HashMap<Point, i64> {
-    let mut points = HashMap::new();
-    let mut position = (0, 0);
+type Path = Vec<(Vector, i64)>;
+
+fn distances(path: &[(Vector, i64)]) -> HashMap<Vector, i64> {
+    let mut distances = HashMap::new();
+    let mut position = Vector::new(0, 0);
     let mut distance = 0;
     for &(direction, length) in path {
-        let vector = match direction {
-            Direction::Left => (-1, 0),
-            Direction::Right => (1, 0),
-            Direction::Down => (0, -1),
-            Direction::Up => (0, 1),
-        };
         for _ in 0..length {
-            position.0 += vector.0;
-            position.1 += vector.1;
+            position += direction;
             distance += 1;
-            points.insert(position, distance);
+            distances.insert(position, distance);
         }
     }
-    points
+    distances
 }
 
-fn keys(points: &HashMap<Point, i64>) -> HashSet<Point> {
-    points.iter().map(|(k, _)| *k).collect()
+fn keys(distances: &HashMap<Vector, i64>) -> HashSet<Vector> {
+    distances.iter().map(|(k, _)| *k).collect()
 }
 
 pub fn part1((path1, path2): &(Path, Path)) -> i64 {
     keys(&distances(&path1))
         .intersection(&keys(&distances(&path2)))
-        .map(|(x, y)| x.abs() + y.abs())
+        .map(Vector::manhattan_distance)
         .min()
         .unwrap()
 }
