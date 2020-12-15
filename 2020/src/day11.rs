@@ -1,28 +1,30 @@
 use std::collections::HashMap;
 
+use vector::Vector;
+
 const INPUT: &str = include_str!("input/day11.txt");
 
-const VECTORS: [(i32, i32); 8] = [
-    (-1, -1),
-    (-1, 0),
-    (-1, 1),
-    (0, -1),
-    (0, 1),
-    (1, -1),
-    (1, 0),
-    (1, 1),
+const DIRECTIONS: [Vector; 8] = [
+    Vector::new(-1, -1),
+    Vector::new(-1, 0),
+    Vector::new(-1, 1),
+    Vector::new(0, -1),
+    Vector::new(0, 1),
+    Vector::new(1, -1),
+    Vector::new(1, 0),
+    Vector::new(1, 1),
 ];
 
 #[derive(Debug, Clone, Copy, PartialEq)]
-pub enum Position {
+pub enum Tile {
     Floor,
     EmptySeat,
     OccupiedSeat,
 }
 
-type Point = (i32, i32);
+type Grid = HashMap<Vector, Tile>;
 
-type Grid = HashMap<Point, Position>;
+type Visible = HashMap<Vector, Vec<Vector>>;
 
 pub fn default_input() -> Grid {
     INPUT
@@ -31,31 +33,31 @@ pub fn default_input() -> Grid {
         .flat_map(|(i, line)| {
             line.chars()
                 .map(|c| match c {
-                    '.' => Position::Floor,
-                    'L' => Position::EmptySeat,
-                    '#' => Position::OccupiedSeat,
+                    '.' => Tile::Floor,
+                    'L' => Tile::EmptySeat,
+                    '#' => Tile::OccupiedSeat,
                     _ => panic!("unexpected state"),
                 })
                 .enumerate()
-                .map(move |(j, pos)| ((i as i32, j as i32), pos))
+                .map(move |(j, tile)| (Vector::new(i as i64, j as i64), tile))
         })
         .collect()
 }
 
 /// Builds a visibility map from the grid.
-fn visibility(grid: &Grid) -> HashMap<Point, Vec<Point>> {
+fn visibility(grid: &Grid) -> Visible {
     let mut visible = HashMap::new();
-    for &(row, col) in grid.keys() {
-        for (i, j) in &VECTORS {
-            let mut point = (row + i, col + j);
-            while let Some(position) = grid.get(&point) {
-                if let Position::Floor = position {
-                    point = (point.0 + i, point.1 + j);
+    for center in grid.keys() {
+        for direction in &DIRECTIONS {
+            let mut location = center + direction;
+            while let Some(tile) = grid.get(&location) {
+                if let Tile::Floor = tile {
+                    location += direction;
                 } else {
                     visible
-                        .entry((row, col))
+                        .entry(*center)
                         .or_insert_with(Vec::new)
-                        .push(point);
+                        .push(location);
                     break;
                 }
             }
@@ -67,25 +69,25 @@ fn visibility(grid: &Grid) -> HashMap<Point, Vec<Point>> {
 /// Returns the number of occupied seats for a grid.
 fn occupied(grid: &Grid) -> usize {
     grid.values()
-        .filter(|position| matches!(position, Position::OccupiedSeat))
+        .filter(|tile| matches!(tile, Tile::OccupiedSeat))
         .count()
 }
 
 /// Returns the number of adjacent occupied seats.
-fn adjacent_occupied(grid: &Grid, point: (i32, i32)) -> usize {
-    VECTORS
+fn adjacent_occupied(grid: &Grid, center: Vector) -> usize {
+    DIRECTIONS
         .iter()
-        .filter_map(|(i, j)| grid.get(&(point.0 + i, point.1 + j)))
-        .filter(|position| matches!(position, Position::OccupiedSeat))
+        .filter_map(|direction| grid.get(&(center + direction)))
+        .filter(|tile| matches!(tile, Tile::OccupiedSeat))
         .count()
 }
 
 /// Returns the number of visible occupied seats.
-fn visible_occupied(grid: &Grid, visible: &HashMap<Point, Vec<Point>>, point: (i32, i32)) -> usize {
-    visible[&point]
+fn visible_occupied(grid: &Grid, visible: &Visible, center: Vector) -> usize {
+    visible[&center]
         .iter()
-        .map(|point| &grid[point])
-        .filter(|position| matches!(position, Position::OccupiedSeat))
+        .map(|location| &grid[location])
+        .filter(|tile| matches!(tile, Tile::OccupiedSeat))
         .count()
 }
 
@@ -93,15 +95,15 @@ pub fn part1(grid: &Grid) -> usize {
     let mut grid = grid.clone();
     loop {
         let mut next = grid.clone();
-        for (&point, &position) in &grid {
+        for (&location, &tile) in &grid {
             next.insert(
-                point,
-                match position {
-                    Position::EmptySeat if adjacent_occupied(&grid, point) == 0 => {
-                        Position::OccupiedSeat
+                location,
+                match tile {
+                    Tile::EmptySeat if adjacent_occupied(&grid, location) == 0 => {
+                        Tile::OccupiedSeat
                     }
-                    Position::OccupiedSeat if adjacent_occupied(&grid, point) >= 4 => {
-                        Position::EmptySeat
+                    Tile::OccupiedSeat if adjacent_occupied(&grid, location) >= 4 => {
+                        Tile::EmptySeat
                     }
                     _ => continue,
                 },
@@ -120,15 +122,15 @@ pub fn part2(grid: &Grid) -> usize {
     let mut grid = grid.clone();
     loop {
         let mut next = grid.clone();
-        for (&point, &position) in &grid {
+        for (&location, &tile) in &grid {
             next.insert(
-                point,
-                match position {
-                    Position::EmptySeat if visible_occupied(&grid, &visible, point) == 0 => {
-                        Position::OccupiedSeat
+                location,
+                match tile {
+                    Tile::EmptySeat if visible_occupied(&grid, &visible, location) == 0 => {
+                        Tile::OccupiedSeat
                     }
-                    Position::OccupiedSeat if visible_occupied(&grid, &visible, point) >= 5 => {
-                        Position::EmptySeat
+                    Tile::OccupiedSeat if visible_occupied(&grid, &visible, location) >= 5 => {
+                        Tile::EmptySeat
                     }
                     _ => continue,
                 },

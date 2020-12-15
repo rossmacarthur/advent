@@ -1,2 +1,2 @@
 [workspace]
-members = ["2019", "2020"]
+members = ["2019", "2020", "crates/vector"]
