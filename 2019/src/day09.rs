@@ -108,19 +108,12 @@ impl Computer {
             }
         }
     }
-
-    fn next_output(&mut self, input: i64) -> i64 {
-        match self.next(input) {
-            State::Yielded(value) => value,
-            _ => panic!("unexpected state"),
-        }
-    }
 }
 
 pub fn part1(input: &[i64]) -> i64 {
-    Computer::new(input.to_vec()).next_output(1)
+    Computer::new(input.to_vec()).next(1).unwrap()
 }
 
 pub fn part2(input: &[i64]) -> i64 {
-    Computer::new(input.to_vec()).next_output(2)
+    Computer::new(input.to_vec()).next(2).unwrap()
 }
