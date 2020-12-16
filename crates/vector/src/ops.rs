@@ -13,6 +13,7 @@ macro_rules! impl_add {
                 Self::Output {
                     x: self.x + other.x,
                     y: self.y + other.y,
+                    z: self.z + other.z,
                 }
             }
         }
@@ -32,6 +33,7 @@ macro_rules! impl_sub {
                 Self::Output {
                     x: self.x - other.x,
                     y: self.y - other.y,
+                    z: self.z - other.z,
                 }
             }
         }
@@ -51,6 +53,7 @@ macro_rules! impl_mul {
                 Self::Output {
                     x: self.x * other,
                     y: self.y * other,
+                    z: self.z * other,
                 }
             }
         }
@@ -68,6 +71,7 @@ macro_rules! impl_add_assign {
             fn add_assign(&mut self, other: $other) {
                 self.x += other.x;
                 self.y += other.y;
+                self.z += other.z;
             }
         }
     };
@@ -82,6 +86,7 @@ macro_rules! impl_sub_assign {
             fn sub_assign(&mut self, other: $other) {
                 self.x -= other.x;
                 self.y -= other.y;
+                self.z -= other.z;
             }
         }
     };

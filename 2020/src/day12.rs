@@ -17,10 +17,10 @@ pub fn default_input() -> Vec<Instruction> {
             let (op, value) = line.split_at(1);
             let value = value.parse().unwrap();
             match op {
-                "N" => Move(Vector::new(0, value)),
-                "S" => Move(Vector::new(0, -value)),
-                "E" => Move(Vector::new(value, 0)),
-                "W" => Move(Vector::new(-value, 0)),
+                "N" => Move(Vector::two(0, value)),
+                "S" => Move(Vector::two(0, -value)),
+                "E" => Move(Vector::two(value, 0)),
+                "W" => Move(Vector::two(-value, 0)),
                 "L" => Turn(value),
                 "R" => Turn(-value),
                 "F" => Forward(value),
@@ -31,8 +31,8 @@ pub fn default_input() -> Vec<Instruction> {
 }
 
 pub fn part1(instrs: &[Instruction]) -> i64 {
-    let mut ship = Vector::new(0, 0);
-    let mut direction = Vector::new(1, 0);
+    let mut ship = Vector::two(0, 0);
+    let mut direction = Vector::two(1, 0);
     for instr in instrs {
         match instr {
             Move(vector) => {
@@ -50,8 +50,8 @@ pub fn part1(instrs: &[Instruction]) -> i64 {
 }
 
 pub fn part2(instrs: &[Instruction]) -> i64 {
-    let mut ship = Vector::new(0, 0);
-    let mut direction = Vector::new(10, 1);
+    let mut ship = Vector::two(0, 0);
+    let mut direction = Vector::two(10, 1);
     for instr in instrs {
         match instr {
             Move(vector) => {
