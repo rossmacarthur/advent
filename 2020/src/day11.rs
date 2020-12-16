@@ -5,14 +5,14 @@ use vector::Vector;
 const INPUT: &str = include_str!("input/day11.txt");
 
 const DIRECTIONS: [Vector; 8] = [
-    Vector::new(-1, -1),
-    Vector::new(-1, 0),
-    Vector::new(-1, 1),
-    Vector::new(0, -1),
-    Vector::new(0, 1),
-    Vector::new(1, -1),
-    Vector::new(1, 0),
-    Vector::new(1, 1),
+    Vector::two(-1, -1),
+    Vector::two(-1, 0),
+    Vector::two(-1, 1),
+    Vector::two(0, -1),
+    Vector::two(0, 1),
+    Vector::two(1, -1),
+    Vector::two(1, 0),
+    Vector::two(1, 1),
 ];
 
 #[derive(Debug, Clone, Copy, PartialEq)]
@@ -39,7 +39,7 @@ pub fn default_input() -> Grid {
                     _ => panic!("unexpected state"),
                 })
                 .enumerate()
-                .map(move |(j, tile)| (Vector::new(i as i64, j as i64), tile))
+                .map(move |(j, tile)| (Vector::two(i as i64, j as i64), tile))
         })
         .collect()
 }

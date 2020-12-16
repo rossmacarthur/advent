@@ -13,7 +13,7 @@ pub fn default_input() -> HashSet<Vector> {
             line.chars()
                 .enumerate()
                 .filter(|&(_, c)| c == '#')
-                .map(move |(x, _)| Vector::new(x as i64, y as i64))
+                .map(move |(x, _)| Vector::two(x as i64, y as i64))
         })
         .collect()
 }

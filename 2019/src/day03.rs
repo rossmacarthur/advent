@@ -15,10 +15,10 @@ pub fn default_input() -> (Path, Path) {
                 .map(|caps| {
                     let length: i64 = caps[2].parse().unwrap();
                     let direction = match &caps[1] {
-                        "L" => Vector::new(-1, 0),
-                        "R" => Vector::new(1, 0),
-                        "D" => Vector::new(0, -1),
-                        "U" => Vector::new(0, 1),
+                        "L" => Vector::two(-1, 0),
+                        "R" => Vector::two(1, 0),
+                        "D" => Vector::two(0, -1),
+                        "U" => Vector::two(0, 1),
                         _ => unreachable!(),
                     };
                     (direction, length)
@@ -33,7 +33,7 @@ type Path = Vec<(Vector, i64)>;
 
 fn distances(path: &[(Vector, i64)]) -> HashMap<Vector, i64> {
     let mut distances = HashMap::new();
-    let mut position = Vector::new(0, 0);
+    let mut position = Vector::two(0, 0);
     let mut distance = 0;
     for &(direction, length) in path {
         for _ in 0..length {

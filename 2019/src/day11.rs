@@ -61,8 +61,8 @@ fn rotate(vector: Vector, turn: Turn) -> Vector {
 fn paint(program: &[i64], color: Color) -> BTreeMap<Vector, Color> {
     let mut computer = Computer::new(program.to_vec());
     let mut map = BTreeMap::new();
-    let mut position = Vector::new(0, 0);
-    let mut direction = Vector::new(0, 1);
+    let mut position = Vector::two(0, 0);
+    let mut direction = Vector::two(0, 1);
     while let Some((color, turn)) =
         computer.next_color_and_turn(*map.get(&position).unwrap_or(&color))
     {
@@ -88,7 +88,7 @@ pub fn part2(program: &[i64]) -> String {
     let mut result = String::from('\n');
     for y in (min_y..=max_y).rev() {
         for x in min_x..=max_x {
-            result.push_str(match map.get(&Vector::new(x, y)) {
+            result.push_str(match map.get(&Vector::two(x, y)) {
                 Some(Black) | None => "  ",
                 Some(White) => "██",
             })
