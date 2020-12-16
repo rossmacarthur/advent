@@ -1,5 +1,7 @@
 use std::collections::BTreeMap;
 
+use vector::Vector;
+
 use crate::day09::Computer;
 use crate::intcode::{parse_program, State};
 
@@ -8,8 +10,6 @@ const INPUT: &str = include_str!("input/day11.txt");
 pub fn default_input() -> Vec<i64> {
     parse_program(INPUT)
 }
-
-type Point = (i64, i64);
 
 #[derive(Debug, Clone, Copy)]
 enum Color {
@@ -31,7 +31,7 @@ impl Computer {
         match self.next(input).unwrap() {
             0 => Left,
             1 => Right,
-            t => panic!("invalid turn `{}`", t),
+            turn => panic!("invalid turn `{}`", turn),
         }
     }
 
@@ -51,24 +51,24 @@ impl Computer {
     }
 }
 
-fn rotate((x, y): Point, turn: Turn) -> Point {
+fn rotate(vector: Vector, turn: Turn) -> Vector {
     match turn {
-        Left => (-y, x),
-        Right => (y, -x),
+        Left => vector.rotated(90),
+        Right => vector.rotated(-90),
     }
 }
 
-fn paint(program: &[i64], color: Color) -> BTreeMap<Point, Color> {
+fn paint(program: &[i64], color: Color) -> BTreeMap<Vector, Color> {
     let mut computer = Computer::new(program.to_vec());
     let mut map = BTreeMap::new();
-    let mut position = (0, 0);
-    let mut direction = (0, 1);
+    let mut position = Vector::new(0, 0);
+    let mut direction = Vector::new(0, 1);
     while let Some((color, turn)) =
         computer.next_color_and_turn(*map.get(&position).unwrap_or(&color))
     {
         map.insert(position, color);
         direction = rotate(direction, turn);
-        position = (position.0 + direction.0, position.1 + direction.1);
+        position += direction;
     }
     map
 }
@@ -80,15 +80,15 @@ pub fn part1(program: &[i64]) -> usize {
 pub fn part2(program: &[i64]) -> String {
     let map = paint(program, White);
 
-    let min_x = *map.keys().map(|(x, _)| x).min().unwrap();
-    let max_x = *map.keys().map(|(x, _)| x).max().unwrap();
-    let min_y = *map.keys().map(|(_, y)| y).min().unwrap();
-    let max_y = *map.keys().map(|(_, y)| y).max().unwrap();
+    let min_x = map.keys().map(|v| v.x).min().unwrap();
+    let max_x = map.keys().map(|v| v.x).max().unwrap();
+    let min_y = map.keys().map(|v| v.y).min().unwrap();
+    let max_y = map.keys().map(|v| v.y).max().unwrap();
 
     let mut result = String::from('\n');
     for y in (min_y..=max_y).rev() {
         for x in min_x..=max_x {
-            result.push_str(match map.get(&(x, y)) {
+            result.push_str(match map.get(&Vector::new(x, y)) {
                 Some(Black) | None => "  ",
                 Some(White) => "██",
             })

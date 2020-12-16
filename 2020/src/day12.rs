@@ -1,10 +1,10 @@
-use vector::{Angle, Vector};
+use vector::Vector;
 
 const INPUT: &str = include_str!("input/day12.txt");
 
 pub enum Instruction {
     Move(Vector),
-    Turn(Angle),
+    Turn(i64),
     Forward(i64),
 }
 
@@ -21,8 +21,8 @@ pub fn default_input() -> Vec<Instruction> {
                 "S" => Move(Vector::new(0, -value)),
                 "E" => Move(Vector::new(value, 0)),
                 "W" => Move(Vector::new(-value, 0)),
-                "L" => Turn(Angle::new(value)),
-                "R" => Turn(Angle::new(-value)),
+                "L" => Turn(value),
+                "R" => Turn(-value),
                 "F" => Forward(value),
                 op => panic!("unexpected operation `{}`", op),
             }

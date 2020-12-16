@@ -63,7 +63,7 @@ pub fn part2((p1, p2): &(Path, Path)) -> i64 {
     keys(&distances1)
         .intersection(&keys(&distances2))
         .into_iter()
-        .map(|point| distances1[point] + distances2[point])
+        .map(|position| distances1[position] + distances2[position])
         .min()
         .unwrap()
 }

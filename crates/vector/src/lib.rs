@@ -1,6 +1,9 @@
-use std::ops;
+mod ops;
 
-#[derive(Debug, Clone, Copy, Default, PartialEq, Eq, Hash)]
+use std::f64::consts as f64;
+
+/// Represents a two dimensional vector.
+#[derive(Debug, Clone, Copy, Default, PartialEq, Eq, Hash, Ord, PartialOrd)]
 pub struct Vector {
     pub x: i64,
     pub y: i64,
@@ -11,6 +14,7 @@ pub struct Vector {
 ////////////////////////////////////////////////////////////////////////////////
 
 impl Vector {
+    /// Create a new vector.
     pub const fn new(x: i64, y: i64) -> Self {
         Self { x, y }
     }
@@ -23,134 +27,83 @@ impl From<(i64, i64)> for Vector {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-// Overloaded operators
-////////////////////////////////////////////////////////////////////////////////
-
-macro_rules! impl_add {
-    ($lhs:ty, $rhs:ty, $output:ty) => {
-        impl ops::Add<$rhs> for $lhs {
-            type Output = $output;
-
-            fn add(self, other: $rhs) -> Self::Output {
-                Self::Output {
-                    x: self.x + other.x,
-                    y: self.y + other.y,
-                }
-            }
-        }
-    };
-}
-
-impl_add!(Vector, Vector, Vector);
-impl_add!(Vector, &Vector, Vector);
-impl_add!(&Vector, &Vector, Vector);
-
-macro_rules! impl_sub {
-    ($lhs:ty, $rhs:ty, $output:ty) => {
-        impl ops::Sub<$rhs> for $lhs {
-            type Output = $output;
-
-            fn sub(self, other: $rhs) -> Self::Output {
-                Self::Output {
-                    x: self.x - other.x,
-                    y: self.y - other.y,
-                }
-            }
-        }
-    };
-}
-
-impl_sub!(Vector, Vector, Vector);
-impl_sub!(Vector, &Vector, Vector);
-impl_sub!(&Vector, &Vector, Vector);
-
-macro_rules! impl_mul {
-    ($lhs:ty, $rhs:ty, $output:ty) => {
-        impl ops::Mul<$rhs> for $lhs {
-            type Output = $output;
-
-            fn mul(self, other: $rhs) -> Self::Output {
-                Self::Output {
-                    x: self.x * other,
-                    y: self.y * other,
-                }
-            }
-        }
-    };
-}
-
-impl_mul!(Vector, i64, Vector);
-impl_mul!(Vector, &i64, Vector);
-impl_mul!(&Vector, i64, Vector);
-impl_mul!(&Vector, &i64, Vector);
-
-macro_rules! impl_add_assign {
-    ($self:ty, $other:ty) => {
-        impl ops::AddAssign<$other> for $self {
-            fn add_assign(&mut self, other: $other) {
-                self.x += other.x;
-                self.y += other.y;
-            }
-        }
-    };
-}
-
-impl_add_assign!(Vector, Vector);
-impl_add_assign!(Vector, &Vector);
-
-macro_rules! impl_sub_assign {
-    ($self:ty, $other:ty) => {
-        impl ops::SubAssign<$other> for $self {
-            fn sub_assign(&mut self, other: $other) {
-                self.x -= other.x;
-                self.y -= other.y;
-            }
-        }
-    };
-}
-
-impl_sub_assign!(Vector, Vector);
-impl_sub_assign!(Vector, &Vector);
-
-////////////////////////////////////////////////////////////////////////////////
 // The actual useful stuff
 ////////////////////////////////////////////////////////////////////////////////
 
+/// Returns the greatest common divisor of two numbers.
+fn gcd(mut x: i64, mut y: i64) -> i64 {
+    while x != 0 {
+        let tmp = x;
+        x = y % tmp;
+        y = tmp;
+    }
+    y.abs()
+}
+
 impl Vector {
-    /// Rotate the vector around the origin.
+    /// Returns the vector rotated around the origin.
     ///
     /// # Panics
     ///
     /// If the angle is not a multiple of 90 degrees.
-    pub fn rotated(self, angle: Angle) -> Vector {
+    pub fn rotated(self, angle: i64) -> Vector {
         let Self { x, y } = self;
-        match angle.normalized() {
-            Angle(0) => Self::new(x, y),
-            Angle(90) => Self::new(-y, x),
-            Angle(180) => Self::new(-x, -y),
-            Angle(270) => Self::new(y, -x),
+        match angle.rem_euclid(360) {
+            0 => Self::new(x, y),
+            90 => Self::new(-y, x),
+            180 => Self::new(-x, -y),
+            270 => Self::new(y, -x),
             angle => panic!("called `Vector::rotate()` with oblique angle `{:?}`", angle),
         }
     }
 
+    /// Returns the distance measured along axes at right angles.
+    ///
+    /// # Examples
+    ///
+    /// ```
+    /// # use vector::Vector;
+    /// #
+    /// let vector = Vector::new(3, -9);
+    /// assert_eq!(vector.manhattan_distance(), 12);
+    ///
+    /// let dv = Vector::new(2, 5) - Vector::new(1, 3);
+    /// assert_eq!(dv.manhattan_distance(), 3);
+    /// ```
     pub const fn manhattan_distance(&self) -> i64 {
         self.x.abs() + self.y.abs()
     }
-}
 
-////////////////////////////////////////////////////////////////////////////////
-// An angle type
-////////////////////////////////////////////////////////////////////////////////
-
-#[derive(Debug, Clone, Copy, Default, PartialEq, Eq, Hash)]
-pub struct Angle(i64);
-
-impl Angle {
-    pub const fn new(degrees: i64) -> Self {
-        Self(degrees)
+    /// Reduces the vector to its simplest form.
+    ///
+    /// # Examples
+    ///
+    /// ```
+    /// # use vector::Vector;
+    /// #
+    /// let vector = Vector::new(3, -9);
+    /// assert_eq!(vector.reduced(), Vector::new(1, -3));
+    ///
+    /// let vector = Vector::new(0, 5);
+    /// assert_eq!(vector.reduced(), Vector::new(0, 1));
+    ///
+    /// let vector = Vector::new(0, 0);
+    /// assert_eq!(vector.reduced(), Vector::new(0, 0));
+    /// ```
+    pub fn reduced(self) -> Self {
+        match self {
+            Self { x: 0, y: 0 } => self,
+            Self { x, y } => {
+                let div = gcd(x, y);
+                Self::new(x / div, y / div)
+            }
+        }
     }
 
-    pub fn normalized(self) -> Self {
-        Self(self.0.rem_euclid(360))
+    /// Returns the angle in radians between the vector and the origin.
+    pub fn angle(&self) -> f64 {
+        let dx = self.x as f64;
+        let dy = self.y as f64;
+        dy.atan2(dx).rem_euclid(f64::TAU)
     }
 }
