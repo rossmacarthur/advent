@@ -8,6 +8,7 @@ dependencies = [
  "itertools",
  "regex-macro",
  "vector",
+ "vectrs",
 ]
 
 [[package]]
@@ -731,6 +732,12 @@ checksum = "f1bddf1187be692e79c5ffeab891132dfb0f236ed36a43c7ed39f1165ee20191"
 [[package]]
 name = "vector"
 version = "0.1.0"
+
+[[package]]
+name = "vectrs"
+version = "0.0.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "629c9496d21cad4020b0a9ecde2fb6343985ff5171684fb4c6f4765ec879165c"
 
 [[package]]
 name = "version_check"
