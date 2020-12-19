@@ -36,7 +36,7 @@ pub fn default_input() -> Grid {
                     '.' => Tile::Floor,
                     'L' => Tile::EmptySeat,
                     '#' => Tile::OccupiedSeat,
-                    _ => panic!("unexpected state"),
+                    _ => panic!("unexpected tile"),
                 })
                 .enumerate()
                 .map(move |(j, tile)| (Vector::two(i as i64, j as i64), tile))
