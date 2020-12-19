@@ -5,8 +5,8 @@ use once_cell::sync::Lazy;
 use regex::Regex;
 
 const INPUT: &str = include_str!("input/day19.txt");
-const EIGHT: Lazy<Rule> = Lazy::new(|| parse_rule("42 | 42 8"));
-const ELEVEN: Lazy<Rule> = Lazy::new(|| parse_rule("42 31 | 42 11 31"));
+static EIGHT: Lazy<Rule> = Lazy::new(|| parse_rule("42 | 42 8"));
+static ELEVEN: Lazy<Rule> = Lazy::new(|| parse_rule("42 31 | 42 11 31"));
 
 #[derive(Debug, Clone)]
 pub enum Rule {
@@ -18,7 +18,10 @@ pub enum Rule {
 type Input<'a> = (HashMap<u64, Rule>, Vec<&'a str>);
 
 fn parse_rule_numbers(s: &str) -> Vec<u64> {
-    s.split_whitespace().map(|x| x.parse().unwrap()).collect()
+    s.split_whitespace()
+        .map(str::parse)
+        .map(Result::unwrap)
+        .collect()
 }
 
 fn parse_rule(rule: &str) -> Rule {
@@ -32,7 +35,7 @@ fn parse_rule(rule: &str) -> Rule {
     }
 }
 
-fn parse_input<'a>(input: &'a str) -> Input<'a> {
+fn parse_input(input: &str) -> Input {
     let (rules, messages) = input.split("\n\n").next_tuple().unwrap();
     (
         rules
@@ -55,12 +58,12 @@ pub fn default_input() -> Input<'static> {
 fn make_regex(rules: &HashMap<u64, Rule>, rule: u64, mut recursion_count: u64) -> String {
     let eight = &*EIGHT;
     let eleven = &*ELEVEN;
-    let rule = match (recursion_count, rule) {
-        (r, 8) if r != 0 => {
+    let rule = match rule {
+        8 if recursion_count != 0 => {
             recursion_count -= 1;
             eight
         }
-        (r, 11) if r != 0 => {
+        11 if recursion_count != 0 => {
             recursion_count -= 1;
             eleven
         }
