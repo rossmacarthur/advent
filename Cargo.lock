@@ -24,6 +24,7 @@ dependencies = [
  "regex",
  "regex-macro",
  "vector",
+ "vectrs",
 ]
 
 [[package]]
@@ -737,9 +738,9 @@ version = "0.1.0"
 
 [[package]]
 name = "vectrs"
-version = "0.0.1"
+version = "0.0.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "629c9496d21cad4020b0a9ecde2fb6343985ff5171684fb4c6f4765ec879165c"
+checksum = "492e41e1f3913ba3d466ebc6d881469a91b33765c3a952188fe6c6f7021fe686"
 
 [[package]]
 name = "version_check"

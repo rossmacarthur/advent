@@ -39,6 +39,7 @@ fn main() {
         Some(14) => run!(advent::day14),
         Some(15) => run!(advent::day15),
         Some(16) => run!(advent::day16),
+        Some(17) => run!(advent::day17),
         Some(18) => run!(advent::day18),
         Some(19) | None => run!(advent::day19),
         Some(d) => {
