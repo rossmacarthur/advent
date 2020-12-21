@@ -32,7 +32,7 @@ fn possible<'a>(foods: &[Food<'a>]) -> HashMap<&'a str, HashSet<&'a str>> {
     for food in foods {
         for allergen in food.allergens.iter().cloned() {
             possible
-                .entry(allergen.clone())
+                .entry(allergen)
                 .and_modify(|current| {
                     *current = current.intersection(&food.ingredients).cloned().collect()
                 })
