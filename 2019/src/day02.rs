@@ -1,12 +1,9 @@
+use crate::intcode::parse_program;
+
 const INPUT: &str = include_str!("input/day02.txt");
 
 pub fn default_input() -> Vec<usize> {
-    INPUT
-        .trim()
-        .split(',')
-        .map(str::parse)
-        .map(Result::unwrap)
-        .collect()
+    parse_program(INPUT)
 }
 
 #[derive(Debug)]
@@ -51,25 +48,39 @@ impl Computer {
     }
 }
 
-pub fn part1(input: &[usize]) -> usize {
+fn run(input: &[usize], noun: usize, verb: usize) -> usize {
     let mut computer = Computer::new(input.to_vec());
-    computer.mem[1] = 12;
-    computer.mem[2] = 2;
+    computer.mem[1] = noun;
+    computer.mem[2] = verb;
     computer.run();
     computer.mem[0]
+}
+
+pub fn part1(input: &[usize]) -> usize {
+    run(input, 12, 2)
 }
 
 pub fn part2(input: &[usize]) -> usize {
     for noun in 0..input.len() {
         for verb in 0..input.len() {
-            let mut computer = Computer::new(input.to_vec());
-            computer.mem[1] = noun;
-            computer.mem[2] = verb;
-            computer.run();
-            if computer.mem[0] == 19690720 {
+            if run(input, noun, verb) == 19690720 {
                 return 100 * noun + verb;
             }
         }
     }
     panic!("no valid noun and verb found")
+}
+
+#[test]
+fn ex1() {
+    let mut computer = Computer::new(vec![1, 9, 10, 3, 2, 3, 11, 0, 99, 30, 40, 50]);
+    computer.run();
+    assert_eq!(computer.mem[0], 3500);
+}
+
+#[test]
+fn default() {
+    let input = default_input();
+    assert_eq!(part1(&input), 3850704);
+    assert_eq!(part2(&input), 6718);
 }

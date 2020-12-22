@@ -1,10 +1,16 @@
 use std::convert::TryFrom;
+use std::fmt::Debug;
+use std::str::FromStr;
 
 pub fn cast(num: i64) -> usize {
     usize::try_from(num).unwrap()
 }
 
-pub fn parse_program(input: &str) -> Vec<i64> {
+pub fn parse_program<T>(input: &str) -> Vec<T>
+where
+    T: FromStr,
+    T::Err: Debug,
+{
     input
         .trim()
         .split(',')
