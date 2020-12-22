@@ -4,19 +4,31 @@ pub fn default_input() -> Vec<u64> {
     INPUT.lines().map(str::parse).map(Result::unwrap).collect()
 }
 
-pub fn part1(input: &[u64]) -> u64 {
-    input.iter().map(|mass| (mass / 3) - 2).sum()
-}
-
-fn calc_fuel(&mass: &u64) -> u64 {
+fn fuel_for_mass(mass: u64) -> u64 {
     if mass == 0 {
         0
     } else {
         let fuel = (mass / 3).saturating_sub(2);
-        fuel + calc_fuel(&fuel)
+        fuel + fuel_for_mass(fuel)
     }
 }
 
-pub fn part2(input: &[u64]) -> u64 {
-    input.iter().map(calc_fuel).sum()
+pub fn part1(masses: &[u64]) -> u64 {
+    masses.iter().map(|mass| (mass / 3) - 2).sum()
+}
+
+pub fn part2(masses: &[u64]) -> u64 {
+    masses.iter().copied().map(fuel_for_mass).sum()
+}
+
+#[test]
+fn ex1() {
+    assert_eq!(fuel_for_mass(100756), 50346);
+}
+
+#[test]
+fn default() {
+    let masses = default_input();
+    assert_eq!(part1(&masses), 3432671);
+    assert_eq!(part2(&masses), 5146132);
 }
