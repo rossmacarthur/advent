@@ -18,7 +18,6 @@ reduce = "0.1.3"
 regex = "1.4.2"
 regex-macro = "0.1.1"
 vector = { path = "../crates/vector" }
-vectrs = "0.0.2"
 
 [dev-dependencies]
 criterion = "0.3.3"
