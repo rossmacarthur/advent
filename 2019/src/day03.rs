@@ -2,10 +2,9 @@ use std::collections::{HashMap, HashSet};
 
 use itertools::Itertools;
 use regex_macro::regex;
+use vector::i64::xy::Vector;
 
 const INPUT: &str = include_str!("input/day03.txt");
-
-type Vector = vectrs::Vector<i64, 2>;
 
 type Path = Vec<(Vector, i64)>;
 
@@ -18,10 +17,10 @@ fn parse_input(input: &str) -> (Path, Path) {
                 .map(|caps| {
                     let length: i64 = caps[2].parse().unwrap();
                     let direction = match &caps[1] {
-                        "L" => Vector::from([-1, 0]),
-                        "R" => Vector::from([1, 0]),
-                        "D" => Vector::from([0, -1]),
-                        "U" => Vector::from([0, 1]),
+                        "L" => Vector::new([-1, 0]),
+                        "R" => Vector::new([1, 0]),
+                        "D" => Vector::new([0, -1]),
+                        "U" => Vector::new([0, 1]),
                         _ => unreachable!(),
                     };
                     (direction, length)
@@ -38,7 +37,7 @@ pub fn default_input() -> (Path, Path) {
 
 fn distances(path: &[(Vector, i64)]) -> HashMap<Vector, i64> {
     let mut distances = HashMap::new();
-    let mut position = Vector::from([0, 0]);
+    let mut position = Vector::zero();
     let mut distance = 0;
     for &(direction, length) in path {
         for _ in 0..length {

@@ -4,3 +4,6 @@ version = "0.1.0"
 authors = ["Ross MacArthur <ross@macarthur.io>"]
 edition = "2018"
 publish = false
+
+[dependencies]
+vectrs = "0.0.4"

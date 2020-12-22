@@ -2,6 +2,7 @@ use std::collections::{HashMap, HashSet};
 use std::iter;
 
 use itertools::Itertools;
+use vector::i64::Vector;
 
 const INPUT: &str = include_str!("input/day17.txt");
 
@@ -12,7 +13,6 @@ pub enum Cube {
 }
 
 type Input = HashMap<(i64, i64), Cube>;
-type Vector<const N: usize> = vectrs::Vector<i64, N>;
 type Vector3 = Vector<3>;
 type Vector4 = Vector<4>;
 
@@ -81,7 +81,7 @@ fn active<const N: usize>(state: HashMap<Vector<N>, Cube>) -> usize {
 pub fn part1(input: &Input) -> usize {
     let mut state: HashMap<_, _> = input
         .iter()
-        .map(|((x, y), cube)| (Vector3::from((*x, *y, 0)), *cube))
+        .map(|((x, y), cube)| (Vector3::from([*x, *y, 0]), *cube))
         .collect();
     for _ in 0..6 {
         state = next_state(state);
@@ -92,7 +92,7 @@ pub fn part1(input: &Input) -> usize {
 pub fn part2(input: &HashMap<(i64, i64), Cube>) -> usize {
     let mut state: HashMap<_, _> = input
         .iter()
-        .map(|((x, y), cube)| (Vector4::from((*x, *y, 0, 0)), *cube))
+        .map(|((x, y), cube)| (Vector4::from([*x, *y, 0, 0]), *cube))
         .collect();
     for _ in 0..6 {
         state = next_state(state);
