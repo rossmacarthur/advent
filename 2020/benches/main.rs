@@ -5,6 +5,7 @@ mod day09;
 mod day11;
 mod day13;
 mod day15;
+mod day23;
 
 criterion::criterion_main!(
     day01::benches,
@@ -14,4 +15,5 @@ criterion::criterion_main!(
     day11::benches,
     day13::benches,
     day15::benches,
+    day23::benches,
 );
