@@ -1,4 +1,4 @@
-use std::collections::{HashMap, HashSet};
+use std::collections::HashSet;
 use std::iter;
 
 use itertools::Itertools;
@@ -6,33 +6,25 @@ use vector::i64::Vector;
 
 const INPUT: &str = include_str!("input/day17.txt");
 
-#[derive(Debug, Clone, Copy, PartialEq)]
-pub enum Cube {
-    Inactive,
-    Active,
-}
+type State<const N: usize> = HashSet<Vector<N>>;
 
-type Input = HashMap<(i64, i64), Cube>;
-type Vector3 = Vector<3>;
-type Vector4 = Vector<4>;
-
-pub fn parse_input(s: &str) -> Input {
+pub fn parse_input(s: &str) -> HashSet<(i64, i64)> {
     s.lines()
         .enumerate()
         .flat_map(|(y, line)| {
             line.chars()
-                .map(|c| match c {
-                    '.' => Cube::Inactive,
-                    '#' => Cube::Active,
-                    c => panic!("unrecognized cube `{}`", c),
-                })
                 .enumerate()
-                .map(move |(x, cube)| ((x as i64, y as i64), cube))
+                .filter_map(|(i, c)| match c {
+                    '#' => Some(i),
+                    '.' => None,
+                    c => panic!("unrecognized cube value `{}`", c),
+                })
+                .map(move |x| (x as i64, y as i64))
         })
         .collect()
 }
 
-pub fn default_input() -> Input {
+pub fn default_input() -> HashSet<(i64, i64)> {
     parse_input(INPUT)
 }
 
@@ -46,58 +38,42 @@ fn neighbours<const N: usize>(center: Vector<N>) -> Vec<Vector<N>> {
         .collect()
 }
 
-fn neighbours_active<const N: usize>(state: &HashMap<Vector<N>, Cube>, center: Vector<N>) -> usize {
+fn neighbours_active<const N: usize>(state: &State<N>, center: Vector<N>) -> usize {
     neighbours(center)
         .into_iter()
         .filter_map(|vector| state.get(&vector))
-        .filter(|cube| matches!(cube, Cube::Active))
         .count()
 }
 
-fn next_state<const N: usize>(state: HashMap<Vector<N>, Cube>) -> HashMap<Vector<N>, Cube> {
-    let vectors: HashSet<_> = state.keys().copied().flat_map(neighbours).collect();
-    let mut next = state.clone();
-    for vector in vectors.into_iter() {
-        let cube = state.get(&vector).unwrap_or(&Cube::Inactive);
-        let active = neighbours_active(&state, vector);
-        let next_cube = match cube {
-            Cube::Active if matches!(active, 2 | 3) => Cube::Active,
-            Cube::Active => Cube::Inactive,
-            Cube::Inactive if active == 3 => Cube::Active,
-            Cube::Inactive => Cube::Inactive,
-        };
-        next.insert(vector, next_cube);
-    }
-    next
-}
-
-fn active<const N: usize>(state: HashMap<Vector<N>, Cube>) -> usize {
+fn next_state<const N: usize>(state: State<N>) -> State<N> {
     state
-        .values()
-        .filter(|cube| matches!(cube, Cube::Active))
-        .count()
+        .iter()
+        .copied()
+        .flat_map(neighbours)
+        .collect::<HashSet<_>>()
+        .into_iter()
+        .filter(|&vector| {
+            let active = neighbours_active(&state, vector);
+            match state.contains(&vector) {
+                true if (2..4).contains(&active) => true,
+                false if (3..4).contains(&active) => true,
+                _ => false,
+            }
+        })
+        .collect()
 }
 
-pub fn part1(input: &Input) -> usize {
-    let mut state: HashMap<_, _> = input
-        .iter()
-        .map(|((x, y), cube)| (Vector3::from([*x, *y, 0]), *cube))
-        .collect();
-    for _ in 0..6 {
-        state = next_state(state);
-    }
-    active(state)
+fn solve<const N: usize>(input: &HashSet<(i64, i64)>) -> usize {
+    let state = input.iter().copied().map(Vector::from_partial).collect();
+    (0..6).fold(state, |state, _| next_state::<N>(state)).len()
 }
 
-pub fn part2(input: &HashMap<(i64, i64), Cube>) -> usize {
-    let mut state: HashMap<_, _> = input
-        .iter()
-        .map(|((x, y), cube)| (Vector4::from([*x, *y, 0, 0]), *cube))
-        .collect();
-    for _ in 0..6 {
-        state = next_state(state);
-    }
-    active(state)
+pub fn part1(input: &HashSet<(i64, i64)>) -> usize {
+    solve::<3>(input)
+}
+
+pub fn part2(input: &HashSet<(i64, i64)>) -> usize {
+    solve::<4>(input)
 }
 
 #[test]
