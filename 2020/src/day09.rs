@@ -18,17 +18,17 @@ fn has_sum_nums(preamble: &[u64], value: u64) -> bool {
     false
 }
 
-pub fn part1(input: &[u64]) -> Option<u64> {
+pub fn part1(input: &[u64]) -> u64 {
     for slice in input.windows(26) {
         let value = slice[25];
         if !has_sum_nums(&slice[..25], value) {
-            return Some(value);
+            return value;
         }
     }
-    None
+    unreachable!()
 }
 
-pub fn part2(input: &[u64]) -> Option<u64> {
+pub fn part2(input: &[u64]) -> u64 {
     let mut left = 0;
     let mut right = 1;
     while right < input.len() {
@@ -36,12 +36,10 @@ pub fn part2(input: &[u64]) -> Option<u64> {
             Less => right += 1,
             Greater => left += 1,
             Equal => {
-                return Some(
-                    input[left..right].iter().max().unwrap()
-                        + input[left..right].iter().min().unwrap(),
-                );
+                return input[left..right].iter().max().unwrap()
+                    + input[left..right].iter().min().unwrap();
             }
         }
     }
-    None
+    unreachable!()
 }

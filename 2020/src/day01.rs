@@ -17,7 +17,7 @@ pub fn random_input(count: usize) -> Vec<u64> {
     input
 }
 
-pub fn part1(input: &[u64]) -> Option<u64> {
+pub fn part1(input: &[u64]) -> u64 {
     let mut numbers = input.to_vec();
     numbers.sort_unstable();
     let mut left = 0;
@@ -29,13 +29,13 @@ pub fn part1(input: &[u64]) -> Option<u64> {
         match sum.cmp(&SUM) {
             Less => left += 1,
             Greater => right -= 1,
-            Equal => return Some(a * b),
+            Equal => return a * b,
         }
     }
-    None
+    unreachable!()
 }
 
-pub fn part2(input: &[u64]) -> Option<u64> {
+pub fn part2(input: &[u64]) -> u64 {
     let mut numbers = input.to_vec();
     numbers.sort_unstable();
     for i in 0..numbers.len() - 2 {
@@ -49,9 +49,9 @@ pub fn part2(input: &[u64]) -> Option<u64> {
             match sum.cmp(&SUM) {
                 Less => left += 1,
                 Greater => right -= 1,
-                Equal => return Some(a * b * c),
+                Equal => return a * b * c,
             }
         }
     }
-    None
+    unreachable!()
 }
