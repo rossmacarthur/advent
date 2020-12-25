@@ -4,25 +4,23 @@ My [Advent of Code](https://adventofcode.com) solutions. All in Rust of course!
 
 ## Getting started
 
-`cargo run` will run the latest 2020 solution.
-
-To run a specific 2020 solution, just use `cargo run` and pass in the day. The
-following will run the solution for 2020 Day 10.
+To run a specfic solution just use `cargo run` and pass in the year and the day.
+For example, the following will run the solution for 2020 Day 10.
 
 ```
-cargo run -- 10
+cargo run -- --year 2020 --day 1
 ```
 
-To run a 2019 solution, specify the package name as well.
+Tests can be run by specifying the package name and the day.
 
 ```
-cargo run --package advent-2019 -- 5
+cargo test --package advent-2020 day01
 ```
 
-All benchmarks can be run with the following.
+Benchmarks can be run by specifying the package name and the day.
 
 ```
-cargo bench
+cargo bench --package advent-2020 day01
 ```
 
 ## License

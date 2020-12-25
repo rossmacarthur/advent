@@ -1,12 +1,12 @@
 use std::str::FromStr;
 
-use serde::Deserialize;
 use recap::Recap;
+use serde::Deserialize;
 
 const INPUT: &str = include_str!("input/day02.txt");
 
 #[derive(Debug, Deserialize, Recap)]
-#[recap(regex=r"(?P<lower>\d+)-(?P<upper>\d+)\s(?P<letter>.):\s(?P<password>.*)")]
+#[recap(regex = r"(?P<lower>\d+)-(?P<upper>\d+)\s(?P<letter>.):\s(?P<password>.*)")]
 pub struct Element {
     lower: usize,
     upper: usize,
@@ -15,7 +15,10 @@ pub struct Element {
 }
 
 fn parse_input(s: &str) -> Vec<Element> {
-    s.lines().map(FromStr::from_str).map(Result::unwrap).collect()
+    s.lines()
+        .map(FromStr::from_str)
+        .map(Result::unwrap)
+        .collect()
 }
 
 pub fn default_input() -> Vec<Element> {
@@ -47,7 +50,7 @@ fn ex1() {
     let input = parse_input(
         "1-3 a: abcde\n\
          1-3 b: cdefg\n\
-         2-9 c: ccccccccc"
+         2-9 c: ccccccccc",
     );
     assert_eq!(part1(&input), 2);
     assert_eq!(part2(&input), 1);

@@ -1,6 +1,6 @@
 use criterion::{criterion_group, Criterion};
 
-use advent::day02::*;
+use advent_2020::day02::*;
 
 fn bench_part1(c: &mut Criterion) {
     let input = default_input();
