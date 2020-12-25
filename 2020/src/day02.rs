@@ -1,27 +1,25 @@
-use std::str;
+use std::str::FromStr;
 
-use regex_macro::regex;
+use serde::Deserialize;
+use recap::Recap;
 
 const INPUT: &str = include_str!("input/day02.txt");
 
-pub fn default_input() -> Vec<Element<'static>> {
-    let re = regex!(r"(?P<lower>\d+)-(?P<upper>\d+)\s(?P<letter>.):\s(?P<password>.*)");
-    re.captures_iter(INPUT)
-        .map(|caps| Element {
-            lower: caps["lower"].parse().unwrap(),
-            upper: caps["upper"].parse().unwrap(),
-            letter: caps["letter"].parse().unwrap(),
-            password: caps.name("password").unwrap().as_str(),
-        })
-        .collect()
-}
-
-#[derive(Debug)]
-pub struct Element<'i> {
+#[derive(Debug, Deserialize, Recap)]
+#[recap(regex=r"(?P<lower>\d+)-(?P<upper>\d+)\s(?P<letter>.):\s(?P<password>.*)")]
+pub struct Element {
     lower: usize,
     upper: usize,
     letter: char,
-    password: &'i str,
+    password: String,
+}
+
+fn parse_input(s: &str) -> Vec<Element> {
+    s.lines().map(FromStr::from_str).map(Result::unwrap).collect()
+}
+
+pub fn default_input() -> Vec<Element> {
+    parse_input(INPUT)
 }
 
 pub fn part1(elements: &[Element]) -> usize {
@@ -42,4 +40,21 @@ pub fn part2(elements: &[Element]) -> usize {
                 ^ (e.password.chars().nth(e.upper - 1).unwrap() == e.letter)
         })
         .count()
+}
+
+#[test]
+fn ex1() {
+    let input = parse_input(
+        "1-3 a: abcde\n\
+         1-3 b: cdefg\n\
+         2-9 c: ccccccccc"
+    );
+    assert_eq!(part1(&input), 2);
+    assert_eq!(part2(&input), 1);
+}
+#[test]
+fn default() {
+    let input = default_input();
+    assert_eq!(part1(&input), 383);
+    assert_eq!(part2(&input), 272);
 }
