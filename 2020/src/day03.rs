@@ -1,62 +1,65 @@
+use std::collections::HashSet;
+
+use vector::i64::xy::Vector;
+
+use crate::map::parse_map_set;
+
 const INPUT: &str = include_str!("input/day03.txt");
 
-pub fn default_input() -> Map {
-    Map(INPUT
-        .lines()
-        .map(|line| {
-            line.chars()
-                .map(|c| match c {
-                    '.' => Square::Empty,
-                    '#' => Square::Tree,
-                    _ => panic!("unrecognized input character"),
-                })
-                .collect()
-        })
-        .collect())
+pub fn default_input() -> HashSet<Vector> {
+    parse_map_set(INPUT)
 }
 
-#[derive(Debug)]
-pub enum Square {
-    Empty,
-    Tree,
-}
-
-#[derive(Debug)]
-pub struct Map(Vec<Vec<Square>>);
-
-impl Map {
-    fn lookup(&self, row: usize, col: usize) -> &Square {
-        let row = row % self.0.len();
-        let col = col % self.0[0].len();
-        &self.0[row][col]
-    }
-
-    fn len(&self) -> usize {
-        self.0.len()
-    }
-}
-
-pub fn count_trees_for_slope(map: &Map, right: usize, down: usize) -> usize {
-    let mut row = 0;
-    let mut col = 0;
+fn count_trees_for_slope(map: &HashSet<Vector>, slope: Vector) -> usize {
+    let len_x = map.iter().map(Vector::x).max().unwrap() + 1;
+    let len_y = map.iter().map(Vector::y).max().unwrap() + 1;
     let mut trees = 0;
-    while row < map.len() {
-        if let Square::Tree = map.lookup(row, col) {
+    let mut location = Vector::zero();
+    while location.y() < len_y {
+        if map.contains(&location) {
             trees += 1;
         }
-        row += down;
-        col += right;
+        location += slope;
+        *location.x_mut() %= len_x;
     }
     trees
 }
 
-pub fn part1(map: &Map) -> usize {
-    count_trees_for_slope(map, 3, 1)
+pub fn part1(map: &HashSet<Vector>) -> usize {
+    count_trees_for_slope(map, Vector::new([3, 1]))
 }
 
-pub fn part2(map: &Map) -> usize {
-    [(1, 1), (3, 1), (5, 1), (7, 1), (1, 2)]
+pub fn part2(map: &HashSet<Vector>) -> usize {
+    [[1, 1], [3, 1], [5, 1], [7, 1], [1, 2]]
         .iter()
-        .map(|&(right, down)| count_trees_for_slope(map, right, down))
+        .copied()
+        .map(Vector::new)
+        .map(|slope| count_trees_for_slope(map, slope))
         .product()
+}
+
+#[test]
+fn ex1() {
+    let input = parse_map_set(
+        r#"..##.......
+#...#...#..
+.#....#..#.
+..#.#...#.#
+.#...##..#.
+..#.##.....
+.#.#.#....#
+.#........#
+#.##...#...
+#...##....#
+.#..#...#.#"#,
+    );
+    assert_eq!(part1(&input), 7);
+    assert_eq!(part2(&input), 336);
+}
+
+#[test]
+fn default() {
+    let input = default_input();
+    assert_eq!(part1(&input), 282);
+    assert_eq!(part2(&input), 958815792);
 }
