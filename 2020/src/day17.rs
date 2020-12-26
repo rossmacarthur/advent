@@ -4,28 +4,14 @@ use std::iter;
 use itertools::Itertools;
 use vector::i64::Vector;
 
+use crate::map::parse_map_set;
+
 const INPUT: &str = include_str!("input/day17.txt");
 
 type State<const N: usize> = HashSet<Vector<N>>;
 
-pub fn parse_input(s: &str) -> HashSet<(i64, i64)> {
-    s.lines()
-        .enumerate()
-        .flat_map(|(y, line)| {
-            line.chars()
-                .enumerate()
-                .filter_map(|(i, c)| match c {
-                    '#' => Some(i),
-                    '.' => None,
-                    c => panic!("unrecognized cube value `{}`", c),
-                })
-                .map(move |x| (x as i64, y as i64))
-        })
-        .collect()
-}
-
-pub fn default_input() -> HashSet<(i64, i64)> {
-    parse_input(INPUT)
+pub fn default_input() -> HashSet<Vector<2>> {
+    parse_map_set(INPUT)
 }
 
 fn neighbours<const N: usize>(center: Vector<N>) -> Vec<Vector<N>> {
@@ -63,22 +49,22 @@ fn next_state<const N: usize>(state: State<N>) -> State<N> {
         .collect()
 }
 
-fn solve<const N: usize>(input: &HashSet<(i64, i64)>) -> usize {
+fn solve<const N: usize>(input: &HashSet<Vector<2>>) -> usize {
     let state = input.iter().copied().map(Vector::from_partial).collect();
     (0..6).fold(state, |state, _| next_state::<N>(state)).len()
 }
 
-pub fn part1(input: &HashSet<(i64, i64)>) -> usize {
+pub fn part1(input: &HashSet<Vector<2>>) -> usize {
     solve::<3>(input)
 }
 
-pub fn part2(input: &HashSet<(i64, i64)>) -> usize {
+pub fn part2(input: &HashSet<Vector<2>>) -> usize {
     solve::<4>(input)
 }
 
 #[test]
 fn ext1() {
-    let input = parse_input(".#.\n..#\n###");
+    let input = parse_map_set(".#.\n..#\n###");
     assert_eq!(part1(&input), 112);
     assert_eq!(part2(&input), 848);
 }

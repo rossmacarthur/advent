@@ -2,6 +2,8 @@ use std::collections::HashMap;
 
 use vector::i64::xy::Vector;
 
+use crate::map::parse_map;
+
 const INPUT: &str = include_str!("input/day11.txt");
 
 const DIRECTIONS: [Vector; 8] = [
@@ -27,21 +29,12 @@ type Grid = HashMap<Vector, Tile>;
 type Visible = HashMap<Vector, Vec<Vector>>;
 
 pub fn default_input() -> Grid {
-    INPUT
-        .lines()
-        .enumerate()
-        .flat_map(|(i, line)| {
-            line.chars()
-                .map(|c| match c {
-                    '.' => Tile::Floor,
-                    'L' => Tile::EmptySeat,
-                    '#' => Tile::OccupiedSeat,
-                    _ => panic!("unexpected tile"),
-                })
-                .enumerate()
-                .map(move |(j, tile)| (Vector::new([i as i64, j as i64]), tile))
-        })
-        .collect()
+    parse_map(INPUT, |c| match c {
+        '.' => Tile::Floor,
+        'L' => Tile::EmptySeat,
+        '#' => Tile::OccupiedSeat,
+        _ => panic!("unexpected character"),
+    })
 }
 
 /// Builds a visibility map from the grid.
