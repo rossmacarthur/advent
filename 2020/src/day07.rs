@@ -7,8 +7,8 @@ const COLOR: &str = "shiny gold";
 
 type Rules<'a> = HashMap<&'a str, Vec<(&'a str, u64)>>;
 
-pub fn default_input() -> Rules<'static> {
-    INPUT
+fn parse_input(input: &str) -> Rules {
+    input
         .lines()
         .map(|rule| {
             let caps = regex!(r"^(\w+ \w+) bags contain (.*)\.$")
@@ -28,6 +28,10 @@ pub fn default_input() -> Rules<'static> {
         .collect()
 }
 
+pub fn default_input() -> Rules<'static> {
+    parse_input(INPUT)
+}
+
 fn find<'a>(
     reversed: &'a HashMap<&'a str, Vec<&'a str>>,
     color: &'a str,
@@ -39,6 +43,13 @@ fn find<'a>(
             find(reversed, color, found);
         }
     }
+}
+
+fn count(rules: &Rules, color: &str) -> u64 {
+    rules[color]
+        .iter()
+        .map(|(color, i)| i * (1 + count(rules, color)))
+        .sum()
 }
 
 pub fn part1(rules: &Rules) -> usize {
@@ -56,13 +67,47 @@ pub fn part1(rules: &Rules) -> usize {
     found.len()
 }
 
-fn count(rules: &Rules, color: &str) -> u64 {
-    rules[color]
-        .iter()
-        .map(|(color, i)| i * (1 + count(rules, color)))
-        .sum()
-}
-
 pub fn part2(rules: &Rules) -> u64 {
     count(rules, COLOR)
+}
+
+#[test]
+fn example1() {
+    let input = parse_input(
+        r#"light red bags contain 1 bright white bag, 2 muted yellow bags.
+dark orange bags contain 3 bright white bags, 4 muted yellow bags.
+bright white bags contain 1 shiny gold bag.
+muted yellow bags contain 2 shiny gold bags, 9 faded blue bags.
+shiny gold bags contain 1 dark olive bag, 2 vibrant plum bags.
+dark olive bags contain 3 faded blue bags, 4 dotted black bags.
+vibrant plum bags contain 5 faded blue bags, 6 dotted black bags.
+faded blue bags contain no other bags.
+dotted black bags contain no other bags.
+"#,
+    );
+    assert_eq!(part1(&input), 4);
+    assert_eq!(part2(&input), 32);
+}
+
+#[test]
+fn example2() {
+    let input = parse_input(
+        r#"shiny gold bags contain 2 dark red bags.
+dark red bags contain 2 dark orange bags.
+dark orange bags contain 2 dark yellow bags.
+dark yellow bags contain 2 dark green bags.
+dark green bags contain 2 dark blue bags.
+dark blue bags contain 2 dark violet bags.
+dark violet bags contain no other bags.
+"#,
+    );
+    assert_eq!(part1(&input), 0);
+    assert_eq!(part2(&input), 126);
+}
+
+#[test]
+fn default() {
+    let input = default_input();
+    assert_eq!(part1(&input), 101);
+    assert_eq!(part2(&input), 108636);
 }
