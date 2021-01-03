@@ -73,14 +73,14 @@ pub fn part2((p1, p2): &(Path, Path)) -> i64 {
 }
 
 #[test]
-fn ex1() {
+fn example1() {
     let input = parse_input("R8,U5,L5,D3\nU7,R6,D4,L4");
     assert_eq!(part1(&input), 6);
     assert_eq!(part2(&input), 30);
 }
 
 #[test]
-fn ex2() {
+fn example2() {
     let input = parse_input(
         "R75,D30,R83,U83,L12,D49,R71,U7,L72\n\
          U62,R66,U55,R34,D71,R55,D58,R83",
@@ -90,7 +90,7 @@ fn ex2() {
 }
 
 #[test]
-fn ex3() {
+fn example3() {
     let input = parse_input(
         "R98,U47,R26,D63,R33,U87,L62,D20,R33,U53,R51\n\
          U98,R91,D20,R16,D67,R40,U7,R15,U6,R7",

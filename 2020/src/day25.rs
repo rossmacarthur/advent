@@ -36,7 +36,7 @@ pub fn part2(_: &(u64, u64)) -> &'static str {
 }
 
 #[test]
-fn ex1() {
+fn example() {
     assert_eq!(part1(&(5764801, 17807724)), 14897079);
 }
 

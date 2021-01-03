@@ -108,7 +108,7 @@ pub fn part2(input: &Input) -> usize {
 }
 
 #[test]
-fn ex1() {
+fn example1() {
     let input = parse_input(
         r#"0: 4 1 5
 1: 2 3 | 3 2
@@ -127,7 +127,7 @@ aaaabbb"#,
 }
 
 #[test]
-fn ex2() {
+fn example2() {
     let input = parse_input(
         r#"42: 9 14 | 10 1
 9: 14 27 | 1 26

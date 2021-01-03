@@ -42,7 +42,7 @@ pub fn part2(input: &[u64]) -> u64 {
 }
 
 #[test]
-fn ex1() {
+fn example() {
     let input = [1721, 979, 366, 299, 675, 1456];
     assert_eq!(part1(&input), 514579);
     assert_eq!(part2(&input), 241861950);

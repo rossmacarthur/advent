@@ -90,8 +90,8 @@ pub fn part2(input: &[Vec<Vector>]) -> usize {
 }
 
 #[test]
-fn ex1() {
-    let input = parse_input(include_str!("input/day24_ex1.txt"));
+fn example() {
+    let input = parse_input(include_str!("input/day24_example.txt"));
     assert_eq!(part1(&input), 10);
     assert_eq!(part2(&input), 2208);
 }

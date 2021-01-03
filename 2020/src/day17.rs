@@ -63,7 +63,7 @@ pub fn part2(input: &HashSet<Vector<2>>) -> usize {
 }
 
 #[test]
-fn ext1() {
+fn example() {
     let input = parse_map_set(".#.\n..#\n###");
     assert_eq!(part1(&input), 112);
     assert_eq!(part2(&input), 848);
