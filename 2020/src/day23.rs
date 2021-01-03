@@ -57,7 +57,7 @@ pub fn part2(cups: &[u64]) -> u64 {
 }
 
 #[test]
-fn ex1() {
+fn example() {
     let input = parse_input("389125467");
     assert_eq!(part1(&input), "67384529");
     assert_eq!(part2(&input), 149245887792);

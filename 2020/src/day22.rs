@@ -102,14 +102,14 @@ pub fn part2((one, two): &(Vec<usize>, Vec<usize>)) -> usize {
 }
 
 #[test]
-fn ex1() {
+fn example1() {
     let input = (vec![9, 2, 6, 3, 1], vec![5, 8, 4, 7, 10]);
     assert_eq!(part1(&input), 306);
     assert_eq!(part2(&input), 291);
 }
 
 #[test]
-fn ex2() {
+fn example2() {
     part2(&(vec![43, 19], vec![2, 29, 14]));
 }
 

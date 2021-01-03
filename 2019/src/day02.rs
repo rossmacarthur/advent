@@ -72,7 +72,7 @@ pub fn part2(input: &[usize]) -> usize {
 }
 
 #[test]
-fn ex1() {
+fn example() {
     let mut computer = Computer::new(vec![1, 9, 10, 3, 2, 3, 11, 0, 99, 30, 40, 50]);
     computer.run();
     assert_eq!(computer.mem[0], 3500);

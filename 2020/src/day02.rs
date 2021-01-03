@@ -46,7 +46,7 @@ pub fn part2(elements: &[Element]) -> usize {
 }
 
 #[test]
-fn ex1() {
+fn example() {
     let input = parse_input(
         "1-3 a: abcde\n\
          1-3 b: cdefg\n\

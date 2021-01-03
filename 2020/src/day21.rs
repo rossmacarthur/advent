@@ -90,7 +90,7 @@ pub fn part2(foods: &[Food]) -> String {
 }
 
 #[test]
-fn ex1() {
+fn example() {
     let foods = parse_input(
         r#"mxmxvkd kfcds sqjhc nhms (contains dairy, fish)
 trh fvjkl sbzzf mxmxvkd (contains dairy)

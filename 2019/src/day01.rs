@@ -22,7 +22,7 @@ pub fn part2(masses: &[u64]) -> u64 {
 }
 
 #[test]
-fn ex1() {
+fn example() {
     assert_eq!(fuel_for_mass(100756), 50346);
 }
 

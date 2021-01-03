@@ -39,7 +39,7 @@ pub fn part2(map: &HashSet<Vector>) -> usize {
 }
 
 #[test]
-fn ex1() {
+fn example() {
     let input = parse_map_set(
         r#"..##.......
 #...#...#..
