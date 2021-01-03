@@ -2,8 +2,8 @@ use itertools::Itertools;
 
 const INPUT: &str = include_str!("input/day05.txt");
 
-pub fn default_input() -> Vec<u64> {
-    INPUT
+fn parse_input(input: &str) -> Vec<u64> {
+    input
         .lines()
         .map(|line| {
             let as_binary: String = line
@@ -21,6 +21,10 @@ pub fn default_input() -> Vec<u64> {
         .collect()
 }
 
+pub fn default_input() -> Vec<u64> {
+    parse_input(INPUT)
+}
+
 pub fn part1(input: &[u64]) -> u64 {
     input.iter().max().copied().unwrap()
 }
@@ -34,4 +38,17 @@ pub fn part2(input: &[u64]) -> u64 {
         }
     }
     unreachable!()
+}
+
+#[test]
+fn example() {
+    let input = parse_input("BFFFBBFRRR\nFFFBBBFRRR\nBBFFBBFRLL");
+    assert_eq!(part1(&input), 820);
+}
+
+#[test]
+fn default() {
+    let input = default_input();
+    assert_eq!(part1(&input), 883);
+    assert_eq!(part2(&input), 532);
 }
