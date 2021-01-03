@@ -761,9 +761,9 @@ dependencies = [
 
 [[package]]
 name = "vectrs"
-version = "0.0.5"
+version = "0.0.6"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "c1189279e0f47829f2944f556e137dc56c1c57d4de3533d56fcfe11a5420e0a2"
+checksum = "d0b67b71a66944dbf333c5def7ad682a4b4ffe69cf614d9132620e7ed01c5d58"
 
 [[package]]
 name = "version_check"
