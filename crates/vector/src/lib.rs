@@ -1,5 +1,3 @@
-#![feature(min_const_generics)]
-
 pub mod i64 {
     pub type Vector<const N: usize> = vectrs::Vector<i64, N>;
 
