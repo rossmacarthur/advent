@@ -57,6 +57,7 @@ pub fn part2(cups: &[u64]) -> u64 {
 }
 
 #[test]
+#[ignore]
 fn example() {
     let input = parse_input("389125467");
     assert_eq!(part1(&input), "67384529");
@@ -64,6 +65,7 @@ fn example() {
 }
 
 #[test]
+#[ignore]
 fn default() {
     let input = default_input();
     assert_eq!(part1(&input), "49725386");

@@ -1,5 +1,7 @@
 # advent
 
+[![Build Status](https://img.shields.io/github/workflow/status/rossmacarthur/advent/build/master)](https://github.com/rossmacarthur/advent/actions?query=workflow%3Abuild)
+
 My [Advent of Code](https://adventofcode.com) solutions. All in Rust of course!
 
 ## Getting started
