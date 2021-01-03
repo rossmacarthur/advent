@@ -62,7 +62,7 @@ pub fn part2(foods: &[Food]) -> String {
             maybe_dangerous
                 .entry(ingredient)
                 .or_insert_with(HashSet::new)
-                .insert(allergen.clone());
+                .insert(allergen);
         }
     }
     let mut dangerous = HashMap::new();
@@ -74,17 +74,17 @@ pub fn part2(foods: &[Food]) -> String {
             .next()
             .map(|(ingredient, allergens)| {
                 assert_eq!(allergens.len(), 1);
-                (ingredient.clone(), allergens.iter().next().unwrap().clone())
+                (*ingredient, *allergens.iter().next().unwrap())
             })
     } {
         for allergens in maybe_dangerous.values_mut() {
-            allergens.remove(&allergen);
+            allergens.remove(allergen);
         }
         dangerous.insert(ingredient, allergen);
     }
     dangerous
         .into_iter()
-        .sorted_by_key(|(_, allergen)| allergen.clone())
+        .sorted_by_key(|(_, allergen)| *allergen)
         .map(|(ingredient, _)| ingredient)
         .join(",")
 }
