@@ -21,7 +21,7 @@ where
 pub fn parse_map_set(input: &str) -> HashSet<Vector> {
     parse_map(input, |c| match c {
         '#' => Some(()),
-        '.' => None,
+        ' ' | '.' => None,
         _ => panic!("unrecognized character"),
     })
     .into_iter()

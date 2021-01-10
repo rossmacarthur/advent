@@ -1,180 +1,319 @@
-use std::collections::{BTreeSet as Set, HashMap as Map, VecDeque};
+use std::cmp::Reverse;
+use std::collections::{HashMap, HashSet};
+use std::fmt;
 
 use itertools::Itertools;
+use regex_macro::regex;
+use vector::i64::xy::Vector;
+
+use crate::map::parse_map_set;
 
 const INPUT: &str = include_str!("input/day20.txt");
 
-type Vector = vectrs::Vector<i64, 2>;
-type Point = Vector;
 type Edge = Vec<Pixel>;
-type Tile = Map<Point, Pixel>;
-type Image = Tile;
+type Image = Vec<Vec<Pixel>>;
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash, PartialOrd, Ord)]
-pub enum Pixel {
+enum Pixel {
     Black,
     White,
 }
 
-fn parse_tile(s: &str) -> (i64, Tile) {
-    let mut lines = s.lines();
-    let id = lines
-        .next()
-        .unwrap()
-        .trim_start_matches("Tile ")
-        .trim_end_matches(":")
-        .parse()
-        .unwrap();
-    let vectors = lines
-        .enumerate()
-        .flat_map(|(y, line)| {
-            line.chars()
-                .map(|c| match c {
-                    '#' => Pixel::White,
-                    '.' => Pixel::Black,
-                    p => panic!("unrecognized pixel value `{}`", p),
-                })
-                .enumerate()
-                .map(move |(x, pixel)| (Point::from((x as i64, y as i64)), pixel))
-        })
-        .collect();
-    (id, vectors)
+#[derive(Clone, Default, PartialEq, Eq, Hash)]
+pub struct Tile {
+    id: i64,
+    pixels: Vec<Vec<Pixel>>,
 }
 
-fn parse_input(s: &str) -> Map<i64, Tile> {
+fn parse_tile(input: &str) -> Tile {
+    let captures = regex!(r"(?s)Tile (\d+):\n(.*)").captures(input).unwrap();
+    Tile::parse(captures[1].parse().unwrap(), &captures[2])
+}
+
+fn parse_input(s: &str) -> Vec<Tile> {
     s.split("\n\n").map(parse_tile).collect()
 }
 
-pub fn default_input() -> Map<i64, Tile> {
+pub fn default_input() -> Vec<Tile> {
     parse_input(INPUT)
 }
 
-fn tile_edge(tile: &Tile, direction: Vector) -> Edge {
-    let d: usize = direction.into_iter().position(|n| n != 0).unwrap();
-    let values = tile.into_iter().map(|(point, _)| point[d]);
-    let edge = match direction[d] {
-        1 => values.max().unwrap(),
-        -1 => values.min().unwrap(),
-        _ => panic!("invalid direction"),
-    };
-    tile.iter()
-        .filter(|(point, _)| point[d] == edge)
-        .sorted_by_key(|(point, _)| *point)
-        .map(|(_, pixel)| *pixel)
-        .collect()
+fn reversed(mut edge: Edge) -> Edge {
+    edge.reverse();
+    edge
 }
 
-fn tile_edges(tile: &Tile) -> Set<Edge> {
-    let mut edges = Set::new();
-    for direction in &[[1, 0], [-1, 0], [0, 1], [0, -1]] {
-        let direction = Vector::from(*direction);
-        let edge = tile_edge(tile, direction);
-        edges.insert(edge.clone());
-        edges.insert(edge.into_iter().rev().collect());
+impl Tile {
+    fn parse(id: i64, input: &str) -> Self {
+        let pixels: Vec<Vec<_>> = input
+            .lines()
+            .map(|line| {
+                line.chars()
+                    .map(|c| match c {
+                        '.' => Pixel::Black,
+                        '#' => Pixel::White,
+                        p => panic!("unrecognized pixel value `{}`", p),
+                    })
+                    .collect()
+            })
+            .collect();
+        Self { id, pixels }
     }
-    edges
-}
 
-fn adjacent_tiles(tiles: &Map<i64, Tile>) -> Vec<(i64, Set<i64>)> {
-    let edges: Map<_, _> = tiles
-        .iter()
-        .map(|(tile_id, tile)| (tile_id, tile_edges(tile)))
-        .collect();
-    let mut adjacents = Map::new();
-    for tile_id_a in edges.keys().copied() {
-        for tile_id_b in edges.keys().copied().filter(|id| *id != tile_id_a) {
-            if edges[tile_id_a].intersection(&edges[tile_id_b]).count() > 0 {
-                adjacents
-                    .entry(*tile_id_a)
-                    .or_insert_with(Set::new)
-                    .insert(*tile_id_b);
+    fn rows(&self) -> usize {
+        self.pixels.len()
+    }
+
+    fn cols(&self) -> usize {
+        self.pixels[0].len()
+    }
+
+    fn top(&self) -> Edge {
+        self.pixels[0].clone()
+    }
+
+    fn bottom(&self) -> Edge {
+        self.pixels[self.rows() - 1].clone()
+    }
+
+    fn left(&self) -> Edge {
+        self.pixels.iter().map(|row| row[0]).collect()
+    }
+
+    fn right(&self) -> Edge {
+        self.pixels.iter().map(|row| row[self.cols() - 1]).collect()
+    }
+
+    fn edges(&self) -> Vec<Edge> {
+        vec![self.top(), self.right(), self.bottom(), self.left()]
+    }
+
+    fn rotate(&mut self) {
+        let rows = self.cols();
+        let cols = self.rows();
+        let mut pixels = vec![vec![Pixel::Black; cols]; rows];
+        for row in 0..rows {
+            for col in 0..cols {
+                pixels[row][col] = self.pixels[self.rows() - col - 1][row];
             }
         }
+        self.pixels = pixels;
     }
-    adjacents
-        .into_iter()
-        .sorted_by_key(|(_, adjacents)| adjacents.len())
-        .collect()
-}
 
-fn rotate_point(point: Point, angle: i64, bound: i64) -> Point {
-    let x = point.x();
-    let y = point.y();
-    let point = match angle {
-        0 => Point::from([x, y]),
-        90 => Point::from([-y, x]),
-        180 => Point::from([-x, -y]),
-        270 => Point::from([y, -x]),
-        _ => unimplemented!(),
-    };
-    point.into_iter().map(|n| n.rem_euclid(bound)).collect()
-}
-
-fn rotate_points(points: &[Point], angle: i64, bound: i64) -> Vec<Vector> {
-    points
-        .iter()
-        .copied()
-        .map(|v| rotate_point(v, angle, bound))
-        .collect()
-}
-
-fn corners(bound: i64) -> Vec<(Point, Point)> {
-    let points = [Point::from((1, 0)), Point::from((0, 1))];
-    [0, 90, 180, 270]
-        .iter()
-        .map(|angle| {
-            rotate_points(&points, *angle, bound)
-                .into_iter()
-                .next_tuple()
-                .unwrap()
-        })
-        .collect()
-}
-
-//
-// # #
-// #
-
-
-fn place_tile(adjacents: &Map<i64, Set<i64>>, tile_id: i64, layout: &mut Map<Point, i64>) {
-
-    if layout.len() == 0 {
-        // this is the first tile, just put it in the top left hand corner
-        layout.insert(Point::from([0, 0]), tile_id);
-        for adjacent_id in &adjacents[&tile_id] {
-            place_tile(adjacents, *adjacent_id, layout);
+    fn flip_v(&mut self) {
+        let rows = self.rows();
+        for i in 0..(rows / 2) {
+            self.pixels.swap(i, rows - 1 - i);
         }
-    } else {
-        todo!()
-
     }
 
+    fn flip_h(&mut self) {
+        for row in &mut self.pixels {
+            row.reverse();
+        }
+    }
 }
 
-fn pick_and_place(adjacents: Vec<(i64, Set<i64>)>) -> Map<Point, i64> {
-    let bound = (adjacents.len() as f64).sqrt() as i64;
-    let first_tile_id = adjacents.iter().map(|(tile_id, _)| *tile_id).next().unwrap();
-    let adjacents: Map<i64, Set<i64>> = adjacents.into_iter().collect();
-    let mut layout = Map::new();
-    place_tile(&adjacents, first_tile_id, &mut layout);
-    layout
+fn edge_matches(tiles: &[Tile]) -> HashMap<Edge, HashSet<i64>> {
+    let mut matches = HashMap::new();
+    for tile in tiles {
+        for edge in tile.edges() {
+            matches
+                .entry(edge.clone())
+                .or_insert_with(HashSet::new)
+                .insert(tile.id);
+            matches
+                .entry(reversed(edge))
+                .or_insert_with(HashSet::new)
+                .insert(tile.id);
+        }
+    }
+    matches
 }
 
-pub fn part1(tiles: &Map<i64, Tile>) -> i64 {
-    adjacent_tiles(tiles)
+fn find_corners(matches: &HashMap<Edge, HashSet<i64>>) -> Vec<i64> {
+    // Count all the border edges, a border edge is an edge that doesn't match
+    // any other edge. We can use this to figure out the corner tile IDs because
+    // they will have the most border edges.
+    matches
+        .values()
+        .filter(|ids| ids.len() == 1)
+        .map(|ids| ids.into_iter().next().unwrap())
+        .fold(HashMap::new(), |mut borders, tile_id| {
+            *borders.entry(*tile_id).or_insert(0) += 1;
+            borders
+        })
         .into_iter()
+        .sorted_by_key(|(_, count)| Reverse(*count))
         .take(4)
-        .map(|(tile_id, _)| tile_id)
-        .product()
+        .map(|(id, _)| id)
+        .collect()
 }
 
-pub fn part2(tiles: &Map<i64, Tile>) -> usize {
-    pick_and_place(adjacent_tiles(tiles));
-    0
+fn is_not_border(matches: &HashMap<Edge, HashSet<i64>>, edge: Edge) -> bool {
+    matches[&edge].len() + matches[&reversed(edge.clone())].len() > 2
+}
+
+fn is_match(a: Edge, b: Edge) -> bool {
+    a == b || a == reversed(b)
+}
+
+fn find_left_match(
+    tiles: &[Tile],
+    matches: &HashMap<Edge, HashSet<i64>>,
+    prev_tile: &Tile,
+) -> Tile {
+    let edge = prev_tile.right();
+    let id = *matches[&edge]
+        .iter()
+        .find(|&id| *id != prev_tile.id)
+        .unwrap();
+    let mut tile: Tile = tiles.iter().find(|tile| tile.id == id).unwrap().clone();
+    while !is_match(edge.clone(), tile.left()) {
+        tile.rotate();
+    }
+    if tile.left() != edge {
+        tile.flip_v();
+    }
+    tile
+}
+
+fn find_top_match(tiles: &[Tile], matches: &HashMap<Edge, HashSet<i64>>, prev_tile: &Tile) -> Tile {
+    let edge = prev_tile.bottom();
+    let id = *matches[&edge]
+        .iter()
+        .find(|&id| *id != prev_tile.id)
+        .unwrap();
+    let mut tile: Tile = tiles.iter().find(|tile| tile.id == id).unwrap().clone();
+    while !is_match(edge.clone(), tile.top()) {
+        tile.rotate();
+    }
+    if tile.top() != edge {
+        tile.flip_h();
+    }
+    tile
+}
+
+fn pick_and_place(tiles: &[Tile]) -> Image {
+    let matches = edge_matches(tiles);
+
+    // Start with a corner tile and rotate it until the border edges are on the
+    // left and top.
+    let corner_tile_id = find_corners(&matches)[0];
+    let mut corner_tile = tiles
+        .iter()
+        .find(|tile| tile.id == corner_tile_id)
+        .unwrap()
+        .clone();
+    while is_not_border(&matches, corner_tile.top()) || is_not_border(&matches, corner_tile.left())
+    {
+        corner_tile.rotate();
+    }
+
+    let dim = (tiles.len() as f64).sqrt() as usize;
+    let mut arranged = vec![vec![Tile::default(); dim]; dim];
+
+    // Place the corner tile.
+    arranged[0][0] = corner_tile;
+
+    // Place the rest of the first row, by comparing it to the tile on the left.
+    for col in 1..dim {
+        arranged[0][col] = find_left_match(tiles, &matches, &arranged[0][col - 1]);
+    }
+
+    // Place the rest of the rows, by comparing it to the row above.
+    for row in 1..dim {
+        for col in 0..dim {
+            arranged[row][col] = find_top_match(tiles, &matches, &arranged[row - 1][col]);
+        }
+    }
+
+    // Finally, construct the image
+    let cols = arranged[0][0].cols();
+    let rows = arranged[0][0].rows();
+    let mut image = Vec::new();
+
+    for tiles in arranged {
+        for row in 0..rows {
+            let mut pixels = Vec::new();
+            for tile in &tiles {
+                for col in 0..cols {
+                    pixels.push(tile.pixels[row][col]);
+                }
+            }
+            image.push(pixels);
+        }
+    }
+
+    image
+}
+
+pub fn part1(tiles: &[Tile]) -> i64 {
+    find_corners(&edge_matches(tiles)).into_iter().product()
+}
+
+pub fn part2(tiles: &[Tile]) -> usize {
+    let mut image = pick_and_place(tiles);
+
+    let rows = image.len() as i64;
+    let cols = image[0].len() as i64;
+
+
+
+    let monster = parse_map_set("                  #\n#    ##    ##    ###\n #  #  #  #  #  #");
+
+    // loop through the entire image
+    loop {
+        println!("here");
+
+        let image_set: HashSet<_> = image
+            .clone()
+            .into_iter()
+            .enumerate()
+            .flat_map(|(y, row)| {
+                row.into_iter()
+                    .enumerate()
+                    .filter_map(|(x, c)| match c {
+                        Pixel::White => Some(x),
+                        Pixel::Black => None,
+                    })
+                    .map(move |x| Vector::new([x as i64, y as i64]))
+            })
+            .collect();
+
+        let mut count = 0;
+        for x in 0..cols {
+            for y in 0..rows {
+                let to_check: HashSet<_> = monster.iter().map(|v| Vector::new([x, y]) + v).collect();
+                if to_check.is_subset(&image_set) {
+                    println!("{:#?}", image_set);
+                    count += 1;
+                }
+            }
+        }
+
+        if count > 0 {
+            return count;
+        } else {
+            let mut tile = Tile { id: 0, pixels: image };
+            tile.rotate();
+            image = tile.pixels;
+        }
+
+
+
+    }
+}
+
+#[test]
+fn example() {
+    let tile = Tile::parse(123, "###\n##.");
+    assert!(false);
 }
 
 #[test]
 fn default() {
     let input = default_input();
     assert_eq!(part1(&input), 5966506063747);
+    assert_eq!(part2(&input), 1714);
 }
