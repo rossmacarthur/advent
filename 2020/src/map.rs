@@ -1,6 +1,6 @@
 use std::collections::{HashMap, HashSet};
 
-use vector::i64::xy::Vector;
+use vector::i64::xy::{vector, Vector};
 
 pub fn parse_map<F, V>(input: &str, parse: F) -> HashMap<Vector, V>
 where
@@ -13,7 +13,7 @@ where
             line.chars()
                 .enumerate()
                 .map(|(x, c)| (x, parse(c)))
-                .map(move |(x, v)| (Vector::new([x as i64, y as i64]), v))
+                .map(move |(x, v)| (vector![x as i64, y as i64], v))
         })
         .collect()
 }

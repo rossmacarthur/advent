@@ -20,7 +20,7 @@ fn parse_input(s: &str) -> Vec<Vec<Vector>> {
                     "ne" => [1, 1],
                     d => panic!("unexpected direction `{}`", d),
                 })
-                .map(Vector::new)
+                .map(Vector::from)
                 .collect()
         })
         .collect()
@@ -34,7 +34,7 @@ fn neighbours(center: Vector) -> Vec<Vector> {
     [[2, 0], [1, -1], [-1, -1], [-2, 0], [-1, 1], [1, 1]]
         .iter()
         .copied()
-        .map(Vector::new)
+        .map(Vector::from)
         .map(|direction| center + direction)
         .collect()
 }

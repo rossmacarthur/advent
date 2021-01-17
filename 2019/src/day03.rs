@@ -2,7 +2,7 @@ use std::collections::{HashMap, HashSet};
 
 use itertools::Itertools;
 use regex_macro::regex;
-use vector::i64::xy::Vector;
+use vector::i64::xy::{vector, Vector};
 
 const INPUT: &str = include_str!("input/day03.txt");
 
@@ -17,10 +17,10 @@ fn parse_input(input: &str) -> (Path, Path) {
                 .map(|caps| {
                     let length: i64 = caps[2].parse().unwrap();
                     let direction = match &caps[1] {
-                        "L" => Vector::new([-1, 0]),
-                        "R" => Vector::new([1, 0]),
-                        "D" => Vector::new([0, -1]),
-                        "U" => Vector::new([0, 1]),
+                        "L" => vector![-1, 0],
+                        "R" => vector![1, 0],
+                        "D" => vector![0, -1],
+                        "U" => vector![0, 1],
                         _ => unreachable!(),
                     };
                     (direction, length)

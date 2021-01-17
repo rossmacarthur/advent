@@ -756,14 +756,28 @@ checksum = "f1bddf1187be692e79c5ffeab891132dfb0f236ed36a43c7ed39f1165ee20191"
 name = "vector"
 version = "0.1.0"
 dependencies = [
- "vectrs",
+ "vectrix",
 ]
 
 [[package]]
-name = "vectrs"
-version = "0.0.6"
+name = "vectrix"
+version = "0.1.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "d0b67b71a66944dbf333c5def7ad682a4b4ffe69cf614d9132620e7ed01c5d58"
+checksum = "9c318216bddf5018a73a487475986c2a9c480b2d433c829f962e8d027ac08c5f"
+dependencies = [
+ "vectrix-macro",
+]
+
+[[package]]
+name = "vectrix-macro"
+version = "0.1.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "800e821bf0ec6cd2da5d4b9cf39bf8c1b997456495e637dabdeec58d18a534db"
+dependencies = [
+ "proc-macro2 1.0.24",
+ "quote 1.0.8",
+ "syn 1.0.55",
+]
 
 [[package]]
 name = "version_check"

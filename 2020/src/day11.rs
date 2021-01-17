@@ -1,20 +1,20 @@
 use std::collections::HashMap;
 
-use vector::i64::xy::Vector;
+use vector::i64::xy::{vector, Vector};
 
 use crate::map::parse_map;
 
 const INPUT: &str = include_str!("input/day11.txt");
 
 const DIRECTIONS: [Vector; 8] = [
-    Vector::new([-1, -1]),
-    Vector::new([-1, 0]),
-    Vector::new([-1, 1]),
-    Vector::new([0, -1]),
-    Vector::new([0, 1]),
-    Vector::new([1, -1]),
-    Vector::new([1, 0]),
-    Vector::new([1, 1]),
+    vector![-1, -1],
+    vector![-1, 0],
+    vector![-1, 1],
+    vector![0, -1],
+    vector![0, 1],
+    vector![1, -1],
+    vector![1, 0],
+    vector![1, 1],
 ];
 
 #[derive(Debug, Clone, Copy, PartialEq)]

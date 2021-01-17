@@ -15,10 +15,17 @@ pub fn default_input() -> HashSet<Vector<2>> {
 }
 
 fn neighbours<const N: usize>(center: Vector<N>) -> Vec<Vector<N>> {
-    iter::repeat([-1, 0, 1].iter())
+    iter::repeat([-1, 0, 1].iter().copied())
         .take(N)
         .multi_cartesian_product()
-        .map(|v| v.into_iter().copied().collect())
+        .map(|v| {
+            assert_eq!(v.len(), N);
+            let mut vector = Vector::default();
+            for i in 0..N {
+                vector[i] = v[i]
+            }
+            vector
+        })
         .filter(|&v| v != Vector::zero())
         .map(|dv: Vector<N>| center + dv)
         .collect()
@@ -50,7 +57,16 @@ fn next_state<const N: usize>(state: State<N>) -> State<N> {
 }
 
 fn solve<const N: usize>(input: &HashSet<Vector<2>>) -> usize {
-    let state = input.iter().copied().map(Vector::from_partial).collect();
+    let state = input
+        .iter()
+        .copied()
+        .map(|v| {
+            let mut vector = Vector::default();
+            vector[0] = v.x;
+            vector[1] = v.y;
+            vector
+        })
+        .collect();
     (0..6).fold(state, |state, _| next_state::<N>(state)).len()
 }
 
