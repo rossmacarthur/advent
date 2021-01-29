@@ -1,10 +1,9 @@
 use std::cmp::Reverse;
 use std::collections::{HashMap, HashSet};
-use std::fmt;
 
 use itertools::Itertools;
 use regex_macro::regex;
-use vector::i64::xy::Vector;
+use vector::i64::xy::vector;
 
 use crate::map::parse_map_set;
 
@@ -277,16 +276,16 @@ pub fn part2(tiles: &[Tile]) -> usize {
                         Pixel::White => Some(x),
                         Pixel::Black => None,
                     })
-                    .map(move |x| Vector::new([x as i64, y as i64]))
+                    .map(move |x| vector![x as i64, y as i64])
             })
             .collect();
 
         let mut count = 0;
         for x in 0..cols {
             for y in 0..rows {
-                let to_check: HashSet<_> = monster.iter().map(|v| Vector::new([x, y]) + v).collect();
+                let to_check: HashSet<_> = monster.iter().map(|v| vector![x, y] + v).collect();
                 if to_check.is_subset(&image_set) {
-                    println!("{:#?}", image_set);
+                    println!("{:?}", image_set);
                     count += 1;
                 }
             }
