@@ -1,4 +1,4 @@
-use vector::i64::xy::{Vector, VectorExt};
+use vector::i64::xy::{vector, Vector, VectorExt};
 
 const INPUT: &str = include_str!("input/day12.txt");
 
@@ -17,10 +17,10 @@ pub fn default_input() -> Vec<Instruction> {
             let (op, value) = line.split_at(1);
             let value = value.parse().unwrap();
             match op {
-                "N" => Move(Vector::new([0, value])),
-                "S" => Move(Vector::new([0, -value])),
-                "E" => Move(Vector::new([value, 0])),
-                "W" => Move(Vector::new([-value, 0])),
+                "N" => Move(vector![0, value]),
+                "S" => Move(vector![0, -value]),
+                "E" => Move(vector![value, 0]),
+                "W" => Move(vector![-value, 0]),
                 "L" => Turn(value),
                 "R" => Turn(-value),
                 "F" => Forward(value),
@@ -32,7 +32,7 @@ pub fn default_input() -> Vec<Instruction> {
 
 pub fn part1(instrs: &[Instruction]) -> i64 {
     let mut ship = Vector::zero();
-    let mut direction = Vector::new([1, 0]);
+    let mut direction = vector![1, 0];
     for instr in instrs {
         match instr {
             Move(vector) => {
@@ -51,7 +51,7 @@ pub fn part1(instrs: &[Instruction]) -> i64 {
 
 pub fn part2(instrs: &[Instruction]) -> i64 {
     let mut ship = Vector::zero();
-    let mut direction = Vector::new([10, 1]);
+    let mut direction = vector![10, 1];
     for instr in instrs {
         match instr {
             Move(vector) => {

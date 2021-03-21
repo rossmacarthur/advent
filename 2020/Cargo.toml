@@ -6,17 +6,16 @@ edition = "2018"
 publish = false
 
 [dependencies]
-itertools = "0.9.0"
-once_cell = "1.5.2"
+itertools = "0.10.0"
+once_cell = "1.7.2"
 recap = "0.1.1"
-reduce = "0.1.3"
-regex = "1.4.2"
+regex = "1.4.5"
 regex-macro = "0.1.1"
-serde = { version = "1.0.118", features = ["derive"] }
+serde = { version = "1.0.124", features = ["derive"] }
 vector = { path = "../crates/vector" }
 
 [dev-dependencies]
-criterion = "0.3.3"
+criterion = "0.3.4"
 
 [[bench]]
 name = "main"

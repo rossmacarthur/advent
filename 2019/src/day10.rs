@@ -1,7 +1,7 @@
 use std::collections::{HashMap, HashSet};
 
 use itertools::Itertools;
-use vector::i64::xy::{Vector, VectorExt};
+use vector::i64::xy::{vector, Vector, VectorExt};
 
 const INPUT: &str = include_str!("input/day10.txt");
 
@@ -13,7 +13,7 @@ fn parse_input(input: &str) -> HashSet<Vector> {
             line.chars()
                 .enumerate()
                 .filter(|&(_, c)| c == '#')
-                .map(move |(x, _)| Vector::new([x as i64, y as i64]))
+                .map(move |(x, _)| vector![x as i64, y as i64])
         })
         .collect()
 }
@@ -58,7 +58,7 @@ pub fn part2(asteroids: &HashSet<Vector>) -> i64 {
         .map(|(vector, mut asteroids)| (vector.rotated(90).angle(), asteroids.remove(0).1))
         .sorted_by(|(angle1, _), (angle2, _)| angle1.partial_cmp(angle2).unwrap())
         .nth(199)
-        .map(|(_, asteroid)| asteroid.x() * 100 + asteroid.y())
+        .map(|(_, asteroid)| asteroid.x * 100 + asteroid.y)
         .unwrap()
 }
 

@@ -6,4 +6,4 @@ edition = "2018"
 publish = false
 
 [dependencies]
-vectrs = "0.0.6"
+vectrix = "0.1.2"

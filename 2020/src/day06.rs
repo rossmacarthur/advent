@@ -1,7 +1,5 @@
 use std::collections::HashSet;
 
-use reduce::Reduce;
-
 const INPUT: &str = include_str!("input/day06.txt");
 
 fn parse_input(input: &str) -> Vec<Vec<HashSet<char>>> {
