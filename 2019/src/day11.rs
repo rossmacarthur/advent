@@ -1,6 +1,6 @@
 use std::collections::BTreeMap;
 
-use vector::i64::xy::{Vector, VectorExt};
+use vector::i64::xy::{vector, Vector, VectorExt};
 
 use crate::day09::Computer;
 use crate::intcode::{parse_program, State};
@@ -62,7 +62,7 @@ fn paint(program: &[i64], color: Color) -> BTreeMap<Vector, Color> {
     let mut computer = Computer::new(program.to_vec());
     let mut map = BTreeMap::new();
     let mut position = Vector::zero();
-    let mut direction = Vector::new([0, 1]);
+    let mut direction = vector![0, 1];
     while let Some((color, turn)) =
         computer.next_color_and_turn(*map.get(&position).unwrap_or(&color))
     {
@@ -80,15 +80,15 @@ pub fn part1(program: &[i64]) -> usize {
 pub fn part2(program: &[i64]) -> String {
     let map = paint(program, White);
 
-    let min_x = map.keys().map(Vector::x).min().unwrap();
-    let max_x = map.keys().map(Vector::x).max().unwrap();
-    let min_y = map.keys().map(Vector::y).min().unwrap();
-    let max_y = map.keys().map(Vector::y).max().unwrap();
+    let min_x = map.keys().map(|v| v.x).min().unwrap();
+    let max_x = map.keys().map(|v| v.x).max().unwrap();
+    let min_y = map.keys().map(|v| v.y).min().unwrap();
+    let max_y = map.keys().map(|v| v.y).max().unwrap();
 
     let mut result = String::from('\n');
     for y in (min_y..=max_y).rev() {
         for x in min_x..=max_x {
-            result.push_str(match map.get(&Vector::new([x, y])) {
+            result.push_str(match map.get(&vector![x, y]) {
                 Some(Black) | None => "  ",
                 Some(White) => "██",
             })

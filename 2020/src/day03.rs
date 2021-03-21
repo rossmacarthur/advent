@@ -1,6 +1,6 @@
 use std::collections::HashSet;
 
-use vector::i64::xy::Vector;
+use vector::i64::xy::{vector, Vector};
 
 use crate::map::parse_map_set;
 
@@ -11,29 +11,29 @@ pub fn default_input() -> HashSet<Vector> {
 }
 
 fn count_trees_for_slope(map: &HashSet<Vector>, slope: Vector) -> usize {
-    let len_x = map.iter().map(Vector::x).max().unwrap() + 1;
-    let len_y = map.iter().map(Vector::y).max().unwrap() + 1;
+    let len_x = map.iter().map(|v| v.x).max().unwrap() + 1;
+    let len_y = map.iter().map(|v| v.y).max().unwrap() + 1;
     let mut trees = 0;
     let mut location = Vector::zero();
-    while location.y() < len_y {
+    while location.y < len_y {
         if map.contains(&location) {
             trees += 1;
         }
         location += slope;
-        *location.x_mut() %= len_x;
+        location.x %= len_x;
     }
     trees
 }
 
 pub fn part1(map: &HashSet<Vector>) -> usize {
-    count_trees_for_slope(map, Vector::new([3, 1]))
+    count_trees_for_slope(map, vector![3, 1])
 }
 
 pub fn part2(map: &HashSet<Vector>) -> usize {
     [[1, 1], [3, 1], [5, 1], [7, 1], [1, 2]]
         .iter()
         .copied()
-        .map(Vector::new)
+        .map(Vector::from)
         .map(|slope| count_trees_for_slope(map, slope))
         .product()
 }

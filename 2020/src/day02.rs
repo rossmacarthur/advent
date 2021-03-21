@@ -1,3 +1,5 @@
+#![allow(clippy::needless_question_mark)]
+
 use std::str::FromStr;
 
 use recap::Recap;
