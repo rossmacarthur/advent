@@ -12,7 +12,7 @@ recap = "0.1.1"
 regex = "1.4.5"
 regex-macro = "0.1.1"
 serde = { version = "1.0.124", features = ["derive"] }
-vector = { path = "../crates/vector" }
+vectrix = { path = "../crates/vectrix-ext" }
 
 [dev-dependencies]
 criterion = "0.3.4"
