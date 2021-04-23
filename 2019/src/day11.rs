@@ -1,11 +1,13 @@
 use std::collections::BTreeMap;
 
-use vector::i64::xy::{vector, Vector, VectorExt};
+use vectrix::{vector, Vector2, VectorExt};
 
 use crate::day09::Computer;
 use crate::intcode::{parse_program, State};
 
 const INPUT: &str = include_str!("input/day11.txt");
+
+type Vector = Vector2<i64>;
 
 pub fn default_input() -> Vec<i64> {
     parse_program(INPUT)

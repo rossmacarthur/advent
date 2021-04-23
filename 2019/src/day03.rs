@@ -2,10 +2,11 @@ use std::collections::{HashMap, HashSet};
 
 use itertools::Itertools;
 use regex_macro::regex;
-use vector::i64::xy::{vector, Vector};
+use vectrix::{vector, Vector2};
 
 const INPUT: &str = include_str!("input/day03.txt");
 
+type Vector = Vector2<i64>;
 type Path = Vec<(Vector, i64)>;
 
 fn parse_input(input: &str) -> (Path, Path) {

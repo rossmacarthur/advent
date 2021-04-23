@@ -1,6 +1,8 @@
-use vector::i64::xy::{vector, Vector, VectorExt};
+use vectrix::{vector, Vector2, VectorExt};
 
 const INPUT: &str = include_str!("input/day12.txt");
+
+type Vector = Vector2<i64>;
 
 pub enum Instruction {
     Move(Vector),

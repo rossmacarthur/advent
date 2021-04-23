@@ -1,8 +1,6 @@
 use std::collections::HashMap;
 
-use vector::i64::xy::{vector, Vector};
-
-use crate::map::parse_map;
+use vectrix::{parse_map, vector, Vector2};
 
 const INPUT: &str = include_str!("input/day11.txt");
 
@@ -24,8 +22,8 @@ pub enum Tile {
     OccupiedSeat,
 }
 
+type Vector = Vector2<i64>;
 type Grid = HashMap<Vector, Tile>;
-
 type Visible = HashMap<Vector, Vec<Vector>>;
 
 pub fn default_input() -> Grid {

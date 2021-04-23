@@ -1,10 +1,10 @@
 use std::collections::HashSet;
 
-use vector::i64::xy::{vector, Vector};
-
-use crate::map::parse_map_set;
+use vectrix::{parse_map_set, vector, Vector2};
 
 const INPUT: &str = include_str!("input/day03.txt");
+
+type Vector = Vector2<i64>;
 
 pub fn default_input() -> HashSet<Vector> {
     parse_map_set(INPUT)

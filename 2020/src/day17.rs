@@ -2,12 +2,11 @@ use std::collections::HashSet;
 use std::iter;
 
 use itertools::Itertools;
-use vector::i64::Vector;
-
-use crate::map::parse_map_set;
+use vectrix::parse_map_set;
 
 const INPUT: &str = include_str!("input/day17.txt");
 
+type Vector<const N: usize> = vectrix::Vector<i64, N>;
 type State<const N: usize> = HashSet<Vector<N>>;
 
 pub fn default_input() -> HashSet<Vector<2>> {

@@ -2,9 +2,11 @@ use std::collections::HashSet;
 
 use regex_macro::regex;
 
-use vector::i64::xy::Vector;
+use vectrix::Vector2;
 
 const INPUT: &str = include_str!("input/day24.txt");
+
+type Vector = Vector2<i64>;
 
 fn parse_input(s: &str) -> Vec<Vec<Vector>> {
     s.lines()
