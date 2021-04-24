@@ -1,16 +1,18 @@
+#[path = "09.rs"]
+#[allow(dead_code)]
+mod bin09;
+
 use std::collections::BTreeMap;
 
 use vectrix::{vector, Vector2, VectorExt};
 
-use crate::day09::Computer;
-use crate::intcode::{parse_program, State};
-
-const INPUT: &str = include_str!("input/11.txt");
+use bin09::intcode::{parse_program, State};
+use bin09::Computer;
 
 type Vector = Vector2<i64>;
 
-pub fn default_input() -> Vec<i64> {
-    parse_program(INPUT)
+fn default_input() -> Vec<i64> {
+    parse_program(include_str!("input/11.txt"))
 }
 
 #[derive(Debug, Clone, Copy)]
@@ -60,8 +62,8 @@ fn rotate(vector: Vector, turn: Turn) -> Vector {
     }
 }
 
-fn paint(program: &[i64], color: Color) -> BTreeMap<Vector, Color> {
-    let mut computer = Computer::new(program.to_vec());
+fn paint(program: Vec<i64>, color: Color) -> BTreeMap<Vector, Color> {
+    let mut computer = Computer::new(program);
     let mut map = BTreeMap::new();
     let mut position = Vector::zero();
     let mut direction = vector![0, 1];
@@ -75,11 +77,11 @@ fn paint(program: &[i64], color: Color) -> BTreeMap<Vector, Color> {
     map
 }
 
-pub fn part1(program: &[i64]) -> usize {
+fn part1(program: Vec<i64>) -> usize {
     paint(program, Black).len()
 }
 
-pub fn part2(program: &[i64]) -> String {
+fn part2(program: Vec<i64>) -> String {
     let map = paint(program, White);
 
     let min_x = map.keys().map(|v| v.x).min().unwrap();
@@ -98,4 +100,18 @@ pub fn part2(program: &[i64]) -> String {
         result.push('\n');
     }
     result
+}
+
+fn main() {
+    let mut run = advent::start();
+    let input = run.time("Parse input", default_input());
+    run.result("Part 1", part1(input.clone()));
+    run.result("Part 2", part2(input));
+    run.finish();
+}
+
+#[test]
+fn default() {
+    let input = default_input();
+    assert_eq!(part1(input), 1930);
 }
