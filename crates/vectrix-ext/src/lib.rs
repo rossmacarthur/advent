@@ -1,19 +1,10 @@
 use std::collections::{HashMap, HashSet};
 
+use math::gcd;
 pub use vectrix::*;
 
 pub type Vector2<T> = vectrix::Vector<T, 2>;
 pub type Vector3<T> = vectrix::Vector<T, 3>;
-
-/// Returns the greatest common divisor of two numbers.
-fn gcd(mut x: i64, mut y: i64) -> i64 {
-    while x != 0 {
-        let tmp = x;
-        x = y % tmp;
-        y = tmp;
-    }
-    y.abs()
-}
 
 pub trait VectorExt {
     fn reduced(self) -> Self;

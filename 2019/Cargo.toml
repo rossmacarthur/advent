@@ -7,5 +7,6 @@ publish = false
 
 [dependencies]
 itertools = "0.10.0"
+math = { path = "../crates/math" }
 regex-macro = "0.1.1"
 vectrix = { path = "../crates/vectrix-ext" }

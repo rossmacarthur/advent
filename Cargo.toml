@@ -15,4 +15,4 @@ advent-2020 = { path = "2020" }
 clap = { version = "3.0.0-beta.2", default-features = false, features = ["derive", "std"] }
 
 [workspace]
-members = ["2019", "2020", "crates/vectrix-ext"]
+members = ["2019", "2020", "crates/math", "crates/vectrix-ext"]
