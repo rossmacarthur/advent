@@ -37,7 +37,8 @@ fn main() {
         (2019, Some(8)) => run!(advent_2019::day08),
         (2019, Some(9)) => run!(advent_2019::day09),
         (2019, Some(10)) => run!(advent_2019::day10),
-        (2019, Some(11)) | (2019, None) => run!(advent_2019::day11),
+        (2019, Some(11)) => run!(advent_2019::day11),
+        (2019, Some(12)) | (2019, None) => run!(advent_2019::day12),
 
         (2020, Some(1)) => run!(advent_2020::day01),
         (2020, Some(2)) => run!(advent_2020::day02),

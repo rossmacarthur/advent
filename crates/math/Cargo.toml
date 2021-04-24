@@ -1,10 +1,6 @@
 [package]
-name = "vectrix"
+name = "math"
 version = "0.0.0"
 authors = ["Ross MacArthur <ross@macarthur.io>"]
 edition = "2018"
 publish = false
-
-[dependencies]
-math = { path = "../math"}
-vectrix = "0.1.3"
