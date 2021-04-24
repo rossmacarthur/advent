@@ -1,6 +1,6 @@
 [package]
-name = "advent"
-version = "0.1.0"
+name = "root"
+version = "0.0.0"
 authors = ["Ross MacArthur <ross@macarthur.io>"]
 edition = "2018"
 publish = false
@@ -10,9 +10,16 @@ name = "advent"
 path = "main.rs"
 
 [dependencies]
+advent = { path = "crates/advent" }
 advent-2019 = { path = "2019" }
 advent-2020 = { path = "2020" }
 clap = { version = "3.0.0-beta.2", default-features = false, features = ["derive", "std"] }
 
 [workspace]
-members = ["2019", "2020", "crates/math", "crates/vectrix-ext"]
+members = [
+    "2019",
+    "2020",
+    "crates/advent",
+    "crates/math",
+    "crates/vectrix-ext"
+]
