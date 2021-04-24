@@ -1,7 +1,9 @@
-const INPUT: &str = include_str!("input/01.txt");
-
-pub fn default_input() -> Vec<u64> {
-    INPUT.lines().map(str::parse).map(Result::unwrap).collect()
+fn default_input() -> Vec<u64> {
+    include_str!("input/01.txt")
+        .lines()
+        .map(str::parse)
+        .map(Result::unwrap)
+        .collect()
 }
 
 fn fuel_for_mass(mass: u64) -> u64 {
@@ -13,12 +15,20 @@ fn fuel_for_mass(mass: u64) -> u64 {
     }
 }
 
-pub fn part1(masses: &[u64]) -> u64 {
+fn part1(masses: &[u64]) -> u64 {
     masses.iter().map(|mass| (mass / 3) - 2).sum()
 }
 
-pub fn part2(masses: &[u64]) -> u64 {
+fn part2(masses: &[u64]) -> u64 {
     masses.iter().copied().map(fuel_for_mass).sum()
+}
+
+fn main() {
+    let mut run = advent::start();
+    let input = run.time("Parse input", default_input());
+    run.result("Part 1", part1(&input));
+    run.result("Part 2", part2(&input));
+    run.finish();
 }
 
 #[test]
