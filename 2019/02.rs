@@ -1,9 +1,9 @@
-use crate::intcode::parse_program;
+mod intcode;
 
-const INPUT: &str = include_str!("input/02.txt");
+use intcode::parse_program;
 
-pub fn default_input() -> Vec<usize> {
-    parse_program(INPUT)
+fn default_input() -> Vec<usize> {
+    parse_program(include_str!("input/02.txt"))
 }
 
 #[derive(Debug)]
@@ -56,11 +56,11 @@ fn run(input: &[usize], noun: usize, verb: usize) -> usize {
     computer.mem[0]
 }
 
-pub fn part1(input: &[usize]) -> usize {
+fn part1(input: &[usize]) -> usize {
     run(input, 12, 2)
 }
 
-pub fn part2(input: &[usize]) -> usize {
+fn part2(input: &[usize]) -> usize {
     for noun in 0..input.len() {
         for verb in 0..input.len() {
             if run(input, noun, verb) == 19690720 {
@@ -69,6 +69,14 @@ pub fn part2(input: &[usize]) -> usize {
         }
     }
     panic!("no valid noun and verb found")
+}
+
+fn main() {
+    let mut run = advent::start();
+    let input = run.time("Parse input", default_input());
+    run.result("Part 1", part1(&input));
+    run.result("Part 2", part2(&input));
+    run.finish();
 }
 
 #[test]
