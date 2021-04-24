@@ -1,25 +1,167 @@
 [package]
-name = "root"
+name = "advent-bins"
 version = "0.0.0"
 authors = ["Ross MacArthur <ross@macarthur.io>"]
 edition = "2018"
 publish = false
 
-[[bin]]
-name = "advent"
-path = "main.rs"
-
 [dependencies]
-advent = { path = "crates/advent" }
-advent-2019 = { path = "2019" }
-advent-2020 = { path = "2020" }
-clap = { version = "3.0.0-beta.2", default-features = false, features = ["derive", "std"] }
+itertools = "0.10.0"
+math = { path = "crates/math" }
+once_cell = "1.7.2"
+recap = "0.1.1"
+regex = "1.4.5"
+regex-macro = "0.1.1"
+serde = { version = "1.0.124", features = ["derive"] }
+vectrix = { path = "crates/vectrix-ext" }
 
 [workspace]
 members = [
-    "2019",
-    "2020",
     "crates/advent",
     "crates/math",
     "crates/vectrix-ext"
 ]
+
+[[bin]]
+name = "201901"
+path = "2019/01.rs"
+
+[[bin]]
+name = "201902"
+path = "2019/02.rs"
+
+[[bin]]
+name = "201903"
+path = "2019/03.rs"
+
+[[bin]]
+name = "201904"
+path = "2019/04.rs"
+
+[[bin]]
+name = "201905"
+path = "2019/05.rs"
+
+[[bin]]
+name = "201906"
+path = "2019/06.rs"
+
+[[bin]]
+name = "201907"
+path = "2019/07.rs"
+
+[[bin]]
+name = "201908"
+path = "2019/08.rs"
+
+[[bin]]
+name = "201909"
+path = "2019/09.rs"
+
+[[bin]]
+name = "201910"
+path = "2019/10.rs"
+
+[[bin]]
+name = "201911"
+path = "2019/11.rs"
+
+[[bin]]
+name = "201912"
+path = "2019/12.rs"
+
+[[bin]]
+name = "202001"
+path = "2020/01.rs"
+
+[[bin]]
+name = "202002"
+path = "2020/02.rs"
+
+[[bin]]
+name = "202003"
+path = "2020/03.rs"
+
+[[bin]]
+name = "202004"
+path = "2020/04.rs"
+
+[[bin]]
+name = "202005"
+path = "2020/05.rs"
+
+[[bin]]
+name = "202006"
+path = "2020/06.rs"
+
+[[bin]]
+name = "202007"
+path = "2020/07.rs"
+
+[[bin]]
+name = "202008"
+path = "2020/08.rs"
+
+[[bin]]
+name = "202009"
+path = "2020/09.rs"
+
+[[bin]]
+name = "202010"
+path = "2020/10.rs"
+
+[[bin]]
+name = "202011"
+path = "2020/11.rs"
+
+[[bin]]
+name = "202012"
+path = "2020/12.rs"
+
+[[bin]]
+name = "202013"
+path = "2020/13.rs"
+
+[[bin]]
+name = "202014"
+path = "2020/14.rs"
+
+[[bin]]
+name = "202015"
+path = "2020/15.rs"
+
+[[bin]]
+name = "202016"
+path = "2020/16.rs"
+
+[[bin]]
+name = "202017"
+path = "2020/17.rs"
+
+[[bin]]
+name = "202018"
+path = "2020/18.rs"
+
+[[bin]]
+name = "202019"
+path = "2020/19.rs"
+
+[[bin]]
+name = "202021"
+path = "2020/21.rs"
+
+[[bin]]
+name = "202022"
+path = "2020/22.rs"
+
+[[bin]]
+name = "202023"
+path = "2020/23.rs"
+
+[[bin]]
+name = "202024"
+path = "2020/24.rs"
+
+[[bin]]
+name = "202025"
+path = "2020/25.rs"
