@@ -51,7 +51,7 @@ impl Advent {
                 self.buckets[i - 1].instant
             };
             let timing = format!(
-                "(took {:.3}ms)",
+                "({:.3}ms)",
                 (b.instant - prev).as_nanos() as f64 / 1_000_000.0
             );
             match &b.result {
