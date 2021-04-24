@@ -1,27 +1,12 @@
 use std::collections::{HashMap, HashSet};
 
 use itertools::Itertools;
-use vectrix::{vector, Vector2, VectorExt};
-
-const INPUT: &str = include_str!("input/10.txt");
+use vectrix::{parse_map_set, Vector2, VectorExt};
 
 type Vector = Vector2<i64>;
 
-fn parse_input(input: &str) -> HashSet<Vector> {
-    input
-        .lines()
-        .enumerate()
-        .flat_map(|(y, line)| {
-            line.chars()
-                .enumerate()
-                .filter(|&(_, c)| c == '#')
-                .map(move |(x, _)| vector![x as i64, y as i64])
-        })
-        .collect()
-}
-
-pub fn default_input() -> HashSet<Vector> {
-    parse_input(INPUT)
+fn default_input() -> HashSet<Vector> {
+    parse_map_set(include_str!("input/10.txt"))
 }
 
 fn visible(asteroids: &HashSet<Vector>, center: Vector) -> HashMap<Vector, Vec<(i64, Vector)>> {
@@ -39,7 +24,7 @@ fn visible(asteroids: &HashSet<Vector>, center: Vector) -> HashMap<Vector, Vec<(
     visible
 }
 
-pub fn part1(asteroids: &HashSet<Vector>) -> usize {
+fn part1(asteroids: &HashSet<Vector>) -> usize {
     asteroids
         .iter()
         .copied()
@@ -48,7 +33,7 @@ pub fn part1(asteroids: &HashSet<Vector>) -> usize {
         .unwrap()
 }
 
-pub fn part2(asteroids: &HashSet<Vector>) -> i64 {
+fn part2(asteroids: &HashSet<Vector>) -> i64 {
     asteroids
         .iter()
         .copied()
@@ -64,9 +49,17 @@ pub fn part2(asteroids: &HashSet<Vector>) -> i64 {
         .unwrap()
 }
 
+fn main() {
+    let mut run = advent::start();
+    let input = run.time("Parse input", default_input());
+    run.result("Part 1", part1(&input));
+    run.result("Part 2", part2(&input));
+    run.finish();
+}
+
 #[test]
 fn example1() {
-    let input = parse_input(
+    let input = parse_map_set(
         r#".#..#
 .....
 #####
@@ -78,7 +71,7 @@ fn example1() {
 
 #[test]
 fn example2() {
-    let input = parse_input(
+    let input = parse_map_set(
         r#"......#.#.
 #..#.#....
 ..#######.
@@ -95,7 +88,7 @@ fn example2() {
 
 #[test]
 fn example3() {
-    let input = parse_input(
+    let input = parse_map_set(
         r#"#.#...#.#.
 .###....#.
 .#....#...
@@ -112,7 +105,7 @@ fn example3() {
 
 #[test]
 fn example4() {
-    let input = parse_input(
+    let input = parse_map_set(
         r#".#..#..###
 ####.###.#
 ....###.#.
@@ -129,7 +122,7 @@ fn example4() {
 
 #[test]
 fn example5() {
-    let input = parse_input(
+    let input = parse_map_set(
         r#".#..##.###...#######
 ##.############..##.
 .#.######.########.#
@@ -153,4 +146,11 @@ fn example5() {
     );
     assert_eq!(part1(&input), 210);
     assert_eq!(part2(&input), 802);
+}
+
+#[test]
+fn default() {
+    let input = default_input();
+    assert_eq!(part1(&input), 319);
+    assert_eq!(part2(&input), 517);
 }
