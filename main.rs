@@ -5,11 +5,11 @@ use clap::{AppSettings, Clap};
 macro_rules! run {
     ($path:path) => {{
         use $path::*;
-        let input = default_input();
-        let result = part1(&input);
-        println!("Part 1: {}", result);
-        let result = part2(&input);
-        println!("Part 2: {}", result);
+        let mut run = advent::start();
+        let input = run.time("Parse input", default_input());
+        run.result("Part 1", part1(&input));
+        run.result("Part 2", part2(&input));
+        run.finish();
     }};
 }
 
