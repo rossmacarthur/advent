@@ -4,8 +4,6 @@ use itertools::Itertools;
 use regex_macro::regex;
 use vectrix::{vector, Vector2};
 
-const INPUT: &str = include_str!("input/03.txt");
-
 type Vector = Vector2<i64>;
 type Path = Vec<(Vector, i64)>;
 
@@ -32,8 +30,8 @@ fn parse_input(input: &str) -> (Path, Path) {
         .unwrap()
 }
 
-pub fn default_input() -> (Path, Path) {
-    parse_input(INPUT)
+fn default_input() -> (Path, Path) {
+    parse_input(include_str!("input/03.txt"))
 }
 
 fn distances(path: &[(Vector, i64)]) -> HashMap<Vector, i64> {
@@ -54,7 +52,7 @@ fn keys(distances: &HashMap<Vector, i64>) -> HashSet<Vector> {
     distances.iter().map(|(k, _)| *k).collect()
 }
 
-pub fn part1((path1, path2): &(Path, Path)) -> i64 {
+fn part1((path1, path2): &(Path, Path)) -> i64 {
     keys(&distances(&path1))
         .intersection(&keys(&distances(&path2)))
         .map(Vector::l1_norm)
@@ -62,7 +60,7 @@ pub fn part1((path1, path2): &(Path, Path)) -> i64 {
         .unwrap()
 }
 
-pub fn part2((p1, p2): &(Path, Path)) -> i64 {
+fn part2((p1, p2): &(Path, Path)) -> i64 {
     let distances1 = distances(p1);
     let distances2 = distances(p2);
     keys(&distances1)
@@ -71,6 +69,14 @@ pub fn part2((p1, p2): &(Path, Path)) -> i64 {
         .map(|position| distances1[position] + distances2[position])
         .min()
         .unwrap()
+}
+
+fn main() {
+    let mut run = advent::start();
+    let input = run.time("Parse input", default_input());
+    run.result("Part 1", part1(&input));
+    run.result("Part 2", part2(&input));
+    run.finish();
 }
 
 #[test]
