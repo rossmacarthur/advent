@@ -1,9 +1,9 @@
-use crate::intcode::{cast, parse_program};
+mod intcode;
 
-const INPUT: &str = include_str!("input/05.txt");
+use intcode::{cast, parse_program};
 
-pub fn default_input() -> Vec<i64> {
-    parse_program(INPUT)
+fn default_input() -> Vec<i64> {
+    parse_program(include_str!("input/05.txt"))
 }
 
 #[derive(Debug)]
@@ -85,14 +85,41 @@ impl Computer {
                 opcode => panic!("unknown opcode `{}`", opcode),
             }
         }
-        output.unwrap()
+        output.expect("program has no output")
     }
 }
 
-pub fn part1(input: &[i64]) -> i64 {
-    Computer::new(input.to_vec()).run(1)
+fn part1(input: Vec<i64>) -> i64 {
+    Computer::new(input).run(1)
 }
 
-pub fn part2(input: &[i64]) -> i64 {
-    Computer::new(input.to_vec()).run(5)
+fn part2(input: Vec<i64>) -> i64 {
+    Computer::new(input).run(5)
+}
+
+fn main() {
+    let mut run = advent::start();
+    let input = run.time("Parse input", default_input());
+    run.result("Part 1", part1(input.clone()));
+    run.result("Part 2", part2(input));
+    run.finish();
+}
+
+#[test]
+fn example() {
+    let input = parse_program(
+        "3,21,1008,21,8,20,1005,20,22,107,8,21,20,1006,20,31,\
+         1106,0,36,98,0,0,1002,21,125,20,4,20,1105,1,46,104,\
+         999,1105,1,46,1101,1000,1,20,4,20,1105,1,46,98,99",
+    );
+    assert_eq!(Computer::new(input.clone()).run(7), 999);
+    assert_eq!(Computer::new(input.clone()).run(8), 1000);
+    assert_eq!(Computer::new(input).run(9), 1001);
+}
+
+#[test]
+fn default() {
+    let input = default_input();
+    assert_eq!(part1(input.clone()), 11933517);
+    assert_eq!(part2(input), 10428568);
 }
