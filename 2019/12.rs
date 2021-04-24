@@ -5,11 +5,6 @@ use vectrix::{vector, Vector3};
 
 type Vector = Vector3<i64>;
 
-const INPUT: &str = "<x=-1, y=-4, z=0>\n\
-                     <x=4, y=7, z=-1>\n\
-                     <x=-14, y=-10, z=9>\n\
-                     <x=1, y=2, z=17>\n";
-
 fn parse_input(input: &str) -> Vec<Moon> {
     regex!(r"<x=(-?\d+), y=(-?\d+), z=(-?\d+)>")
         .captures_iter(input)
@@ -25,12 +20,17 @@ fn parse_input(input: &str) -> Vec<Moon> {
         .collect()
 }
 
-pub fn default_input() -> Vec<Moon> {
-    parse_input(INPUT)
+fn default_input() -> Vec<Moon> {
+    parse_input(
+        "<x=-1, y=-4, z=0>
+        <x=4, y=7, z=-1>
+        <x=-14, y=-10, z=9>
+        <x=1, y=2, z=17>",
+    )
 }
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
-pub struct Moon {
+struct Moon {
     pos: Vector,
     vel: Vector,
 }
@@ -55,14 +55,6 @@ fn simulate(moons: &mut [Moon]) {
     for moon in moons.iter_mut() {
         moon.pos += moon.vel;
     }
-}
-
-/// Simulate a set of moons moving `n` times, and returns the energy.
-fn simulate_n_energy(mut moons: Vec<Moon>, n: usize) -> i64 {
-    for _ in 0..n {
-        simulate(&mut moons);
-    }
-    moons.iter().map(Moon::energy).sum()
 }
 
 /// Simulate a set of moons on the given axis only.
@@ -91,38 +83,55 @@ fn simulate_axis_until_repeat(moons: &mut [Moon], d: usize) -> i64 {
     unreachable!()
 }
 
-pub fn part1(moons: &[Moon]) -> i64 {
-    simulate_n_energy(moons.to_vec(), 1000)
+fn part1(mut moons: Vec<Moon>, n: usize) -> i64 {
+    for _ in 0..n {
+        simulate(&mut moons);
+    }
+    moons.iter().map(Moon::energy).sum()
 }
 
-pub fn part2(moons: &[Moon]) -> i64 {
-    let mut moons = moons.to_vec();
+fn part2(mut moons: Vec<Moon>) -> i64 {
     let x = simulate_axis_until_repeat(&mut moons, 0);
     let y = simulate_axis_until_repeat(&mut moons, 1);
     let z = simulate_axis_until_repeat(&mut moons, 2);
     lcm(x, lcm(y, z))
 }
 
+fn main() {
+    let mut run = advent::start();
+    let input = run.time("Parse input", default_input());
+    run.result("Part 1", part1(input.clone(), 1000));
+    run.result("Part 2", part2(input));
+    run.finish();
+}
+
 #[test]
 fn example1() {
     let input = parse_input(
-        "<x=-1, y=0, z=2>\n\
-         <x=2, y=-10, z=-7>\n\
-         <x=4, y=-8, z=8>\n\
-         <x=3, y=5, z=-1>\n",
+        "<x=-1, y=0, z=2>
+         <x=2, y=-10, z=-7>
+         <x=4, y=-8, z=8>
+         <x=3, y=5, z=-1>",
     );
-    assert_eq!(simulate_n_energy(input.clone(), 10), 179);
-    assert_eq!(part2(&input), 2772);
+    assert_eq!(part1(input.clone(), 10), 179);
+    assert_eq!(part2(input), 2772);
 }
 
 #[test]
 fn example2() {
     let input = parse_input(
-        "<x=-8, y=-10, z=0>\n\
-         <x=5, y=5, z=10>\n\
-         <x=2, y=-7, z=3>\n\
-         <x=9, y=-8, z=-3>\n",
+        "<x=-8, y=-10, z=0>
+         <x=5, y=5, z=10>
+         <x=2, y=-7, z=3>
+         <x=9, y=-8, z=-3>",
     );
-    assert_eq!(simulate_n_energy(input.clone(), 100), 1940);
-    assert_eq!(part2(&input), 4686774924);
+    assert_eq!(part1(input.clone(), 100), 1940);
+    assert_eq!(part2(input), 4686774924);
+}
+
+#[test]
+fn default() {
+    let input = default_input();
+    assert_eq!(part1(input.clone(), 1000), 7988);
+    assert_eq!(part2(input), 337721412394184);
 }
