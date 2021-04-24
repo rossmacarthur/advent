@@ -1,13 +1,11 @@
-#[path = "09.rs"]
-#[allow(dead_code)]
-mod bin09;
+mod computer;
+mod intcode;
 
 use std::collections::BTreeMap;
 
 use vectrix::{vector, Vector2, VectorExt};
 
-use bin09::intcode::{parse_program, State};
-use bin09::Computer;
+use computer::{parse_program, Computer, State};
 
 type Vector = Vector2<i64>;
 
@@ -32,7 +30,7 @@ use Turn::*;
 
 impl Computer {
     fn next_turn(&mut self, input: i64) -> Turn {
-        match self.next(input).unwrap() {
+        match self.next(Some(input)).unwrap() {
             0 => Left,
             1 => Right,
             turn => panic!("invalid turn `{}`", turn),
@@ -40,7 +38,7 @@ impl Computer {
     }
 
     fn next_color(&mut self, input: i64) -> Option<Color> {
-        match self.next(input) {
+        match self.next(Some(input)) {
             State::Complete => None,
             State::Yielded(0) => Some(Black),
             State::Yielded(1) => Some(White),
