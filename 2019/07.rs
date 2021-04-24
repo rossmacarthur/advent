@@ -1,11 +1,11 @@
+mod intcode;
+
 use itertools::Itertools;
 
-use crate::intcode::{cast, parse_program, State};
+use intcode::{cast, parse_program, State};
 
-const INPUT: &str = include_str!("input/07.txt");
-
-pub fn default_input() -> Vec<i64> {
-    parse_program(INPUT)
+fn default_input() -> Vec<i64> {
+    parse_program(include_str!("input/07.txt"))
 }
 
 #[derive(Debug)]
@@ -95,22 +95,22 @@ impl Computer {
     }
 }
 
-fn make_computers(input: &[i64], phases: &[i64]) -> Vec<Computer> {
+fn make_computers(input: Vec<i64>, phases: &[i64]) -> Vec<Computer> {
     phases
         .iter()
         .map(|&phase| {
-            let mut computer = Computer::new(input.to_vec());
+            let mut computer = Computer::new(input.clone());
             assert!(matches!(computer.next(phase), State::Waiting));
             computer
         })
         .collect()
 }
 
-pub fn part1(input: &[i64]) -> i64 {
+fn part1(input: Vec<i64>) -> i64 {
     (0..=4)
         .permutations(5)
         .map(|phases| {
-            let mut computers = make_computers(input, &phases);
+            let mut computers = make_computers(input.clone(), &phases);
             let mut signal = 0;
             for computer in computers.iter_mut() {
                 signal = match computer.next(signal) {
@@ -124,11 +124,11 @@ pub fn part1(input: &[i64]) -> i64 {
         .unwrap()
 }
 
-pub fn part2(input: &[i64]) -> i64 {
+fn part2(input: Vec<i64>) -> i64 {
     (5..=9)
         .permutations(5)
         .map(|phases| {
-            let mut computers = make_computers(input, &phases);
+            let mut computers = make_computers(input.clone(), &phases);
             let mut signal = 0;
             loop {
                 for computer in computers.iter_mut() {
@@ -142,4 +142,53 @@ pub fn part2(input: &[i64]) -> i64 {
         })
         .max()
         .unwrap()
+}
+
+fn main() {
+    let mut run = advent::start();
+    let input = run.time("Parse input", default_input());
+    run.result("Part 1", part1(input.clone()));
+    run.result("Part 2", part2(input));
+    run.finish();
+}
+
+#[test]
+fn example1() {
+    let input = parse_program("3,15,3,16,1002,16,10,16,1,16,15,15,4,15,99,0,0");
+    assert_eq!(part1(input), 43210);
+
+    let input = parse_program(
+        "3,23,3,24,1002,24,10,24,1002,23,-1,\
+        23,101,5,23,23,1,24,23,23,4,23,99,0,0",
+    );
+    assert_eq!(part1(input), 54321);
+
+    let input = parse_program(
+        "3,31,3,32,1002,32,10,32,1001,31,-2,31,1007,31,0,33,\
+         1002,33,7,33,1,33,31,31,1,32,31,31,4,31,99,0,0,0",
+    );
+    assert_eq!(part1(input), 65210);
+}
+
+#[test]
+fn example2() {
+    let input = parse_program(
+        "3,26,1001,26,-4,26,3,27,1002,27,2,27,1,27,26,\
+         27,4,27,1001,28,-1,28,1005,28,6,99,0,0,5",
+    );
+    assert_eq!(part2(input), 139629729);
+
+    let input = parse_program(
+        "3,52,1001,52,-5,52,3,53,1,52,56,54,1007,54,5,55,1005,55,26,1001,54,\
+         -5,54,1105,1,12,1,53,54,53,1008,54,0,55,1001,55,1,55,2,53,55,53,4,\
+         53,1001,56,-1,56,1005,56,6,99,0,0,0,0,10",
+    );
+    assert_eq!(part2(input), 18216);
+}
+
+#[test]
+fn default() {
+    let input = default_input();
+    assert_eq!(part1(input.clone()), 225056);
+    assert_eq!(part2(input), 14260332);
 }
