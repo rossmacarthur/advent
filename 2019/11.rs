@@ -29,27 +29,19 @@ use Color::*;
 use Turn::*;
 
 impl Computer {
-    fn next_turn(&mut self, input: i64) -> Turn {
-        match self.next(Some(input)).unwrap() {
-            0 => Left,
-            1 => Right,
-            turn => panic!("invalid turn `{}`", turn),
-        }
-    }
-
-    fn next_color(&mut self, input: i64) -> Option<Color> {
-        match self.next(Some(input)) {
-            State::Complete => None,
-            State::Yielded(0) => Some(Black),
-            State::Yielded(1) => Some(White),
-            state => panic!("unexpected state `{:?}`", state),
-        }
-    }
-
     fn next_color_and_turn(&mut self, color: Color) -> Option<(Color, Turn)> {
         let input = color as i64;
-        self.next_color(input)
-            .map(|color| (color, self.next_turn(input)))
+        let color = self.next_value(Some(input)).map(|v| match v {
+            0 => Black,
+            1 => White,
+            c => panic!("invalid color `{}`", c),
+        })?;
+        let turn = self.next_value(Some(input)).map(|v| match v {
+            0 => Left,
+            1 => Right,
+            t => panic!("invalid turn `{}`", t),
+        })?;
+        Some((color, turn))
     }
 }
 
