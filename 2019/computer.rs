@@ -1,5 +1,7 @@
 //! The latest and greatest intcode computer.
 
+#![allow(dead_code)]
+
 use std::cmp::max;
 
 pub use super::intcode::*;
@@ -101,6 +103,14 @@ impl Computer {
                 99 => break State::Complete,
                 opcode => panic!("unknown opcode `{}`", opcode),
             }
+        }
+    }
+
+    pub fn next_value(&mut self, input: Option<i64>) -> Option<i64> {
+        match self.next(input) {
+            State::Yielded(v) => Some(v),
+            State::Complete => None,
+            state => panic!("unexpected state `{:?}`", state),
         }
     }
 }
