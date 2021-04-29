@@ -1,7 +1,5 @@
 use itertools::Itertools;
 
-const INPUT: &str = include_str!("input/05.txt");
-
 fn parse_input(input: &str) -> Vec<u64> {
     input
         .lines()
@@ -21,15 +19,15 @@ fn parse_input(input: &str) -> Vec<u64> {
         .collect()
 }
 
-pub fn default_input() -> Vec<u64> {
-    parse_input(INPUT)
+fn default_input() -> Vec<u64> {
+    parse_input(include_str!("input/05.txt"))
 }
 
-pub fn part1(input: &[u64]) -> u64 {
+fn part1(input: &[u64]) -> u64 {
     input.iter().max().copied().unwrap()
 }
 
-pub fn part2(input: &[u64]) -> u64 {
+fn part2(input: &[u64]) -> u64 {
     let mut ids = input.to_vec();
     ids.sort_unstable();
     for (curr, next) in ids.iter().tuple_windows() {
@@ -38,6 +36,14 @@ pub fn part2(input: &[u64]) -> u64 {
         }
     }
     unreachable!()
+}
+
+fn main() {
+    let input = default_input();
+    let mut run = advent::start();
+    run.part(|| part1(&input));
+    run.part(|| part2(&input));
+    run.finish();
 }
 
 #[test]
