@@ -1,33 +1,32 @@
-#![allow(clippy::needless_question_mark)]
+use regex_macro::regex;
 
-use std::str::FromStr;
+fn parse_input(s: &str) -> Vec<Element> {
+    regex!(r"(?P<lower>\d+)-(?P<upper>\d+)\s(?P<letter>.):\s(?P<password>.*)")
+        .captures_iter(s)
+        .map(|caps| {
+            let lower = caps["lower"].parse().unwrap();
+            let upper = caps["upper"].parse().unwrap();
+            let letter = caps["letter"].parse().unwrap();
+            let password = caps["password"].to_owned();
+            Element {
+                lower, upper, letter, password
+            }
+        })
+        .collect()
+}
 
-use recap::Recap;
-use serde::Deserialize;
+fn default_input() -> Vec<Element> {
+    parse_input(include_str!("input/02.txt"))
+}
 
-const INPUT: &str = include_str!("input/02.txt");
-
-#[derive(Debug, Deserialize, Recap)]
-#[recap(regex = r"(?P<lower>\d+)-(?P<upper>\d+)\s(?P<letter>.):\s(?P<password>.*)")]
-pub struct Element {
+struct Element {
     lower: usize,
     upper: usize,
     letter: char,
     password: String,
 }
 
-fn parse_input(s: &str) -> Vec<Element> {
-    s.lines()
-        .map(FromStr::from_str)
-        .map(Result::unwrap)
-        .collect()
-}
-
-pub fn default_input() -> Vec<Element> {
-    parse_input(INPUT)
-}
-
-pub fn part1(elements: &[Element]) -> usize {
+fn part1(elements: &[Element]) -> usize {
     elements
         .iter()
         .filter(|e| {
@@ -37,7 +36,7 @@ pub fn part1(elements: &[Element]) -> usize {
         .count()
 }
 
-pub fn part2(elements: &[Element]) -> usize {
+fn part2(elements: &[Element]) -> usize {
     elements
         .iter()
         .filter(|e| {
@@ -45,6 +44,14 @@ pub fn part2(elements: &[Element]) -> usize {
                 ^ (e.password.chars().nth(e.upper - 1).unwrap() == e.letter)
         })
         .count()
+}
+
+fn main() {
+    let input = default_input();
+    let mut run = advent::start();
+    run.part(|| part1(&input));
+    run.part(|| part2(&input));
+    run.finish();
 }
 
 #[test]
