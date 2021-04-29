@@ -2,12 +2,10 @@ use std::collections::HashSet;
 
 use vectrix::{parse_map_set, vector, Vector2};
 
-const INPUT: &str = include_str!("input/03.txt");
-
 type Vector = Vector2<i64>;
 
-pub fn default_input() -> HashSet<Vector> {
-    parse_map_set(INPUT)
+fn default_input() -> HashSet<Vector> {
+    parse_map_set(include_str!("input/03.txt"))
 }
 
 fn count_trees_for_slope(map: &HashSet<Vector>, slope: Vector) -> usize {
@@ -25,17 +23,25 @@ fn count_trees_for_slope(map: &HashSet<Vector>, slope: Vector) -> usize {
     trees
 }
 
-pub fn part1(map: &HashSet<Vector>) -> usize {
+fn part1(map: &HashSet<Vector>) -> usize {
     count_trees_for_slope(map, vector![3, 1])
 }
 
-pub fn part2(map: &HashSet<Vector>) -> usize {
+fn part2(map: &HashSet<Vector>) -> usize {
     [[1, 1], [3, 1], [5, 1], [7, 1], [1, 2]]
         .iter()
         .copied()
         .map(Vector::from)
         .map(|slope| count_trees_for_slope(map, slope))
         .product()
+}
+
+fn main() {
+    let input = default_input();
+    let mut run = advent::start();
+    run.part(|| part1(&input));
+    run.part(|| part2(&input));
+    run.finish();
 }
 
 #[test]
