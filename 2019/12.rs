@@ -98,10 +98,10 @@ fn part2(mut moons: Vec<Moon>) -> i64 {
 }
 
 fn main() {
+    let input = default_input();
     let mut run = advent::start();
-    let input = run.time("Parse input", default_input());
-    run.result("Part 1", part1(input.clone(), 1000));
-    run.result("Part 2", part2(input));
+    run.part(|| part1(input.clone(), 1000));
+    run.part(|| part2(input.clone()));
     run.finish();
 }
 

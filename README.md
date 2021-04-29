@@ -11,13 +11,19 @@ consists of the year and the day. For example, the following will run the
 solution for 2020 Day 7.
 
 ```
-cargo run --bin 202007
+cargo run --release --bin 202007
 ```
 
 Tests can be run in a similar way.
 
 ```
 cargo test --bin 202007
+```
+
+Benchmarks can be run by passing `--bench` to the binary.
+
+```
+cargo run --release --bin 202007 -- --bench
 ```
 
 ## License
