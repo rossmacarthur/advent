@@ -1,11 +1,13 @@
 use std::cmp::Ordering::*;
 
-const INPUT: &str = include_str!("input/01.txt");
-
 const SUM: u64 = 2020;
 
-pub fn default_input() -> Vec<u64> {
-    INPUT.lines().map(str::parse).map(Result::unwrap).collect()
+fn default_input() -> Vec<u64> {
+    include_str!("input/01.txt")
+        .lines()
+        .map(str::parse)
+        .map(Result::unwrap)
+        .collect()
 }
 
 fn solve(numbers: &[u64], mut left: usize, c: u64) -> Option<u64> {
@@ -23,13 +25,13 @@ fn solve(numbers: &[u64], mut left: usize, c: u64) -> Option<u64> {
     None
 }
 
-pub fn part1(input: &[u64]) -> u64 {
+fn part1(input: &[u64]) -> u64 {
     let mut numbers = input.to_vec();
     numbers.sort_unstable();
     solve(&numbers, 0, 0).unwrap()
 }
 
-pub fn part2(input: &[u64]) -> u64 {
+fn part2(input: &[u64]) -> u64 {
     let mut numbers = input.to_vec();
     numbers.sort_unstable();
     for i in 0..numbers.len() - 2 {
@@ -41,9 +43,17 @@ pub fn part2(input: &[u64]) -> u64 {
     unreachable!()
 }
 
+fn main() {
+    let input = default_input();
+    let mut run = advent::start();
+    run.part(|| part1(&input));
+    run.part(|| part2(&input));
+    run.finish();
+}
+
 #[test]
 fn example() {
-    let input = [1721, 979, 366, 299, 675, 1456];
+    let input = vec![1721, 979, 366, 299, 675, 1456];
     assert_eq!(part1(&input), 514579);
     assert_eq!(part2(&input), 241861950);
 }
