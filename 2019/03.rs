@@ -72,10 +72,10 @@ fn part2((p1, p2): &(Path, Path)) -> i64 {
 }
 
 fn main() {
+    let input = default_input();
     let mut run = advent::start();
-    let input = run.time("Parse input", default_input());
-    run.result("Part 1", part1(&input));
-    run.result("Part 2", part2(&input));
+    run.part(|| part1(&input));
+    run.part(|| part2(&input));
     run.finish();
 }
 

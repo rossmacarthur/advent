@@ -47,10 +47,10 @@ fn part2(input: Range<u64>) -> usize {
 }
 
 fn main() {
-    let mut run = advent::start();
     let input = default_input();
-    run.result("Part 1", part1(input.clone()));
-    run.result("Part 2", part2(input));
+    let mut run = advent::start();
+    run.part(|| part1(input.clone()));
+    run.part(|| part2(input.clone()));
     run.finish();
 }
 
