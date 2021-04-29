@@ -1,8 +1,6 @@
 use itertools::Itertools;
 use regex_macro::regex;
 
-const INPUT: &str = include_str!("input/04.txt");
-
 fn parse_input(input: &str) -> Vec<String> {
     input
         .split("\n\n")
@@ -10,11 +8,11 @@ fn parse_input(input: &str) -> Vec<String> {
         .collect()
 }
 
-pub fn default_input() -> Vec<String> {
-    parse_input(INPUT)
+fn default_input() -> Vec<String> {
+    parse_input(include_str!("input/04.txt"))
 }
 
-pub fn part1(input: &[String]) -> usize {
+fn part1(input: &[String]) -> usize {
     let re = regex!(r"^byr:\S+ (cid:\S+ )?ecl:\S+ eyr:\S+ hcl:\S+ hgt:\S+ iyr:\S+ pid:\S+$");
     input
         .iter()
@@ -22,7 +20,7 @@ pub fn part1(input: &[String]) -> usize {
         .count()
 }
 
-pub fn part2(input: &[String]) -> usize {
+fn part2(input: &[String]) -> usize {
     let re = regex!(
         r"^byr:(19[2-9][0-9]|200[0-2]) (cid:\S+ )?ecl:(amb|blu|brn|gry|grn|hzl|oth) eyr:(202[0-9]|2030) hcl:#[0-9a-f]{6} hgt:((1[5-8][0-9]|19[0-3])cm|(59|6[0-9]|7[0-6])in) iyr:(201[0-9]|2020) pid:\d{9}$"
     );
@@ -30,6 +28,14 @@ pub fn part2(input: &[String]) -> usize {
         .iter()
         .filter(|passport| re.is_match(passport))
         .count()
+}
+
+fn main() {
+    let input = default_input();
+    let mut run = advent::start();
+    run.part(|| part1(&input));
+    run.part(|| part2(&input));
+    run.finish();
 }
 
 #[test]
