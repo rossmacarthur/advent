@@ -1,11 +1,10 @@
-mod computer;
 mod intcode;
 
 use std::iter;
 
 use vectrix::{vector, Vector2};
 
-use computer::{parse_program, Computer};
+use intcode::{parse_program, Computer};
 
 type Vector = Vector2<i64>;
 
