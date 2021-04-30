@@ -5,7 +5,8 @@ use regex_macro::regex;
 
 use itertools::Itertools;
 
-const INPUT: &str = include_str!("input/16.txt");
+type Ticket = Vec<u64>;
+type Input = (Vec<Rule>, Ticket, Vec<Ticket>);
 
 fn parse_tickets(lines: &str) -> impl Iterator<Item = Ticket> + '_ {
     lines
@@ -19,8 +20,8 @@ fn parse_tickets(lines: &str) -> impl Iterator<Item = Ticket> + '_ {
         })
 }
 
-pub fn default_input() -> Input {
-    let (rules, mine, nearby) = INPUT.split("\n\n").next_tuple().unwrap();
+fn parse_input(input: &str) -> Input {
+    let (rules, mine, nearby) = input.split("\n\n").next_tuple().unwrap();
     let rules = rules
         .lines()
         .map(|line| {
@@ -42,12 +43,12 @@ pub fn default_input() -> Input {
     (rules, my_ticket, nearby_tickets)
 }
 
-type Ticket = Vec<u64>;
-
-type Input = (Vec<Rule>, Ticket, Vec<Ticket>);
+fn default_input() -> Input {
+    parse_input(include_str!("input/16.txt"))
+}
 
 #[derive(Debug, Clone, PartialEq, Eq, Hash)]
-pub struct Rule {
+struct Rule {
     name: String,
     range: (RangeInclusive<u64>, RangeInclusive<u64>),
 }
@@ -62,7 +63,7 @@ impl Rule {
     }
 }
 
-pub fn part1(input: &Input) -> u64 {
+fn part1(input: &Input) -> u64 {
     let (rules, _, nearby_tickets) = input;
     nearby_tickets
         .iter()
@@ -74,7 +75,7 @@ pub fn part1(input: &Input) -> u64 {
         .sum()
 }
 
-pub fn part2(input: &Input) -> u64 {
+fn part2(input: &Input) -> u64 {
     let (rules, my_ticket, nearby_tickets) = input;
 
     let valid_tickets: Vec<_> = nearby_tickets
@@ -114,4 +115,39 @@ pub fn part2(input: &Input) -> u64 {
         }
     }
     result
+}
+
+fn main() {
+    let input = default_input();
+    let mut run = advent::start();
+    run.part(|| part1(&input));
+    run.part(|| part2(&input));
+    run.finish();
+}
+
+#[test]
+fn example() {
+    let input = parse_input(
+        "class: 1-3 or 5-7
+row: 6-11 or 33-44
+seat: 13-40 or 45-50
+
+your ticket:
+7,1,14
+
+nearby tickets:
+7,3,47
+40,4,50
+55,2,20
+38,6,12",
+    );
+    assert_eq!(part1(&input), 71);
+    assert_eq!(part2(&input), 1);
+}
+
+#[test]
+fn default() {
+    let input = default_input();
+    assert_eq!(part1(&input), 29019);
+    assert_eq!(part2(&input), 517827547723);
 }
