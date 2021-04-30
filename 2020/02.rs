@@ -9,7 +9,10 @@ fn parse_input(s: &str) -> Vec<Element> {
             let letter = caps["letter"].parse().unwrap();
             let password = caps["password"].to_owned();
             Element {
-                lower, upper, letter, password
+                lower,
+                upper,
+                letter,
+                password,
             }
         })
         .collect()

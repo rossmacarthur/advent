@@ -87,7 +87,6 @@ fn example() {
     assert_eq!(part2(&input), 286);
 }
 
-
 #[test]
 fn default() {
     let input = default_input();
