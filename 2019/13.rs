@@ -76,10 +76,10 @@ fn part2(mut program: Vec<i64>) -> i64 {
 }
 
 fn main() {
+    let input = default_input();
     let mut run = advent::start();
-    let input = run.time("Parse input", default_input());
     run.part(|| part1(input.clone()));
-    run.part(|| part2(input));
+    run.part(|| part2(input.clone()));
     run.finish();
 }
 
