@@ -147,7 +147,8 @@ fn main() {
 
 #[test]
 fn example() {
-    let input = parse_input(r#"
+    let input = parse_input(
+        r#"
 L.LL.LL.LL
 LLLLLLL.LL
 L.L.L..L..
@@ -157,11 +158,11 @@ L.LLLLL.LL
 ..L.L.....
 LLLLLLLLLL
 L.LLLLLL.L
-L.LLLLL.LL"#);
+L.LLLLL.LL"#,
+    );
     assert_eq!(part1(&input), 37);
     assert_eq!(part2(&input), 26);
 }
-
 
 #[test]
 fn default() {

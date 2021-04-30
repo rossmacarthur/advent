@@ -1,7 +1,11 @@
 use std::cmp::Ordering::*;
 
 fn parse_input(input: &str) -> Vec<u64> {
-    input.split_whitespace().map(str::parse).map(Result::unwrap).collect()
+    input
+        .split_whitespace()
+        .map(str::parse)
+        .map(Result::unwrap)
+        .collect()
 }
 
 fn default_input() -> Vec<u64> {
@@ -9,7 +13,8 @@ fn default_input() -> Vec<u64> {
 }
 
 fn part1(input: &[u64], size: usize) -> u64 {
-    input.windows(size + 1)
+    input
+        .windows(size + 1)
         .find(|window| {
             for i in 0..(size - 1) {
                 for j in (i + 1)..size {
@@ -33,8 +38,7 @@ fn part2(input: &[u64], invalid: u64) -> u64 {
             Less => j += 1,
             Greater => i += 1,
             Equal => {
-                return input[i..j].iter().max().unwrap()
-                    + input[i..j].iter().min().unwrap();
+                return input[i..j].iter().max().unwrap() + input[i..j].iter().min().unwrap();
             }
         }
     }
@@ -51,7 +55,8 @@ fn main() {
 
 #[test]
 fn example() {
-    let input = parse_input("35 20 15 25 47 40 62 55 65 95 102 117 150 182 127 219 299 277 309 576");
+    let input =
+        parse_input("35 20 15 25 47 40 62 55 65 95 102 117 150 182 127 219 299 277 309 576");
     assert_eq!(part1(&input, 5), 127);
     assert_eq!(part2(&input, 127), 62);
 }

@@ -1,7 +1,11 @@
 use itertools::Itertools;
 
 fn parse_input(input: &str) -> Vec<u64> {
-    let mut j: Vec<_> = input.split_whitespace().map(str::parse).map(Result::unwrap).collect();
+    let mut j: Vec<_> = input
+        .split_whitespace()
+        .map(str::parse)
+        .map(Result::unwrap)
+        .collect();
     j.insert(0, 0);
     j.sort_unstable();
     j.push(j.last().unwrap() + 3);
@@ -57,7 +61,7 @@ fn example1() {
 fn example2() {
     let input = parse_input(
         "28 33 18 42 31 14 46 20 48 47 24 23 49 45
-         19 38 39 11 1 32 25 35 8 17 7 9 4 2 34 10 3"
+         19 38 39 11 1 32 25 35 8 17 7 9 4 2 34 10 3",
     );
     assert_eq!(part1(&input), 220);
     assert_eq!(part2(&input), 19208);
