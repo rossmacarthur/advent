@@ -6,9 +6,9 @@ fn parse_input(s: &str) -> Vec<(Operation, i64)> {
             let (op, arg) = line.split_whitespace().next_tuple().unwrap();
             (
                 match op {
-                    "nop" => Self::Nop,
-                    "acc" => Self::Acc,
-                    "jmp" => Self::Jmp,
+                    "nop" => Operation::Nop,
+                    "acc" => Operation::Acc,
+                    "jmp" => Operation::Jmp,
                     op => panic!("unknown operation `{}`", op),
                 },
                 arg.parse().unwrap(),

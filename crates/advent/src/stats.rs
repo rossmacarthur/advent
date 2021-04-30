@@ -38,7 +38,7 @@ impl Stats for [f64] {
         assert!(zero <= pct);
         assert!(pct <= hundred);
 
-        if pct == hundred {
+        if (pct - hundred).abs() < f64::EPSILON {
             return self[self.len() - 1];
         } else if pct == 0.0 {
             return self[0];

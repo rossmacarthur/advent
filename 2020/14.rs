@@ -4,7 +4,7 @@ use itertools::Itertools;
 
 use Instruction::*;
 
-fn parse_input<'a>(input: &'a str) -> Vec<Instruction<'a>> {
+fn parse_input(input: &str) -> Vec<Instruction> {
     input
         .lines()
         .map(|line| match line.split(" = ").next_tuple().unwrap() {

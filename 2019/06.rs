@@ -5,7 +5,7 @@ use itertools::Itertools;
 
 type Orbits<'a> = HashMap<&'a str, &'a str>;
 
-fn parse_input<'a>(input: &'a str) -> Orbits<'a> {
+fn parse_input(input: &str) -> Orbits {
     input
         .lines()
         .map(|line| line.split(')').next_tuple().unwrap())
