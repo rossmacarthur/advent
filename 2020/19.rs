@@ -4,17 +4,6 @@ use itertools::Itertools;
 use once_cell::sync::Lazy;
 use regex::Regex;
 
-const INPUT: &str = include_str!("input/19.txt");
-static EIGHT: Lazy<Rule> = Lazy::new(|| parse_rule("42 | 42 8"));
-static ELEVEN: Lazy<Rule> = Lazy::new(|| parse_rule("42 31 | 42 11 31"));
-
-#[derive(Debug, Clone)]
-pub enum Rule {
-    Value(char),
-    And(Vec<u64>),
-    Or(Vec<u64>, Vec<u64>),
-}
-
 type Input<'a> = (HashMap<u64, Rule>, Vec<&'a str>);
 
 fn parse_rule_numbers(s: &str) -> Vec<u64> {
@@ -51,8 +40,18 @@ fn parse_input(input: &str) -> Input {
     )
 }
 
-pub fn default_input() -> Input<'static> {
-    parse_input(INPUT)
+fn default_input() -> Input<'static> {
+    parse_input(include_str!("input/19.txt"))
+}
+
+static EIGHT: Lazy<Rule> = Lazy::new(|| parse_rule("42 | 42 8"));
+static ELEVEN: Lazy<Rule> = Lazy::new(|| parse_rule("42 31 | 42 11 31"));
+
+#[derive(Debug, Clone)]
+enum Rule {
+    Value(char),
+    And(Vec<u64>),
+    Or(Vec<u64>, Vec<u64>),
 }
 
 fn make_regex(rules: &HashMap<u64, Rule>, rule: u64, mut recursion_count: u64) -> String {
@@ -99,12 +98,20 @@ fn count_matches(input: &Input, recursion_count: u64) -> usize {
         .count()
 }
 
-pub fn part1(input: &Input) -> usize {
+fn part1(input: &Input) -> usize {
     count_matches(input, 0)
 }
 
-pub fn part2(input: &Input) -> usize {
+fn part2(input: &Input) -> usize {
     count_matches(input, 5)
+}
+
+fn main() {
+    let input = default_input();
+    let mut run = advent::start();
+    run.part(|| part1(&input));
+    run.part(|| part2(&input));
+    run.finish();
 }
 
 #[test]
@@ -179,4 +186,11 @@ aabbbbbaabbbaaaaaabbbbbababaaaaabbaaabba"#,
     );
     assert_eq!(part1(&input), 3);
     assert_eq!(part2(&input), 12);
+}
+
+#[test]
+fn default() {
+    let input = default_input();
+    assert_eq!(part1(&input), 178);
+    assert_eq!(part2(&input), 346);
 }
