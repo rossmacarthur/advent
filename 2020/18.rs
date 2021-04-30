@@ -1,24 +1,8 @@
-const INPUT: &str = include_str!("input/18.txt");
-
-#[derive(Debug, Clone, Copy)]
-pub enum Operator {
-    Add,
-    Mul,
-}
-
-#[derive(Debug, Clone, Copy)]
-pub enum Token {
-    LeftPar,
-    RightPar,
-    Op(Operator),
-    Num(u64),
-}
-
 use Operator::*;
 use Token::*;
 
-pub fn default_input() -> Vec<Vec<Token>> {
-    INPUT
+fn parse_input(input: &str) -> Vec<Vec<Token>> {
+    input
         .lines()
         .map(|line| {
             line.replace("(", " ( ")
@@ -34,6 +18,24 @@ pub fn default_input() -> Vec<Vec<Token>> {
                 .collect()
         })
         .collect()
+}
+
+fn default_input() -> Vec<Vec<Token>> {
+    parse_input(include_str!("input/18.txt"))
+}
+
+#[derive(Debug, Clone, Copy)]
+enum Operator {
+    Add,
+    Mul,
+}
+
+#[derive(Debug, Clone, Copy)]
+enum Token {
+    LeftPar,
+    RightPar,
+    Op(Operator),
+    Num(u64),
 }
 
 fn find_right_par(expr: &[Token]) -> usize {
@@ -99,13 +101,44 @@ fn evaluate(expr: &[Token]) -> u64 {
     result
 }
 
-pub fn part1(input: &[Vec<Token>]) -> u64 {
+fn part1(input: &[Vec<Token>]) -> u64 {
     input.iter().map(|expr| evaluate(expr.as_slice())).sum()
 }
 
-pub fn part2(input: &[Vec<Token>]) -> u64 {
+fn part2(input: &[Vec<Token>]) -> u64 {
     input
         .iter()
         .map(|expr| evaluate(&parenthesize(expr.as_slice())))
         .sum()
+}
+
+fn main() {
+    let input = default_input();
+    let mut run = advent::start();
+    run.part(|| part1(&input));
+    run.part(|| part2(&input));
+    run.finish();
+}
+
+#[test]
+fn example() {
+    let test_cases = &[
+        ("1 + 2 * 3 + 4 * 5 + 6", 71, 231),
+        ("2 * 3 + (4 * 5)", 26, 46),
+        ("5 + (8 * 3 + 9 + 3 * 4 * 3)", 437, 1445),
+        ("5 * 9 * (7 * 3 * 3 + 9 * 3 + (8 + 6 * 4))", 12240, 669060),
+        ("((2 + 4 * 9) * (6 + 9 * 8 + 6) + 6) + 2 + 4 * 2", 13632, 23340),
+    ];
+    for &(input, r1, r2) in test_cases {
+        let input = parse_input(input);
+        assert_eq!(part1(&input), r1);
+        assert_eq!(part2(&input), r2);
+    }
+}
+
+#[test]
+fn default() {
+    let input = default_input();
+    assert_eq!(part1(&input), 7293529867931);
+    assert_eq!(part2(&input), 60807587180737);
 }
