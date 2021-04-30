@@ -2,7 +2,22 @@ use std::collections::HashMap;
 
 use vectrix::{parse_map, vector, Vector2};
 
-const INPUT: &str = include_str!("input/11.txt");
+type Vector = Vector2<i64>;
+type Grid = HashMap<Vector, Tile>;
+type Visible = HashMap<Vector, Vec<Vector>>;
+
+fn parse_input(input: &str) -> Grid {
+    parse_map(input, |c| match c {
+        '.' => Tile::Floor,
+        'L' => Tile::EmptySeat,
+        '#' => Tile::OccupiedSeat,
+        _ => panic!("unexpected character"),
+    })
+}
+
+fn default_input() -> Grid {
+    parse_input(include_str!("input/11.txt"))
+}
 
 const DIRECTIONS: [Vector; 8] = [
     vector![-1, -1],
@@ -16,23 +31,10 @@ const DIRECTIONS: [Vector; 8] = [
 ];
 
 #[derive(Debug, Clone, Copy, PartialEq)]
-pub enum Tile {
+enum Tile {
     Floor,
     EmptySeat,
     OccupiedSeat,
-}
-
-type Vector = Vector2<i64>;
-type Grid = HashMap<Vector, Tile>;
-type Visible = HashMap<Vector, Vec<Vector>>;
-
-pub fn default_input() -> Grid {
-    parse_map(INPUT, |c| match c {
-        '.' => Tile::Floor,
-        'L' => Tile::EmptySeat,
-        '#' => Tile::OccupiedSeat,
-        _ => panic!("unexpected character"),
-    })
 }
 
 /// Builds a visibility map from the grid.
@@ -82,7 +84,7 @@ fn visible_occupied(grid: &Grid, visible: &Visible, center: Vector) -> usize {
         .count()
 }
 
-pub fn part1(grid: &Grid) -> usize {
+fn part1(grid: &Grid) -> usize {
     let mut grid = grid.clone();
     loop {
         let mut next = grid.clone();
@@ -108,7 +110,7 @@ pub fn part1(grid: &Grid) -> usize {
     occupied(&grid)
 }
 
-pub fn part2(grid: &Grid) -> usize {
+fn part2(grid: &Grid) -> usize {
     let visible = visibility(grid);
     let mut grid = grid.clone();
     loop {
@@ -133,4 +135,37 @@ pub fn part2(grid: &Grid) -> usize {
         grid = next;
     }
     occupied(&grid)
+}
+
+fn main() {
+    let input = default_input();
+    let mut run = advent::start();
+    run.part(|| part1(&input));
+    run.part(|| part2(&input));
+    run.finish();
+}
+
+#[test]
+fn example() {
+    let input = parse_input(r#"
+L.LL.LL.LL
+LLLLLLL.LL
+L.L.L..L..
+LLLL.LL.LL
+L.LL.LL.LL
+L.LLLLL.LL
+..L.L.....
+LLLLLLLLLL
+L.LLLLLL.L
+L.LLLLL.LL"#);
+    assert_eq!(part1(&input), 37);
+    assert_eq!(part2(&input), 26);
+}
+
+
+#[test]
+fn default() {
+    let input = default_input();
+    assert_eq!(part1(&input), 2254);
+    assert_eq!(part2(&input), 2004);
 }
