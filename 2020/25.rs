@@ -1,9 +1,9 @@
-const MOD: u64 = 20201227;
-const SUBJECT: u64 = 7;
-
-pub fn default_input() -> (u64, u64) {
+fn default_input() -> (u64, u64) {
     (13316116, 13651422)
 }
+
+const MOD: u64 = 20201227;
+const SUBJECT: u64 = 7;
 
 fn transform(subject: u64, secret: u32) -> u64 {
     (0..secret).fold(1, |value, _| value * subject % MOD)
@@ -21,7 +21,7 @@ fn find_secret(public: u64) -> u32 {
     }
 }
 
-pub fn part1(input: &(u64, u64)) -> u64 {
+fn part1(input: &(u64, u64)) -> u64 {
     let &(card_public, door_public) = input;
     let card_secret = find_secret(card_public);
     let door_secret = find_secret(door_public);
@@ -31,8 +31,11 @@ pub fn part1(input: &(u64, u64)) -> u64 {
     card_encryption_key
 }
 
-pub fn part2(_: &(u64, u64)) -> &'static str {
-    "we gucci"
+fn main() {
+    let input = default_input();
+    let mut run = advent::start();
+    run.part(|| part1(&input));
+    run.finish();
 }
 
 #[test]
