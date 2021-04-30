@@ -2,15 +2,9 @@ use std::collections::{HashSet, VecDeque};
 
 use itertools::Itertools;
 
-const INPUT: &str = include_str!("input/22.txt");
+type Input = (VecDeque<usize>, VecDeque<usize>);
 
-#[derive(Debug, Clone, Copy)]
-enum Player {
-    One,
-    Two,
-}
-
-fn parse_player(s: &str) -> Vec<usize> {
+fn parse_player(s: &str) -> VecDeque<usize> {
     s.lines()
         .skip(1)
         .map(str::parse)
@@ -18,9 +12,18 @@ fn parse_player(s: &str) -> Vec<usize> {
         .collect()
 }
 
-pub fn default_input() -> (Vec<usize>, Vec<usize>) {
-    let (one, two) = INPUT.split("\n\n").next_tuple().unwrap();
+fn default_input() -> Input {
+    let (one, two) = include_str!("input/22.txt")
+        .split("\n\n")
+        .next_tuple()
+        .unwrap();
     (parse_player(one), parse_player(two))
+}
+
+#[derive(Debug, Clone, Copy)]
+enum Player {
+    One,
+    Two,
 }
 
 fn score(deck: VecDeque<usize>) -> usize {
@@ -83,34 +86,39 @@ fn combat(
     }
 }
 
-pub fn part1((one, two): &(Vec<usize>, Vec<usize>)) -> usize {
-    let (_, deck) = combat(
-        VecDeque::from(one.clone()),
-        VecDeque::from(two.clone()),
-        false,
-    );
+fn part1((one, two): &Input) -> usize {
+    let (_, deck) = combat(one.clone(), two.clone(), false);
     score(deck)
 }
 
-pub fn part2((one, two): &(Vec<usize>, Vec<usize>)) -> usize {
-    let (_, deck) = combat(
-        VecDeque::from(one.clone()),
-        VecDeque::from(two.clone()),
-        true,
-    );
+fn part2((one, two): &Input) -> usize {
+    let (_, deck) = combat(one.clone(), two.clone(), true);
     score(deck)
+}
+
+fn main() {
+    let input = default_input();
+    let mut run = advent::start();
+    run.part(|| part1(&input));
+    run.part(|| part2(&input));
+    run.finish();
+}
+
+#[cfg(test)]
+macro_rules! deq {
+    ($($i:expr),*) => (VecDeque::from(vec![$($i),*]));
 }
 
 #[test]
 fn example1() {
-    let input = (vec![9, 2, 6, 3, 1], vec![5, 8, 4, 7, 10]);
+    let input = (deq![9, 2, 6, 3, 1], deq![5, 8, 4, 7, 10]);
     assert_eq!(part1(&input), 306);
     assert_eq!(part2(&input), 291);
 }
 
 #[test]
 fn example2() {
-    part2(&(vec![43, 19], vec![2, 29, 14]));
+    part2(&(deq![43, 19], deq![2, 29, 14]));
 }
 
 #[test]
