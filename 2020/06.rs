@@ -1,7 +1,5 @@
 use std::collections::HashSet;
 
-const INPUT: &str = include_str!("input/06.txt");
-
 fn parse_input(input: &str) -> Vec<Vec<HashSet<char>>> {
     input
         .split("\n\n")
@@ -9,11 +7,11 @@ fn parse_input(input: &str) -> Vec<Vec<HashSet<char>>> {
         .collect()
 }
 
-pub fn default_input() -> Vec<Vec<HashSet<char>>> {
-    parse_input(INPUT)
+fn default_input() -> Vec<Vec<HashSet<char>>> {
+    parse_input(include_str!("input/06.txt"))
 }
 
-pub fn part1(input: &[Vec<HashSet<char>>]) -> usize {
+fn part1(input: &[Vec<HashSet<char>>]) -> usize {
     input
         .iter()
         .map(|group| {
@@ -27,7 +25,7 @@ pub fn part1(input: &[Vec<HashSet<char>>]) -> usize {
         .sum()
 }
 
-pub fn part2(input: &[Vec<HashSet<char>>]) -> usize {
+fn part2(input: &[Vec<HashSet<char>>]) -> usize {
     input
         .iter()
         .map(|group| {
@@ -39,6 +37,14 @@ pub fn part2(input: &[Vec<HashSet<char>>]) -> usize {
                 .unwrap()
         })
         .sum()
+}
+
+fn main() {
+    let input = default_input();
+    let mut run = advent::start();
+    run.part(|| part1(&input));
+    run.part(|| part2(&input));
+    run.finish();
 }
 
 #[test]
