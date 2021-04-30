@@ -2,14 +2,6 @@ use std::collections::{HashMap, HashSet};
 
 use itertools::Itertools;
 
-const INPUT: &str = include_str!("input/21.txt");
-
-#[derive(Debug)]
-pub struct Food<'a> {
-    ingredients: HashSet<&'a str>,
-    allergens: HashSet<&'a str>,
-}
-
 fn parse_input(input: &str) -> Vec<Food> {
     input
         .lines()
@@ -23,8 +15,14 @@ fn parse_input(input: &str) -> Vec<Food> {
         .collect()
 }
 
-pub fn default_input() -> Vec<Food<'static>> {
-    parse_input(INPUT)
+fn default_input() -> Vec<Food<'static>> {
+    parse_input(include_str!("input/21.txt"))
+}
+
+#[derive(Debug)]
+struct Food<'a> {
+    ingredients: HashSet<&'a str>,
+    allergens: HashSet<&'a str>,
 }
 
 fn possible<'a>(foods: &[Food<'a>]) -> HashMap<&'a str, HashSet<&'a str>> {
@@ -42,9 +40,8 @@ fn possible<'a>(foods: &[Food<'a>]) -> HashMap<&'a str, HashSet<&'a str>> {
     possible
 }
 
-pub fn part1(foods: &[Food]) -> usize {
-    let possible = possible(foods);
-    let maybe_allergens: HashSet<_> = possible
+fn part1(foods: &[Food]) -> usize {
+    let maybe_allergens: HashSet<_> = possible(foods)
         .into_iter()
         .flat_map(|(_, ingredients)| ingredients)
         .collect();
@@ -55,9 +52,9 @@ pub fn part1(foods: &[Food]) -> usize {
         .count()
 }
 
-pub fn part2(foods: &[Food]) -> String {
+fn part2(foods: &[Food]) -> String {
     let mut maybe_dangerous = HashMap::new();
-    for (allergen, ingredients) in possible(foods).into_iter() {
+    for (allergen, ingredients) in possible(foods) {
         for ingredient in ingredients {
             maybe_dangerous
                 .entry(ingredient)
@@ -87,6 +84,14 @@ pub fn part2(foods: &[Food]) -> String {
         .sorted_by_key(|(_, allergen)| *allergen)
         .map(|(ingredient, _)| ingredient)
         .join(",")
+}
+
+fn main() {
+    let input = default_input();
+    let mut run = advent::start();
+    run.part(|| part1(&input));
+    run.part(|| part2(&input));
+    run.finish();
 }
 
 #[test]
