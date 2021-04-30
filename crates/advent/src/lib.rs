@@ -99,9 +99,11 @@ impl<'a> Advent<'a> {
 
             // remove extreme outliers 🤷‍♂️
             times.sort_by(stats::cmp);
-            let min = times.percentile(1.0);
-            let max = times.percentile(99.0);
-            times.retain(|&t| t >= min && t <= max);
+            if times.len() > 1_000 {
+                let min = times.percentile(1.0);
+                let max = times.percentile(99.0);
+                times.retain(|&t| t >= min && t <= max);
+            }
 
             print_bench_summary(i, &times);
         }
