@@ -49,7 +49,7 @@ fn print_run_summary(i: usize, result: String, elapsed: String) {
         result.push('\n');
         (result, 45)
     } else {
-        let width = 37 - result.chars().count();
+        let width = 37_usize.saturating_sub(result.chars().count());
         (result, width)
     };
     println!(
