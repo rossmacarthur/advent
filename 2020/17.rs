@@ -4,13 +4,11 @@ use std::iter;
 use itertools::Itertools;
 use vectrix::parse_map_set;
 
-const INPUT: &str = include_str!("input/17.txt");
-
 type Vector<const N: usize> = vectrix::Vector<i64, N>;
 type State<const N: usize> = HashSet<Vector<N>>;
 
-pub fn default_input() -> HashSet<Vector<2>> {
-    parse_map_set(INPUT)
+fn default_input() -> HashSet<Vector<2>> {
+    parse_map_set(include_str!("input/17.txt"))
 }
 
 fn neighbours<const N: usize>(center: Vector<N>) -> Vec<Vector<N>> {
@@ -69,12 +67,20 @@ fn solve<const N: usize>(input: &HashSet<Vector<2>>) -> usize {
     (0..6).fold(state, |state, _| next_state::<N>(state)).len()
 }
 
-pub fn part1(input: &HashSet<Vector<2>>) -> usize {
+fn part1(input: &HashSet<Vector<2>>) -> usize {
     solve::<3>(input)
 }
 
-pub fn part2(input: &HashSet<Vector<2>>) -> usize {
+fn part2(input: &HashSet<Vector<2>>) -> usize {
     solve::<4>(input)
+}
+
+fn main() {
+    let input = default_input();
+    let mut run = advent::start();
+    run.part(|| part1(&input));
+    run.part(|| part2(&input));
+    run.finish();
 }
 
 #[test]
