@@ -2,10 +2,9 @@ use std::collections::{HashMap, HashSet};
 
 use regex_macro::regex;
 
-const INPUT: &str = include_str!("input/07.txt");
-const COLOR: &str = "shiny gold";
-
 type Rules<'a> = HashMap<&'a str, Vec<(&'a str, u64)>>;
+
+const COLOR: &str = "shiny gold";
 
 fn parse_input(input: &str) -> Rules {
     input
@@ -28,8 +27,8 @@ fn parse_input(input: &str) -> Rules {
         .collect()
 }
 
-pub fn default_input() -> Rules<'static> {
-    parse_input(INPUT)
+fn default_input() -> Rules<'static> {
+    parse_input(include_str!("input/07.txt"))
 }
 
 fn find<'a>(
@@ -52,7 +51,7 @@ fn count(rules: &Rules, color: &str) -> u64 {
         .sum()
 }
 
-pub fn part1(rules: &Rules) -> usize {
+fn part1(rules: &Rules) -> usize {
     let mut reversed = HashMap::new();
     for (color, contains) in rules {
         for (in_color, _) in contains {
@@ -67,8 +66,16 @@ pub fn part1(rules: &Rules) -> usize {
     found.len()
 }
 
-pub fn part2(rules: &Rules) -> u64 {
+fn part2(rules: &Rules) -> u64 {
     count(rules, COLOR)
+}
+
+fn main() {
+    let input = default_input();
+    let mut run = advent::start();
+    run.part(|| part1(&input));
+    run.part(|| part2(&input));
+    run.finish();
 }
 
 #[test]
