@@ -4,8 +4,6 @@ use regex_macro::regex;
 
 use vectrix::Vector2;
 
-const INPUT: &str = include_str!("input/24.txt");
-
 type Vector = Vector2<i64>;
 
 fn parse_input(s: &str) -> Vec<Vec<Vector>> {
@@ -28,8 +26,8 @@ fn parse_input(s: &str) -> Vec<Vec<Vector>> {
         .collect()
 }
 
-pub fn default_input() -> Vec<Vec<Vector>> {
-    parse_input(INPUT)
+fn default_input() -> Vec<Vec<Vector>> {
+    parse_input(include_str!("input/24.txt"))
 }
 
 fn neighbours(center: Vector) -> Vec<Vector> {
@@ -79,16 +77,24 @@ fn next_state(state: HashSet<Vector>) -> HashSet<Vector> {
         .collect()
 }
 
-pub fn part1(input: &[Vec<Vector>]) -> usize {
+fn part1(input: &[Vec<Vector>]) -> usize {
     initial_state(input).len()
 }
 
-pub fn part2(input: &[Vec<Vector>]) -> usize {
+fn part2(input: &[Vec<Vector>]) -> usize {
     let mut state = initial_state(input);
     for _ in 0..100 {
         state = next_state(state)
     }
     state.len()
+}
+
+fn main() {
+    let input = default_input();
+    let mut run = advent::start();
+    run.part(|| part1(&input));
+    run.part(|| part2(&input));
+    run.finish();
 }
 
 #[test]
