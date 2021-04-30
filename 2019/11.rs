@@ -1,11 +1,10 @@
-mod computer;
 mod intcode;
 
 use std::collections::BTreeMap;
 
 use vectrix::{vector, Vector2, VectorExt};
 
-use computer::{parse_program, Computer};
+use intcode::{parse_program, Computer};
 
 type Vector = Vector2<i64>;
 

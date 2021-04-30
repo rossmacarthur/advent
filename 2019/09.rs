@@ -1,7 +1,6 @@
-mod computer;
 mod intcode;
 
-use computer::{parse_program, Computer};
+use intcode::{parse_program, Computer};
 
 fn default_input() -> Vec<i64> {
     parse_program(include_str!("input/09.txt"))
