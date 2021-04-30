@@ -7,11 +7,11 @@ fn parse_input(s: &str) -> Vec<u64> {
     s.chars().map(|c| c.to_digit(10).unwrap().into()).collect()
 }
 
-pub fn default_input() -> Vec<u64> {
+fn default_input() -> Vec<u64> {
     parse_input("716892543")
 }
 
-pub fn play(cups: Vec<u64>, moves: usize, limit: Option<u64>) -> HashMap<u64, u64> {
+fn play(cups: Vec<u64>, moves: usize, limit: Option<u64>) -> HashMap<u64, u64> {
     let max = cups.iter().max().copied().unwrap();
     let limit = limit.unwrap_or(max);
     let mut curr = cups[0];
@@ -41,8 +41,8 @@ pub fn play(cups: Vec<u64>, moves: usize, limit: Option<u64>) -> HashMap<u64, u6
     circle
 }
 
-pub fn part1(cups: &[u64]) -> String {
-    let circle = play(cups.to_vec(), 100, None);
+fn part1(cups: Vec<u64>) -> String {
+    let circle = play(cups, 100, None);
     iter::successors(Some(1), |cup| Some(circle[&cup]))
         .take(cups.len())
         .skip(1)
@@ -50,24 +50,32 @@ pub fn part1(cups: &[u64]) -> String {
         .collect()
 }
 
-pub fn part2(cups: &[u64]) -> u64 {
-    let circle = play(cups.to_vec(), 10_000_000, Some(1_000_000));
+fn part2(cups: Vec<u64>) -> u64 {
+    let circle = play(cups, 10_000_000, Some(1_000_000));
     let cup = circle[&1];
     cup * circle[&cup]
+}
+
+fn main() {
+    let input = default_input();
+    let mut run = advent::start();
+    run.part(|| part1(input.clone()));
+    run.part(|| part2(input.clone()));
+    run.finish();
 }
 
 #[test]
 #[ignore]
 fn example() {
     let input = parse_input("389125467");
-    assert_eq!(part1(&input), "67384529");
-    assert_eq!(part2(&input), 149245887792);
+    assert_eq!(part1(input.clone()), "67384529");
+    assert_eq!(part2(input), 149245887792);
 }
 
 #[test]
 #[ignore]
 fn default() {
     let input = default_input();
-    assert_eq!(part1(&input), "49725386");
-    assert_eq!(part2(&input), 538935646702);
+    assert_eq!(part1(input.clone()), "49725386");
+    assert_eq!(part2(input), 538935646702);
 }
