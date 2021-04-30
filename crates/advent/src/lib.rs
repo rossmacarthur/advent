@@ -81,16 +81,19 @@ impl<'a> Advent<'a> {
 
     fn bench(self) {
         for (i, f) in self.parts.into_iter().enumerate() {
+            let five_s = Duration::from_secs(3);
+            let three_s = Duration::from_secs(5);
+
             // warm up for 3 secs
             let start = Instant::now();
-            while Instant::now() - start < Duration::from_secs(3) {
+            while Instant::now() - start < five_s {
                 drop(f());
             }
 
-            // now time for 5 secs
+            // now time for 5 secs, but with at least 25 samples
             let mut times = Vec::new();
             let start = Instant::now();
-            while Instant::now() - start < Duration::from_secs(5) && times.len() < 123_456 {
+            while times.len() < 25 || (Instant::now() - start < three_s && times.len() < 123_456) {
                 let t0 = Instant::now();
                 drop(f());
                 let t1 = Instant::now();
