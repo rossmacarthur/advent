@@ -2,7 +2,8 @@
 
 [![Build Status](https://img.shields.io/github/workflow/status/rossmacarthur/advent/build/master)](https://github.com/rossmacarthur/advent/actions?query=workflow%3Abuild)
 
-My [Advent of Code](https://adventofcode.com) solutions. All in Rust of course!
+My [🎄 Advent of Code](https://adventofcode.com) solutions. All in Rust of
+course 🦀!
 
 ## Getting started
 
@@ -17,7 +18,7 @@ cargo run --release --bin 202007
 Tests can be run in a similar way.
 
 ```
-cargo test --bin 202007
+cargo test --release --bin 202007
 ```
 
 Benchmarks can be run by passing `--bench` to the binary.
