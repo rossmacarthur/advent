@@ -7,11 +7,11 @@ fn default_input() -> Vec<i64> {
 }
 
 fn part1(input: Vec<i64>) -> i64 {
-    Computer::new(input).next(Some(1)).unwrap()
+    Computer::new(input).input(1).next().unwrap()
 }
 
 fn part2(input: Vec<i64>) -> i64 {
-    Computer::new(input).next(Some(2)).unwrap()
+    Computer::new(input).input(2).next().unwrap()
 }
 
 fn main() {
@@ -28,7 +28,7 @@ fn example1() {
     let mut computer = Computer::new(input.clone());
     let mut result = Vec::new();
     for _ in 0..input.len() {
-        result.push(computer.next(None).unwrap());
+        result.push(computer.next().unwrap());
     }
     assert_eq!(input, result);
 }
@@ -36,13 +36,13 @@ fn example1() {
 #[test]
 fn example2() {
     let input = parse_program("1102,34915192,34915192,7,4,7,99,0");
-    assert_eq!(Computer::new(input).next(None).unwrap(), 1219070632396864);
+    assert_eq!(Computer::new(input).next().unwrap(), 1219070632396864);
 }
 
 #[test]
 fn example3() {
     let input = parse_program("104,1125899906842624,99");
-    assert_eq!(Computer::new(input).next(None).unwrap(), 1125899906842624)
+    assert_eq!(Computer::new(input).next().unwrap(), 1125899906842624)
 }
 
 #[test]

@@ -33,14 +33,14 @@ enum Tile {
 
 impl Computer {
     fn next_status(&mut self, direction: Vector) -> Option<Status> {
-        self.next_value(Some(match direction {
+        self.input(match direction {
             NORTH => 1,
             SOUTH => 2,
             WEST => 3,
             EAST => 4,
             d => panic!("invalid direction `{:?}`", d),
-        }))
-        .map(|v| match v {
+        });
+        self.next_value().map(|v| match v {
             0 => Status::Wall,
             1 => Status::Moved,
             2 => Status::Found,

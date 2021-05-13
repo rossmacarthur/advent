@@ -29,13 +29,13 @@ use Turn::*;
 
 impl Computer {
     fn next_color_and_turn(&mut self, color: Color) -> Option<(Color, Turn)> {
-        let input = color as i64;
-        let color = self.next_value(Some(input)).map(|v| match v {
+        self.input(color as i64);
+        let color = self.next_value().map(|v| match v {
             0 => Black,
             1 => White,
             c => panic!("invalid color `{}`", c),
         })?;
-        let turn = self.next_value(Some(input)).map(|v| match v {
+        let turn = self.next_value().map(|v| match v {
             0 => Left,
             1 => Right,
             t => panic!("invalid turn `{}`", t),
