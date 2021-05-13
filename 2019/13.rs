@@ -27,10 +27,10 @@ enum Output {
 }
 
 impl Computer {
-    fn next_output(&mut self, input: Option<i64>) -> Option<Output> {
-        let x = self.next_value(input)?;
-        let y = self.next_value(input)?;
-        let t = self.next_value(input)?;
+    fn next_output(&mut self) -> Option<Output> {
+        let x = self.next_value()?;
+        let y = self.next_value()?;
+        let t = self.next_value()?;
         Some(if x == -1 && y == 0 {
             Output::Score(t)
         } else {
@@ -50,7 +50,7 @@ impl Computer {
 
 fn part1(program: Vec<i64>) -> usize {
     let mut computer = Computer::new(program);
-    iter::from_fn(|| computer.next_output(None))
+    iter::from_fn(|| computer.next_output())
         .filter(|o| matches!(o, Output::Tile(_, Tile::Block)))
         .count()
 }
@@ -59,13 +59,14 @@ fn part2(mut program: Vec<i64>) -> i64 {
     program[0] = 2;
 
     let mut computer = Computer::new(program);
-    let mut input = None;
     let mut score = 0;
     let mut paddle = Vector::zero();
 
-    while let Some(output) = computer.next_output(input) {
+    while let Some(output) = computer.next_output() {
         match output {
-            Output::Tile(pos, Tile::Ball) => input = Some((pos.x - paddle.x).signum()),
+            Output::Tile(pos, Tile::Ball) => {
+                computer.input((pos.x - paddle.x).signum());
+            }
             Output::Tile(pos, Tile::Paddle) => paddle = pos,
             Output::Score(value) => score = value,
             _ => continue,
