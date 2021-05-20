@@ -56,7 +56,39 @@ impl Input for i64 {
     }
 }
 
+impl Input for Vec<i64> {
+    fn input(self, v: &mut VecDeque<i64>) {
+        v.extend(self);
+    }
+}
+
 impl<T> State<T> {
+    pub fn map<U, F>(self, op: F) -> State<U>
+    where
+        F: FnOnce(T) -> U,
+    {
+        match self {
+            Self::Yielded(t) => State::Yielded(op(t)),
+            Self::Waiting => State::Waiting,
+            Self::Complete => State::Complete,
+        }
+    }
+
+    pub const fn as_ref(&self) -> State<&T> {
+        match *self {
+            Self::Yielded(ref o) => State::Yielded(o),
+            Self::Waiting => State::Waiting,
+            Self::Complete => State::Complete,
+        }
+    }
+
+    pub fn as_deref(&self) -> State<&T::Target>
+    where
+        T: Deref,
+    {
+        self.as_ref().map(T::deref)
+    }
+
     #[track_caller]
     pub fn unwrap(self) -> T {
         match self {
