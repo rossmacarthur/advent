@@ -18,6 +18,7 @@ vectrix = { path = "crates/vectrix-ext" }
 [workspace]
 members = [
     "crates/advent",
+    "crates/cli",
     "crates/math",
     "crates/vectrix-ext"
 ]
