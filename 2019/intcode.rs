@@ -56,6 +56,13 @@ impl Input for i64 {
     }
 }
 
+impl Input for (i64, i64) {
+    fn input(self, v: &mut VecDeque<i64>) {
+        v.push_back(self.0);
+        v.push_back(self.1);
+    }
+}
+
 impl Input for Vec<i64> {
     fn input(self, v: &mut VecDeque<i64>) {
         v.extend(self);
