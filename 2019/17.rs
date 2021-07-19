@@ -80,8 +80,8 @@ enum Move {
 }
 
 impl Move {
-    fn to_ascii(&self) -> String {
-        match *self {
+    fn to_ascii(self) -> String {
+        match self {
             Self::Left(d) => format!("L,{}", d),
             Self::Right(d) => format!("R,{}", d),
         }
@@ -153,7 +153,7 @@ fn navigate(image: &HashMap<Vector, char>) -> Vec<Move> {
 
 /// Returns whether the function is valid and is usable more than once.
 fn is_valid_function(f: &[Move], positions: &[usize]) -> bool {
-    positions.len() > 1 && (f.iter().map(Move::to_ascii).join(",").len() <= 20)
+    positions.len() > 1 && (f.iter().map(|m| m.to_ascii()).join(",").len() <= 20)
 }
 
 /// Returns whether the set of functions is a valid routine.
@@ -218,7 +218,7 @@ fn routine(moves: &[Move]) -> (String, Vec<String>) {
         .chars()
         .zip(routine.into_iter())
         .flat_map(|(name, (f, positions))| {
-            functions.push(f.iter().map(Move::to_ascii).join(","));
+            functions.push(f.iter().map(|m| m.to_ascii()).join(","));
             positions.into_iter().map(move |p| (name, p))
         })
         .sorted_by_key(|(_, p)| *p)
