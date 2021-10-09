@@ -3,7 +3,7 @@ use std::collections::{BinaryHeap, HashMap, HashSet, VecDeque};
 use std::iter;
 use std::ops::BitOr;
 
-use vectrix::{parse_map, vector, Vector2};
+use vectrix::{parse_map, vector, Vector2, CARDINALS};
 
 type Vector = Vector2<i64>;
 
@@ -21,12 +21,6 @@ fn parse_input(input: &str) -> HashMap<Vector, Tile> {
 fn default_input() -> HashMap<Vector, Tile> {
     parse_input(include_str!("input/18.txt"))
 }
-
-const NORTH: Vector = vector![0, 1];
-const SOUTH: Vector = vector![0, -1];
-const WEST: Vector = vector![-1, 0];
-const EAST: Vector = vector![1, 0];
-const DIRECTIONS: &[Vector] = &[NORTH, SOUTH, WEST, EAST];
 
 #[derive(Debug, Clone, Copy)]
 enum Tile {
@@ -91,7 +85,7 @@ fn distances(map: &HashMap<Vector, Tile>, source: Vector) -> HashMap<u32, (usize
     visited.insert(source);
     frontier.push_back((source, 0, 0));
     while let Some((pos, dist, doors)) = frontier.pop_front() {
-        for d in DIRECTIONS {
+        for d in CARDINALS {
             let next = pos + d;
             if visited.contains(&next) {
                 continue;
@@ -185,7 +179,7 @@ fn part2(mut map: HashMap<Vector, Tile>) -> usize {
         .find_map(|(p, t)| t.is_entrance().then(|| *p))
         .unwrap();
     map.insert(entrance, Tile::Wall);
-    for d in DIRECTIONS {
+    for d in CARDINALS {
         map.insert(entrance + d, Tile::Wall);
     }
     for &(d, e) in &[

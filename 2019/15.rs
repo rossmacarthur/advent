@@ -3,7 +3,7 @@ mod intcode;
 use std::cmp;
 use std::collections::{HashMap, HashSet};
 
-use vectrix::{vector, Vector2};
+use vectrix::{Vector2, CARDINALS, EAST, NORTH, SOUTH, WEST};
 
 use intcode::{parse_program, Computer};
 
@@ -12,12 +12,6 @@ type Vector = Vector2<i64>;
 fn default_input() -> Vec<i64> {
     parse_program(include_str!("input/15.txt"))
 }
-
-const NORTH: Vector = vector![0, 1];
-const SOUTH: Vector = vector![0, -1];
-const WEST: Vector = vector![-1, 0];
-const EAST: Vector = vector![1, 0];
-const DIRECTIONS: &[Vector] = &[NORTH, SOUTH, WEST, EAST];
 
 enum Status {
     Wall,
@@ -57,7 +51,7 @@ fn shortest(
 ) -> usize {
     let mut min = usize::MAX;
     path.insert(pos);
-    for d in DIRECTIONS {
+    for d in CARDINALS {
         let next = pos + d;
         if map.contains_key(&next) || path.contains(&next) {
             continue;
@@ -85,7 +79,7 @@ fn shortest(
 fn longest(map: &HashMap<Vector, Tile>, mut path: HashSet<Vector>, pos: Vector) -> usize {
     let mut max = path.len();
     path.insert(pos);
-    for d in DIRECTIONS {
+    for d in CARDINALS {
         let next = pos + d;
         if path.contains(&next) || matches!(map.get(&next), Some(Tile::Wall)) {
             continue;

@@ -4,7 +4,7 @@ use std::cmp::Reverse;
 use std::collections::{HashMap, HashSet};
 
 use itertools::Itertools;
-use vectrix::{vector, Vector2};
+use vectrix::{vector, Vector2, CARDINALS, EAST, NORTH, SOUTH, WEST};
 
 use intcode::{parse_program, Computer, State};
 
@@ -13,12 +13,6 @@ type Vector = Vector2<i64>;
 fn default_input() -> Vec<i64> {
     parse_program(include_str!("input/17.txt"))
 }
-
-const NORTH: Vector = vector![0, 1];
-const SOUTH: Vector = vector![0, -1];
-const WEST: Vector = vector![-1, 0];
-const EAST: Vector = vector![1, 0];
-const DIRECTIONS: &[Vector] = &[NORTH, SOUTH, WEST, EAST];
 
 fn to_ascii(v: i64) -> char {
     assert!(v < 127, "unexpected non-ascii value `{}`", v);
@@ -129,7 +123,7 @@ fn navigate(image: &HashMap<Vector, char>) -> Vec<Move> {
         // scaffold and not our previous position.
         } else {
             let prev = droid - d;
-            for to in DIRECTIONS {
+            for to in CARDINALS {
                 let next = droid + to;
                 if scaffolds.contains(&next) && next != prev {
                     moves.push(match d.x * to.y + to.x * -d.y {
@@ -232,7 +226,7 @@ fn part1(program: Vec<i64>) -> i64 {
     let scaffolds = scaffolds(&image);
     scaffolds
         .iter()
-        .filter(|&s| DIRECTIONS.iter().all(|&d| scaffolds.contains(&(s + d))))
+        .filter(|&s| CARDINALS.iter().all(|&d| scaffolds.contains(&(s + d))))
         .map(|s| s.x * s.y)
         .sum()
 }
