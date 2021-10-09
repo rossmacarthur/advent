@@ -24,7 +24,7 @@ fn parse_rule(rule: &str) -> Rule {
     }
 }
 
-fn parse_input(input: &str) -> Input {
+fn parse_input(input: &str) -> Input<'_> {
     let (rules, messages) = input.split("\n\n").next_tuple().unwrap();
     (
         rules
@@ -89,7 +89,7 @@ fn make_regex(rules: &HashMap<u64, Rule>, rule: u64, mut recursion_count: u64) -
     }
 }
 
-fn count_matches(input: &Input, recursion_count: u64) -> usize {
+fn count_matches(input: &Input<'_>, recursion_count: u64) -> usize {
     let (rules, messages) = input;
     let re = Regex::new(&format!("^{}$", make_regex(rules, 0, recursion_count))).unwrap();
     messages
@@ -98,11 +98,11 @@ fn count_matches(input: &Input, recursion_count: u64) -> usize {
         .count()
 }
 
-fn part1(input: &Input) -> usize {
+fn part1(input: &Input<'_>) -> usize {
     count_matches(input, 0)
 }
 
-fn part2(input: &Input) -> usize {
+fn part2(input: &Input<'_>) -> usize {
     count_matches(input, 5)
 }
 

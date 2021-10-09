@@ -2,7 +2,7 @@ use std::collections::{HashMap, HashSet};
 
 use itertools::Itertools;
 
-fn parse_input(input: &str) -> Vec<Food> {
+fn parse_input(input: &str) -> Vec<Food<'_>> {
     input
         .lines()
         .map(|line| {
@@ -40,7 +40,7 @@ fn possible<'a>(foods: &[Food<'a>]) -> HashMap<&'a str, HashSet<&'a str>> {
     possible
 }
 
-fn part1(foods: &[Food]) -> usize {
+fn part1(foods: &[Food<'_>]) -> usize {
     let maybe_allergens: HashSet<_> = possible(foods)
         .into_iter()
         .flat_map(|(_, ingredients)| ingredients)
@@ -52,7 +52,7 @@ fn part1(foods: &[Food]) -> usize {
         .count()
 }
 
-fn part2(foods: &[Food]) -> String {
+fn part2(foods: &[Food<'_>]) -> String {
     let mut maybe_dangerous = HashMap::new();
     for (allergen, ingredients) in possible(foods) {
         for ingredient in ingredients {

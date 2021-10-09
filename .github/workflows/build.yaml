@@ -3,7 +3,7 @@ name: build
 on: [push, pull_request]
 
 env:
-  RUSTFLAGS: --deny warnings
+  RUSTFLAGS: --warn elided-lifetimes-in-paths --deny warnings
 
 jobs:
   build:
