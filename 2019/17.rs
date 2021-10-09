@@ -192,20 +192,18 @@ fn routine(moves: &[Move]) -> (String, Vec<String>) {
                 (f, positions)
             })
         })
-        .filter(|(f, positions)| is_valid_function(f, &positions))
+        .filter(|(f, positions)| is_valid_function(f, positions))
         .collect();
     // Then we sort by function length, then number of times it can be used.
     // This will help us find a valid combination faster.
-    let functions: Vec<_> = functions
+    let functions = functions
         .into_iter()
-        .sorted_by_key(|(f, positions)| Reverse((f.len(), positions.len())))
-        .collect();
+        .sorted_by_key(|(f, positions)| Reverse((f.len(), positions.len())));
     // Now we find a valid routine.
     //
     // A routine is valid if all moves can be made using it and there are no
     // overlapping functions.
     let routine: Vec<(&[Move], Vec<usize>)> = functions
-        .into_iter()
         .combinations(3)
         .find(|routine| is_valid_routine(moves, routine))
         .unwrap();

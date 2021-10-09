@@ -137,7 +137,7 @@ fn shortest(map: &HashMap<Vector, Tile>) -> usize {
     let graph: HashMap<_, _> = map
         .iter()
         .filter(|(_, t)| t.is_interesting())
-        .map(|(p, t)| (t.value(), distances(&map, *p)))
+        .map(|(p, t)| (t.value(), distances(map, *p)))
         .collect();
 
     let all_keys = map

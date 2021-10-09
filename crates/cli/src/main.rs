@@ -66,7 +66,7 @@ fn new(year: u32, day: u32) -> Result<()> {
     let manifest = fs::read_to_string("Cargo.toml")?;
     let index = manifest.find("[[bin]]").unwrap();
     let (main, binaries) = manifest.split_at(index);
-    let mut bins: Binaries = toml::from_str(&binaries)?;
+    let mut bins: Binaries = toml::from_str(binaries)?;
     let to_add = Binary {
         name: name.clone(),
         path: bin,
