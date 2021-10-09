@@ -44,7 +44,7 @@ fn play(cups: Vec<u64>, moves: usize, limit: Option<u64>) -> HashMap<u64, u64> {
 fn part1(cups: Vec<u64>) -> String {
     let len = cups.len();
     let circle = play(cups, 100, None);
-    iter::successors(Some(1), |cup| Some(circle[&cup]))
+    iter::successors(Some(1), |cup| Some(circle[cup]))
         .take(len)
         .skip(1)
         .map(|cup| cup.to_string())

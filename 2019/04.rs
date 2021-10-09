@@ -35,14 +35,14 @@ fn has_two_adjacent_excl(digits: &Digits) -> bool {
 fn part1(input: Range<u64>) -> usize {
     input
         .map(digits)
-        .filter(|digits| has_increasing(&digits) && has_two_adjacent(&digits))
+        .filter(|digits| has_increasing(digits) && has_two_adjacent(digits))
         .count()
 }
 
 fn part2(input: Range<u64>) -> usize {
     input
         .map(digits)
-        .filter(|digits| has_increasing(&digits) && has_two_adjacent_excl(&digits))
+        .filter(|digits| has_increasing(digits) && has_two_adjacent_excl(digits))
         .count()
 }
 

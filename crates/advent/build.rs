@@ -1,6 +1,6 @@
 use std::env;
 
-pub fn main() {
+fn main() {
     if let Ok(profile) = env::var("PROFILE") {
         println!("cargo:rustc-cfg=profile={:?}", profile);
     }

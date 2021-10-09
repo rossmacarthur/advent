@@ -32,8 +32,8 @@ fn part2(input: &[usize]) -> usize {
 fn main() {
     let input = default_input();
     let mut run = advent::start();
-    run.part(|| part1(&input));
-    run.part(|| part2(&input));
+    run.part(|| part1(input));
+    run.part(|| part2(input));
     run.finish();
 }
 
@@ -47,6 +47,6 @@ fn example() {
 #[test]
 fn default() {
     let input = default_input();
-    assert_eq!(part1(&input), 758);
-    assert_eq!(part2(&input), 814);
+    assert_eq!(part1(input), 758);
+    assert_eq!(part2(input), 814);
 }

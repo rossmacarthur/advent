@@ -53,8 +53,8 @@ fn keys(distances: &HashMap<Vector, i64>) -> HashSet<Vector> {
 }
 
 fn part1((path1, path2): &(Path, Path)) -> i64 {
-    keys(&distances(&path1))
-        .intersection(&keys(&distances(&path2)))
+    keys(&distances(path1))
+        .intersection(&keys(&distances(path2)))
         .map(Vector::l1_norm)
         .min()
         .unwrap()
