@@ -6,6 +6,12 @@ pub use vectrix::*;
 pub type Vector2<T> = vectrix::Vector<T, 2>;
 pub type Vector3<T> = vectrix::Vector<T, 3>;
 
+pub const NORTH: Vector2<i64> = vector![0, 1];
+pub const SOUTH: Vector2<i64> = vector![0, -1];
+pub const WEST: Vector2<i64> = vector![-1, 0];
+pub const EAST: Vector2<i64> = vector![1, 0];
+pub const CARDINALS: &[Vector2<i64>] = &[NORTH, SOUTH, WEST, EAST];
+
 pub trait VectorExt {
     fn reduced(self) -> Self;
     fn rotated(self, angle: i64) -> Self;
