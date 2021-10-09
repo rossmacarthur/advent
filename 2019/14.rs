@@ -6,12 +6,12 @@ use itertools::Itertools;
 type Pair<'a> = (i64, &'a str);
 type Formulae<'a> = HashMap<&'a str, Formula<'a>>;
 
-fn parse_pair(s: &str) -> Pair {
+fn parse_pair(s: &str) -> Pair<'_> {
     let (c, chem) = s.split_whitespace().next_tuple().unwrap();
     (c.parse().unwrap(), chem)
 }
 
-fn parse_input(input: &str) -> HashMap<&str, Formula> {
+fn parse_input(input: &str) -> HashMap<&str, Formula<'_>> {
     input
         .lines()
         .map(|line| {
@@ -32,7 +32,7 @@ struct Formula<'a> {
     result: i64,
 }
 
-fn fuel_to_ore(formulae: &Formulae, fuel: i64) -> i64 {
+fn fuel_to_ore(formulae: &Formulae<'_>, fuel: i64) -> i64 {
     let mut need = HashMap::new();
     need.insert("FUEL", fuel);
     loop {
@@ -55,11 +55,11 @@ fn fuel_to_ore(formulae: &Formulae, fuel: i64) -> i64 {
     }
 }
 
-fn part1(formulae: &Formulae) -> i64 {
+fn part1(formulae: &Formulae<'_>) -> i64 {
     fuel_to_ore(formulae, 1)
 }
 
-fn part2(formulae: &Formulae) -> i64 {
+fn part2(formulae: &Formulae<'_>) -> i64 {
     let have = 1_000_000_000_000;
     let mut f0 = have / fuel_to_ore(formulae, 1);
     let mut f1 = 2 * f0;

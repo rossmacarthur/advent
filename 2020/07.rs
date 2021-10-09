@@ -6,7 +6,7 @@ type Rules<'a> = HashMap<&'a str, Vec<(&'a str, u64)>>;
 
 const COLOR: &str = "shiny gold";
 
-fn parse_input(input: &str) -> Rules {
+fn parse_input(input: &str) -> Rules<'_> {
     input
         .lines()
         .map(|rule| {
@@ -44,14 +44,14 @@ fn find<'a>(
     }
 }
 
-fn count(rules: &Rules, color: &str) -> u64 {
+fn count(rules: &Rules<'_>, color: &str) -> u64 {
     rules[color]
         .iter()
         .map(|(color, i)| i * (1 + count(rules, color)))
         .sum()
 }
 
-fn part1(rules: &Rules) -> usize {
+fn part1(rules: &Rules<'_>) -> usize {
     let mut reversed = HashMap::new();
     for (color, contains) in rules {
         for (in_color, _) in contains {
@@ -66,7 +66,7 @@ fn part1(rules: &Rules) -> usize {
     found.len()
 }
 
-fn part2(rules: &Rules) -> u64 {
+fn part2(rules: &Rules<'_>) -> u64 {
     count(rules, COLOR)
 }
 

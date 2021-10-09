@@ -5,7 +5,7 @@ use itertools::Itertools;
 
 type Orbits<'a> = HashMap<&'a str, &'a str>;
 
-fn parse_input(input: &str) -> Orbits {
+fn parse_input(input: &str) -> Orbits<'_> {
     input
         .lines()
         .map(|line| line.split(')').next_tuple().unwrap())
@@ -17,15 +17,15 @@ fn default_input() -> Orbits<'static> {
     parse_input(include_str!("input/06.txt"))
 }
 
-fn path<'a>(orbits: &'a Orbits, to: &'a str) -> Vec<&'a str> {
+fn path<'a>(orbits: &'a Orbits<'_>, to: &'a str) -> Vec<&'a str> {
     iter::successors(Some(to), move |to| orbits.get(*to).copied()).collect()
 }
 
-fn part1(orbits: &Orbits) -> usize {
+fn part1(orbits: &Orbits<'_>) -> usize {
     orbits.keys().map(|to| path(orbits, to).len() - 1).sum()
 }
 
-fn part2(orbits: &Orbits) -> usize {
+fn part2(orbits: &Orbits<'_>) -> usize {
     let you = path(orbits, "YOU");
     let san = path(orbits, "SAN");
     you.iter().take_while(|x| !san.contains(x)).count()

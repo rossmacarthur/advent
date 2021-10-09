@@ -4,7 +4,7 @@ use itertools::Itertools;
 
 use Instruction::*;
 
-fn parse_input(input: &str) -> Vec<Instruction> {
+fn parse_input(input: &str) -> Vec<Instruction<'_>> {
     input
         .lines()
         .map(|line| match line.split(" = ").next_tuple().unwrap() {
@@ -54,7 +54,7 @@ fn combinations(address: u64, mask: &str, i: usize) -> Vec<u64> {
         .collect()
 }
 
-fn part1(instrs: &[Instruction]) -> u64 {
+fn part1(instrs: &[Instruction<'_>]) -> u64 {
     let mut memory = HashMap::new();
     let mut mask = DEFAULT_MASK;
     for instr in instrs {
@@ -71,7 +71,7 @@ fn part1(instrs: &[Instruction]) -> u64 {
     memory.values().sum()
 }
 
-fn part2(instrs: &[Instruction]) -> u64 {
+fn part2(instrs: &[Instruction<'_>]) -> u64 {
     let mut memory = HashMap::new();
     let mut mask = DEFAULT_MASK;
     for instr in instrs {
