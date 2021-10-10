@@ -28,9 +28,9 @@ enum Output {
 
 impl Computer {
     fn next_output(&mut self) -> Option<Output> {
-        let x = self.next_value()?;
-        let y = self.next_value()?;
-        let t = self.next_value()?;
+        let x = self.next()?;
+        let y = self.next()?;
+        let t = self.next()?;
         Some(if x == -1 && y == 0 {
             Output::Score(t)
         } else {

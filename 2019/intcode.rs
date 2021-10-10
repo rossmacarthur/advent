@@ -6,8 +6,10 @@ use std::cmp::max;
 use std::collections::VecDeque;
 use std::convert::TryFrom;
 use std::fmt::Debug;
-use std::ops::Deref;
+use std::result;
 use std::str::FromStr;
+
+use thiserror::Error;
 
 pub fn cast(num: i64) -> usize {
     usize::try_from(num).unwrap()
@@ -22,20 +24,25 @@ where
         .trim()
         .split(',')
         .map(str::parse)
-        .map(Result::unwrap)
+        .map(result::Result::unwrap)
         .collect()
 }
 
-/// Something that can provide input to the computer.
-pub trait Input {
-    fn input(self, input: &mut VecDeque<i64>);
+pub type Result<T> = result::Result<T, Error>;
+
+#[derive(Debug, Error)]
+pub enum Error {
+    #[error("unknown mode `{}`", .mode)]
+    UnknownMode { mode: i64 },
+    #[error("unknown opcode `{}`", .opcode)]
+    UnknownOpcode { opcode: i64 },
 }
 
 /// The state of the computer.
 #[derive(Debug)]
-pub enum State<T> {
+pub enum State {
     /// An output.
-    Yielded(T),
+    Yielded(i64),
     /// Waiting for input.
     Waiting,
     /// Program execution has finished.
@@ -50,62 +57,6 @@ pub struct Computer {
     input: VecDeque<i64>,
 }
 
-impl Input for i64 {
-    fn input(self, v: &mut VecDeque<i64>) {
-        v.push_back(self);
-    }
-}
-
-impl Input for (i64, i64) {
-    fn input(self, v: &mut VecDeque<i64>) {
-        v.push_back(self.0);
-        v.push_back(self.1);
-    }
-}
-
-impl Input for Vec<i64> {
-    fn input(self, v: &mut VecDeque<i64>) {
-        v.extend(self);
-    }
-}
-
-impl<T> State<T> {
-    pub fn map<U, F>(self, op: F) -> State<U>
-    where
-        F: FnOnce(T) -> U,
-    {
-        match self {
-            Self::Yielded(t) => State::Yielded(op(t)),
-            Self::Waiting => State::Waiting,
-            Self::Complete => State::Complete,
-        }
-    }
-
-    pub const fn as_ref(&self) -> State<&T> {
-        match *self {
-            Self::Yielded(ref o) => State::Yielded(o),
-            Self::Waiting => State::Waiting,
-            Self::Complete => State::Complete,
-        }
-    }
-
-    pub fn as_deref(&self) -> State<&T::Target>
-    where
-        T: Deref,
-    {
-        self.as_ref().map(T::deref)
-    }
-
-    #[track_caller]
-    pub fn unwrap(self) -> T {
-        match self {
-            Self::Yielded(output) => output,
-            Self::Waiting => panic!("called `State::unwrap()` on a `Waiting` state"),
-            Self::Complete => panic!("called `State::unwrap()` on a `Complete` state"),
-        }
-    }
-}
-
 impl Computer {
     pub fn new(program: Vec<i64>) -> Self {
         Self {
@@ -116,100 +67,133 @@ impl Computer {
         }
     }
 
+    pub fn input(&mut self, value: i64) -> &mut Self {
+        self.input.push_back(value);
+        self
+    }
+
+    pub fn feed(&mut self, iter: impl IntoIterator<Item = i64>) {
+        self.input.extend(iter);
+    }
+
     fn mem_get(&self, addr: usize) -> i64 {
         self.mem.get(addr).copied().unwrap_or(0)
     }
 
-    pub fn mem_get_mut(&mut self, addr: usize) -> &mut i64 {
+    fn mem_get_mut(&mut self, addr: usize) -> &mut i64 {
         self.mem.resize(max(self.mem.len(), addr + 1), 0);
         &mut self.mem[addr]
     }
 
-    fn param_ptr(&self, i: usize) -> usize {
+    fn param_ptr(&self, i: usize) -> Result<usize> {
         let opcode = self.mem_get(self.ptr);
         let ptr = self.ptr + i;
         match opcode / (10i64.pow((1 + i) as u32)) % 10 {
-            0 => cast(self.mem_get(ptr)),
-            1 => ptr,
-            2 => cast(self.relative_base + self.mem_get(ptr)),
-            mode => panic!("unknown mode `{}`", mode),
+            0 => Ok(cast(self.mem_get(ptr))),
+            1 => Ok(ptr),
+            2 => Ok(cast(self.relative_base + self.mem_get(ptr))),
+            mode => Err(Error::UnknownMode { mode }),
         }
     }
 
-    fn param(&self, i: usize) -> i64 {
-        self.mem_get(self.param_ptr(i))
+    fn param(&self, i: usize) -> Result<i64> {
+        self.param_ptr(i).map(move |ptr| self.mem_get(ptr))
     }
 
-    fn param_mut(&mut self, i: usize) -> &mut i64 {
-        self.mem_get_mut(self.param_ptr(i))
+    fn param_mut(&mut self, i: usize) -> Result<&mut i64> {
+        self.param_ptr(i).map(move |ptr| self.mem_get_mut(ptr))
     }
 
-    pub fn input<I: Input>(&mut self, i: I) -> &mut Self {
-        i.input(&mut self.input);
-        self
-    }
-
-    pub fn next(&mut self) -> State<i64> {
+    fn try_next_state(&mut self) -> Result<State> {
         loop {
             match self.mem_get(self.ptr) % 100 {
                 1 => {
-                    *self.param_mut(3) = self.param(1) + self.param(2);
+                    *self.param_mut(3)? = self.param(1)? + self.param(2)?;
                     self.ptr += 4;
                 }
                 2 => {
-                    *self.param_mut(3) = self.param(1) * self.param(2);
+                    *self.param_mut(3)? = self.param(1)? * self.param(2)?;
                     self.ptr += 4;
                 }
                 3 => {
                     if let Some(input) = self.input.pop_front() {
-                        *self.param_mut(1) = input;
+                        *self.param_mut(1)? = input;
                         self.ptr += 2;
                     } else {
-                        break State::Waiting;
+                        break Ok(State::Waiting);
                     }
                 }
                 4 => {
-                    let output = self.param(1);
+                    let output = self.param(1)?;
                     self.ptr += 2;
-                    break State::Yielded(output);
+                    break Ok(State::Yielded(output));
                 }
                 5 => {
-                    if self.param(1) != 0 {
-                        self.ptr = cast(self.param(2));
+                    if self.param(1)? != 0 {
+                        self.ptr = cast(self.param(2)?);
                     } else {
                         self.ptr += 3;
                     }
                 }
                 6 => {
-                    if self.param(1) == 0 {
-                        self.ptr = cast(self.param(2));
+                    if self.param(1)? == 0 {
+                        self.ptr = cast(self.param(2)?);
                     } else {
                         self.ptr += 3;
                     }
                 }
                 7 => {
-                    *self.param_mut(3) = (self.param(1) < self.param(2)) as i64;
+                    *self.param_mut(3)? = (self.param(1)? < self.param(2)?) as i64;
                     self.ptr += 4;
                 }
                 8 => {
-                    *self.param_mut(3) = (self.param(1) == self.param(2)) as i64;
+                    *self.param_mut(3)? = (self.param(1)? == self.param(2)?) as i64;
                     self.ptr += 4;
                 }
                 9 => {
-                    self.relative_base += self.param(1);
+                    self.relative_base += self.param(1)?;
                     self.ptr += 2;
                 }
-                99 => break State::Complete,
-                opcode => panic!("unknown opcode `{}`", opcode),
+                99 => break Ok(State::Complete),
+                opcode => break Err(Error::UnknownOpcode { opcode }),
             }
         }
     }
 
-    pub fn next_value(&mut self) -> Option<i64> {
-        match self.next() {
+    #[track_caller]
+    pub fn next(&mut self) -> Option<i64> {
+        match match self.try_next_state() {
+            Ok(state) => state,
+            Err(err) => panic!("oops `{}`", err),
+        } {
             State::Yielded(v) => Some(v),
             State::Complete => None,
             state => panic!("unexpected state `{:?}`", state),
         }
+    }
+
+    #[track_caller]
+    fn next_char(&mut self) -> Option<char> {
+        self.next().map(|v| {
+            assert!(v < 127, "unexpected non-ascii value `{}`", v);
+            v as u8 as char
+        })
+    }
+
+    #[track_caller]
+    pub fn read_line(&mut self) -> Option<String> {
+        let mut line = String::new();
+        loop {
+            match self.next_char()? {
+                '\n' => break Some(line),
+                c => line.push(c),
+            }
+        }
+    }
+
+    pub fn write_line(&mut self, line: &str) {
+        assert!(line.is_ascii());
+        self.feed(line.bytes().map(i64::from));
+        self.input(b'\n' as i64);
     }
 }

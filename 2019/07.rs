@@ -41,7 +41,7 @@ impl Computer {
         &mut self.mem.as_mut_slice()[ptr]
     }
 
-    fn next(&mut self, input: i64) -> State<i64> {
+    fn next(&mut self, input: i64) -> State {
         let mut input = Some(input);
         loop {
             match self.mem[self.ptr] % 100 {
