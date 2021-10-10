@@ -6,7 +6,7 @@ use std::collections::{HashMap, HashSet};
 use itertools::Itertools;
 use vectrix::{vector, Vector2, CARDINALS, EAST, NORTH, SOUTH, WEST};
 
-use intcode::{parse_program, Computer, State};
+use intcode::{parse_program, Computer};
 
 type Vector = Vector2<i64>;
 
@@ -14,48 +14,14 @@ fn default_input() -> Vec<i64> {
     parse_program(include_str!("input/17.txt"))
 }
 
-fn to_ascii(v: i64) -> char {
-    assert!(v < 127, "unexpected non-ascii value `{}`", v);
-    v as u8 as char
-}
-
 impl Computer {
-    /// Read the next ASCII character.
-    fn next_char(&mut self) -> State<char> {
-        self.next().map(to_ascii)
-    }
-
-    /// Read an ASCII line.
-    fn read_line(&mut self) -> State<String> {
-        let mut line = String::new();
-        loop {
-            match self.next_char() {
-                State::Yielded('\n') => break State::Yielded(line),
-                State::Yielded(c) => line.push(c),
-                State::Waiting => break State::Waiting,
-                State::Complete => break State::Complete,
-            }
-        }
-    }
-
-    /// Write an ASCII line.
-    fn write_line(&mut self, line: &str) -> State<String> {
-        assert!(line.is_ascii());
-        let mut input: Vec<_> = line.bytes().map(i64::from).collect();
-        input.push(b'\n' as i64);
-        self.input(input);
-        self.read_line()
-    }
-
-    /// Read an ASCII image.
-    fn read_image(&mut self) -> State<HashMap<Vector, char>> {
+    fn read_image(&mut self) -> Option<HashMap<Vector, char>> {
         let mut map = HashMap::new();
         let mut y = 0;
         loop {
-            match self.read_line().as_deref() {
-                State::Waiting => break State::Waiting,
-                State::Complete | State::Yielded("") => break State::Yielded(map),
-                State::Yielded(line) => {
+            match self.read_line().as_deref()? {
+                "" => break Some(map),
+                line => {
                     map.extend(line.chars().enumerate().filter_map(|(x, c)| match c {
                         '.' => None,
                         c => Some((vector![x as i64, y], c)),
@@ -221,8 +187,8 @@ fn routine(moves: &[Move]) -> (String, Vec<String>) {
 }
 
 fn part1(program: Vec<i64>) -> i64 {
-    let mut computer = Computer::new(program);
-    let image = computer.read_image().unwrap();
+    let mut c = Computer::new(program);
+    let image = c.read_image().unwrap();
     let scaffolds = scaffolds(&image);
     scaffolds
         .iter()
@@ -233,18 +199,21 @@ fn part1(program: Vec<i64>) -> i64 {
 
 fn part2(mut program: Vec<i64>) -> i64 {
     program[0] = 2;
-    let mut computer = Computer::new(program);
-    let image = computer.read_image().unwrap();
+    let mut c = Computer::new(program);
+    let image = c.read_image().unwrap();
     let moves = navigate(&image);
     let (routine, functions) = routine(&moves);
-    computer.read_line().unwrap();
-    computer.write_line(&routine).unwrap();
+    c.read_line().unwrap();
+    c.write_line(&routine);
+    c.read_line().unwrap();
     for f in functions {
-        computer.write_line(&f);
+        c.write_line(&f);
+        c.read_line().unwrap();
     }
-    computer.write_line("n").unwrap();
-    computer.read_image().unwrap();
-    computer.next().unwrap()
+    c.write_line("n");
+    c.read_line().unwrap();
+    c.read_image().unwrap();
+    c.next().unwrap()
 }
 
 fn main() {

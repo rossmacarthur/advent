@@ -10,7 +10,8 @@ fn default_input() -> Vec<i64> {
 
 fn is_affected(input: &[i64], x: i64, y: i64) -> bool {
     let mut computer = Computer::new(input.to_vec());
-    computer.input((x, y));
+    computer.input(x);
+    computer.input(y);
     computer.next().unwrap() == 1
 }
 

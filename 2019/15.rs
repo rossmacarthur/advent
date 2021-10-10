@@ -34,7 +34,7 @@ impl Computer {
             EAST => 4,
             d => panic!("invalid direction `{:?}`", d),
         });
-        self.next_value().map(|v| match v {
+        self.next().map(|v| match v {
             0 => Status::Wall,
             1 => Status::Moved,
             2 => Status::Found,
