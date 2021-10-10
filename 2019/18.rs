@@ -68,7 +68,7 @@ fn bit(c: char) -> u32 {
 
 /// Iterate over the set bits in a bitmap.
 fn iter(bitmap: u32) -> impl Iterator<Item = u32> + 'static {
-    iter::successors(Some(1u32), |n| Some(n * 2))
+    iter::successors(Some(1u32), |n| n.checked_mul(2))
         .take(32)
         .filter(move |b| bitmap & b != 0)
 }
