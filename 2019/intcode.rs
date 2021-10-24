@@ -4,16 +4,11 @@
 
 use std::cmp::max;
 use std::collections::VecDeque;
-use std::convert::TryFrom;
 use std::fmt::Debug;
 use std::result;
 use std::str::FromStr;
 
 use thiserror::Error;
-
-pub fn cast(num: i64) -> usize {
-    usize::try_from(num).unwrap()
-}
 
 pub fn parse_program<T>(input: &str) -> Vec<T>
 where
@@ -36,6 +31,8 @@ pub enum Error {
     UnknownMode { mode: i64 },
     #[error("unknown opcode `{}`", .opcode)]
     UnknownOpcode { opcode: i64 },
+    #[error("failed to cast `{}` as `usize`", .num)]
+    BadConversion { num: i64 },
 }
 
 /// The state of the computer.
@@ -55,6 +52,10 @@ pub struct Computer {
     ptr: usize,
     relative_base: i64,
     input: VecDeque<i64>,
+}
+
+fn cast(num: i64) -> Result<usize> {
+    usize::try_from(num).map_err(|_| Error::BadConversion { num })
 }
 
 impl Computer {
@@ -89,9 +90,9 @@ impl Computer {
         let opcode = self.mem_get(self.ptr);
         let ptr = self.ptr + i;
         match opcode / (10i64.pow((1 + i) as u32)) % 10 {
-            0 => Ok(cast(self.mem_get(ptr))),
+            0 => Ok(cast(self.mem_get(ptr))?),
             1 => Ok(ptr),
-            2 => Ok(cast(self.relative_base + self.mem_get(ptr))),
+            2 => Ok(cast(self.relative_base + self.mem_get(ptr))?),
             mode => Err(Error::UnknownMode { mode }),
         }
     }
@@ -130,14 +131,14 @@ impl Computer {
                 }
                 5 => {
                     if self.param(1)? != 0 {
-                        self.ptr = cast(self.param(2)?);
+                        self.ptr = cast(self.param(2)?)?;
                     } else {
                         self.ptr += 3;
                     }
                 }
                 6 => {
                     if self.param(1)? == 0 {
-                        self.ptr = cast(self.param(2)?);
+                        self.ptr = cast(self.param(2)?)?;
                     } else {
                         self.ptr += 3;
                     }

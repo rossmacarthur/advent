@@ -2,7 +2,7 @@ mod intcode;
 
 use itertools::Itertools;
 
-use intcode::{cast, parse_program, State};
+use intcode::{parse_program, State};
 
 fn default_input() -> Vec<i64> {
     parse_program(include_str!("input/07.txt"))
@@ -12,6 +12,10 @@ fn default_input() -> Vec<i64> {
 struct Computer {
     mem: Vec<i64>,
     ptr: usize,
+}
+
+fn cast(num: i64) -> usize {
+    usize::try_from(num).unwrap()
 }
 
 impl Computer {

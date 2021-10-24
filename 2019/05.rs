@@ -1,6 +1,6 @@
 mod intcode;
 
-use intcode::{cast, parse_program};
+use intcode::parse_program;
 
 fn default_input() -> Vec<i64> {
     parse_program(include_str!("input/05.txt"))
@@ -10,6 +10,10 @@ fn default_input() -> Vec<i64> {
 struct Computer {
     mem: Vec<i64>,
     ptr: usize,
+}
+
+fn cast(num: i64) -> usize {
+    usize::try_from(num).unwrap()
 }
 
 impl Computer {
