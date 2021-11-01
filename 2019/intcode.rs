@@ -105,7 +105,7 @@ impl Computer {
         self.param_ptr(i).map(move |ptr| self.mem_get_mut(ptr))
     }
 
-    fn try_next_state(&mut self) -> Result<State> {
+    pub fn try_next_state(&mut self) -> Result<State> {
         loop {
             match self.mem_get(self.ptr) % 100 {
                 1 => {
