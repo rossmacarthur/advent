@@ -9,21 +9,23 @@ use peter::Stylize;
 
 use crate::stats::Stats;
 
+type FnBox<'a> = Box<dyn Fn() -> Box<dyn Display + 'a> + 'a>;
+
 #[derive(Default)]
 pub struct Advent<'a> {
-    parts: Vec<Box<dyn Fn() -> Box<dyn Display + 'a> + 'a>>,
+    parts: Vec<(Option<String>, FnBox<'a>)>,
 }
 
-fn print_bench_summary(i: usize, times: &[f64]) {
+fn print_bench_summary(i: usize, name: Option<String>, times: &[f64]) {
     if i != 0 {
         println!();
     }
-    let part = format!("Part {}", i + 1);
+    let name = name.unwrap_or_else(|| format!("Part {}", i + 1));
     println!(
         "{}{:>width$}",
-        part.bold(),
+        name.bold(),
         human::fmt_samples(times.len()).fixed(245),
-        width = 46 - part.chars().count(),
+        width = 46 - name.chars().count(),
     );
     let (mean, std_dev, min, max) =
         human::fmt_time_four(times.mean(), times.std_dev(), times.min(), times.max());
@@ -43,20 +45,17 @@ fn print_bench_summary(i: usize, times: &[f64]) {
     );
 }
 
-fn print_run_summary(i: usize, result: String, elapsed: String) {
-    let (result, width) = if result.contains('\n') {
-        let mut result = result.trim().to_owned();
-        result.push('\n');
-        (result, 45)
-    } else {
-        let width = 37_usize.saturating_sub(result.chars().count());
-        (result, width)
-    };
+fn print_run_summary(i: usize, name: Option<String>, result: String, elapsed: String) {
+    if i != 0 {
+        println!();
+    }
+    let name = name.unwrap_or_else(|| format!("Part {}", i + 1));
+    let width = 46_usize.saturating_sub(name.chars().count() + 2);
     println!(
-        "{}: {} {:>width$}",
-        format!("Part {}", i + 1).bold().cyan(),
-        result.bold(),
+        "{}: {:>width$}\n{}",
+        name.bold().cyan(),
         format!("({})", elapsed).fixed(245),
+        result.bold(),
         width = width,
     )
 }
@@ -67,20 +66,29 @@ impl<'a> Advent<'a> {
         R: Display + 'a,
         F: Fn() -> R + 'a,
     {
-        self.parts.push(Box::new(move || Box::new(f())))
+        self.parts.push((None, Box::new(move || Box::new(f()))))
+    }
+
+    pub fn named<F, R>(&mut self, name: &str, f: F)
+    where
+        R: Display + 'a,
+        F: Fn() -> R + 'a,
+    {
+        let name = Some(String::from(name));
+        self.parts.push((name, Box::new(move || Box::new(f()))))
     }
 
     fn once(self) {
-        for (i, f) in self.parts.into_iter().enumerate() {
+        for (i, (name, f)) in self.parts.into_iter().enumerate() {
             let start = Instant::now();
             let result = f();
             let elapsed = (Instant::now() - start).as_secs_f64();
-            print_run_summary(i, result.to_string(), human::fmt_time(elapsed));
+            print_run_summary(i, name, result.to_string(), human::fmt_time(elapsed));
         }
     }
 
-    fn bench(self) {
-        for (i, f) in self.parts.into_iter().enumerate() {
+    pub fn bench(self) {
+        for (i, (name, f)) in self.parts.into_iter().enumerate() {
             let five_s = Duration::from_secs(3);
             let three_s = Duration::from_secs(5);
 
@@ -108,7 +116,7 @@ impl<'a> Advent<'a> {
                 times.retain(|&t| t >= min && t <= max);
             }
 
-            print_bench_summary(i, &times);
+            print_bench_summary(i, name, &times);
         }
     }
 
