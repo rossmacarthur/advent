@@ -162,11 +162,16 @@ impl Computer {
     }
 
     #[track_caller]
-    pub fn next(&mut self) -> Option<i64> {
-        match match self.try_next_state() {
+    pub fn next_state(&mut self) -> State {
+        match self.try_next_state() {
             Ok(state) => state,
             Err(err) => panic!("oops `{}`", err),
-        } {
+        }
+    }
+
+    #[track_caller]
+    pub fn next(&mut self) -> Option<i64> {
+        match self.next_state() {
             State::Yielded(v) => Some(v),
             _ => None,
         }

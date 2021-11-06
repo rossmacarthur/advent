@@ -23,6 +23,10 @@ members = [
 ]
 
 [[bin]]
+name = "2019-bench-intcode"
+path = "2019/bench-intcode.rs"
+
+[[bin]]
 name = "201901"
 path = "2019/01.rs"
 
