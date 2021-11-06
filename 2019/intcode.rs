@@ -168,8 +168,7 @@ impl Computer {
             Err(err) => panic!("oops `{}`", err),
         } {
             State::Yielded(v) => Some(v),
-            State::Complete => None,
-            state => panic!("unexpected state `{:?}`", state),
+            _ => None,
         }
     }
 
