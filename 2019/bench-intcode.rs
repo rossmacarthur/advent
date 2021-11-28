@@ -1,8 +1,7 @@
-/// Benchmark the intcode computer from 2019.
-///
-/// See https://redd.it/egq9xn
+//! Benchmark the intcode computer from 2019.
+//!
+//! See https://redd.it/egq9xn
 
-#[path = "../2019/intcode.rs"]
 mod intcode;
 
 use crate::intcode::{parse_program, Computer, State};
