@@ -11,14 +11,12 @@ regex = "1.5.4"
 regex-macro = "0.1.1"
 thiserror = "1.0.30"
 advent = { path = "crates/advent"}
-math = { path = "crates/math" }
 vectrix = { path = "crates/vectrix" }
 
 [workspace]
 members = [
     "crates/advent",
     "crates/cli",
-    "crates/math",
     "crates/vectrix"
 ]
 
