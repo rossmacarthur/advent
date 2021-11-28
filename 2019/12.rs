@@ -1,7 +1,6 @@
 use itertools::Itertools;
-use math::lcm;
 use regex_macro::regex;
-use vectrix::{vector, Vector3};
+use vectrix::{gcd, vector, Vector3};
 
 type Vector = Vector3<i64>;
 
@@ -39,6 +38,11 @@ impl Moon {
     fn energy(&self) -> i64 {
         self.pos.l1_norm() * self.vel.l1_norm()
     }
+}
+
+/// Returns the least common multiple of two numbers.
+fn lcm(x: i64, y: i64) -> i64 {
+    x * y / gcd(x, y)
 }
 
 /// Simulate a set of moons moving, applies acceleration and velocity.

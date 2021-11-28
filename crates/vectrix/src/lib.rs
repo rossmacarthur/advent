@@ -1,6 +1,5 @@
 use std::collections::{HashMap, HashSet};
 
-use math::gcd;
 pub use vectrix::*;
 
 pub type Vector2<T> = vectrix::Vector<T, 2>;
@@ -53,6 +52,16 @@ impl VectorExt for Vector2<i64> {
             .atan2(self.x as f64)
             .rem_euclid(std::f64::consts::TAU)
     }
+}
+
+/// Returns the greatest common divisor of two numbers.
+pub fn gcd(mut x: i64, mut y: i64) -> i64 {
+    while x != 0 {
+        let tmp = x;
+        x = y % tmp;
+        y = tmp;
+    }
+    y.abs()
 }
 
 pub fn parse_map<F, V>(input: &str, parse: F) -> HashMap<Vector2<i64>, V>

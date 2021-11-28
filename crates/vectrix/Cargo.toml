@@ -5,5 +5,4 @@ edition = "2021"
 publish = false
 
 [dependencies]
-math = { path = "../math"}
 vectrix = "0.1.3"

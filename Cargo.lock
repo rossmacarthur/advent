@@ -15,7 +15,6 @@ version = "0.0.0"
 dependencies = [
  "advent",
  "itertools",
- "math",
  "once_cell",
  "regex",
  "regex-macro",
@@ -222,10 +221,6 @@ dependencies = [
  "pkg-config",
  "vcpkg",
 ]
-
-[[package]]
-name = "math"
-version = "0.0.0"
 
 [[package]]
 name = "memchr"
@@ -502,7 +497,6 @@ checksum = "f1bddf1187be692e79c5ffeab891132dfb0f236ed36a43c7ed39f1165ee20191"
 name = "vectrix"
 version = "0.0.0"
 dependencies = [
- "math",
  "vectrix 0.1.3",
 ]
 
