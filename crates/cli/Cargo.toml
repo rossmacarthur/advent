@@ -6,8 +6,10 @@ publish = false
 
 [dependencies]
 anyhow = "1.0.40"
-clap = "3.0.0-beta.2"
+argh = "0.1.6"
 curl = "0.4.37"
 open = "1.7.0"
 serde = { version = "1.0.126", features = ["derive"] }
 toml = "0.5.8"
+
+[features]

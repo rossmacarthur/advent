@@ -3,7 +3,7 @@ use std::fs;
 use std::path::PathBuf;
 
 use anyhow::{Context, Result};
-use clap::{AppSettings, Clap};
+use argh::FromArgs;
 use serde::{Deserialize, Serialize};
 
 #[derive(Debug, Clone, PartialEq, Eq, PartialOrd, Ord, Deserialize, Serialize)]
@@ -40,43 +40,65 @@ fn download(url: &str) -> Result<String> {
 
 fn new(year: u32, day: u32) -> Result<()> {
     let name = format!("{:04}{:02}", year, day);
-    let bin = PathBuf::from(format!("{:04}/{:02}.rs", year, day));
-    let input = PathBuf::from(format!("{:04}/input/{:02}.txt", year, day));
+
+    let workspace_dir = PathBuf::from(env!("CARGO_WORKSPACE_DIR"));
+    let manifest_path = workspace_dir.join("Cargo.toml");
+
+    // Calculate bin and input file paths.
+    let bin = workspace_dir
+        .join(format!("{:04}", year))
+        .join(format!("{:02}.rs", day));
+    let input = workspace_dir
+        .join(format!("{:04}", year))
+        .join("input")
+        .join(format!("{:02}.txt", day));
+
+    // Create directory if not exists
+    fs::create_dir_all(input.parent().unwrap())?;
 
     // Download input
     if input.exists() {
-        println!("{} already exists", input.display());
+        println!(
+            "{} already exists",
+            input.strip_prefix(&workspace_dir)?.display()
+        );
     } else {
         let url = format!("https://adventofcode.com/{}/day/{}/input", year, day);
         let text = download(&url)?;
         fs::write(&input, text)?;
-        println!("Downloaded input to {}", input.display());
+        println!(
+            "Downloaded input to {}",
+            input.strip_prefix(&workspace_dir)?.display()
+        );
     }
 
     // Add {year}/{day}.rs file
     const TEMPLATE: &str = include_str!("template.rs");
     if bin.exists() {
-        println!("{} already exists", bin.display());
+        println!(
+            "{} already exists",
+            bin.strip_prefix(&workspace_dir)?.display()
+        );
     } else {
         fs::write(&bin, TEMPLATE.replace("{day}", &format!("{:02}", day)))?;
-        println!("Created {}", bin.display());
+        println!("Created {}", bin.strip_prefix(&workspace_dir)?.display());
     }
 
     // Update Cargo.toml
-    let manifest = fs::read_to_string("Cargo.toml")?;
+    let manifest = fs::read_to_string(&manifest_path)?;
     let index = manifest.find("[[bin]]").unwrap();
     let (main, binaries) = manifest.split_at(index);
     let mut bins: Binaries = toml::from_str(binaries)?;
     let to_add = Binary {
         name: name.clone(),
-        path: bin,
+        path: bin.strip_prefix(&workspace_dir)?.to_owned(),
     };
     let added = !bins.bin.contains(&to_add);
     bins.bin.push(to_add);
     bins.bin.sort();
     bins.bin.dedup();
     let binaries = toml::to_string(&bins)?;
-    fs::write("Cargo.toml", main.to_owned() + &binaries)?;
+    fs::write(&manifest_path, main.to_owned() + &binaries)?;
     if added {
         println!("Added {} binary to Cargo manifest", name);
     } else {
@@ -91,43 +113,46 @@ fn new(year: u32, day: u32) -> Result<()> {
 
 fn open(year: u32, day: u32) -> Result<()> {
     let url = format!("https://adventofcode.com/{}/day/{}", year, day);
-    open::that(&url)?;
+    open::with(&url, "firefox")?;
     Ok(())
 }
 
-#[derive(Debug, Clap)]
-#[clap(
-    author,
-    about,
-    global_setting = AppSettings::DeriveDisplayOrder,
-    global_setting = AppSettings::DisableHelpSubcommand,
-    global_setting = AppSettings::GlobalVersion,
-    global_setting = AppSettings::VersionlessSubcommands,
-    setting = AppSettings::SubcommandRequiredElseHelp,
-)]
-enum Opt {
-    /// Create a new blank template for the given day and year.
-    New {
-        #[clap(long, short, value_name = "YEAR")]
-        year: u32,
+/// Add a puzzle template or open the puzzle description.
+#[derive(Debug, FromArgs)]
+struct Opt {
+    /// the puzzle year.
+    #[argh(option, short = 'y')]
+    year: u32,
 
-        #[clap(long, short, value_name = "DAY")]
-        day: u32,
-    },
+    /// the puzzle day.
+    #[argh(option, short = 'd')]
+    day: u32,
 
-    /// Open the browser for the given problem.
-    Open {
-        #[clap(long, short, value_name = "YEAR")]
-        year: u32,
+    /// the command.
+    #[argh(positional, arg_name = "new|open")]
+    command: Command,
+}
 
-        #[clap(long, short, value_name = "DAY")]
-        day: u32,
-    },
+#[derive(Debug)]
+enum Command {
+    New,
+    Open,
+}
+
+impl argh::FromArgValue for Command {
+    fn from_arg_value(value: &str) -> Result<Self, String> {
+        match value {
+            "new" => Ok(Self::New),
+            "open" => Ok(Self::Open),
+            _ => Err("expected `new` or `open`".into()),
+        }
+    }
 }
 
 fn main() -> Result<()> {
-    match Opt::parse() {
-        Opt::New { year, day } => new(year, day),
-        Opt::Open { year, day } => open(year, day),
+    let Opt { year, day, command } = argh::from_env();
+    match command {
+        Command::New => new(year, day),
+        Command::Open => open(year, day),
     }
 }
