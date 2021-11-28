@@ -164,7 +164,7 @@ fn shortest(map: &HashMap<Vector, Tile>, recurse: bool) -> usize {
             // descreases the recursion level. Note: it is not valid to navigate
             // to outer portals on the outermost level.
             portal @ Tile::OutPortal(_) if !recurse || lvl != 0 => {
-                pq.push(matching(portal, lvl - 1));
+                pq.push(matching(portal, lvl.saturating_sub(1)));
                 pq.extend(cardinals());
             }
 
