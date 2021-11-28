@@ -9,22 +9,25 @@ course 🦀!
 
 To run a specific solution just use `cargo run` and pass in the binary name
 which consists of the year and the day. For example, the following will run the
-solution for 2020 Day 7.
+solution for 2020 Day 18.
 
 ```
-cargo run --release --bin 202007
+cargo run --release --bin 202018
 ```
-
-Tests can be run in a similar way.
-
-```
-cargo test --release --bin 202007
-```
+<img width="500" alt="screenshot of cargo run" src="https://user-images.githubusercontent.com/17109887/143766604-af62d540-5c11-45b1-ae60-702df8e9869c.png">
 
 Benchmarks can be run by passing `--bench` to the binary.
 
 ```
-cargo run --release --bin 202007 -- --bench
+cargo run --release --bin 202018 -- --bench
+```
+
+<img width="500" alt="screenshot of cargo run with bench" src="https://user-images.githubusercontent.com/17109887/143766603-e73f01cc-f318-4977-aec3-e12f137e32e6.png">
+
+Tests are run using `cargo test`. Passing `--release` is recommended.
+
+```
+cargo test --release --bin 202018
 ```
 
 ## Development
