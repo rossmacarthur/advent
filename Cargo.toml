@@ -5,6 +5,7 @@ edition = "2021"
 publish = false
 
 [dependencies]
+itermore = "0.1.0"
 itertools = "0.10.0"
 once_cell = "1.7.2"
 regex = "1.5.4"
@@ -219,3 +220,7 @@ path = "2020/24.rs"
 [[bin]]
 name = "202025"
 path = "2020/25.rs"
+
+[[bin]]
+name = "202101"
+path = "2021/01.rs"
