@@ -5,11 +5,9 @@ edition = "2021"
 publish = false
 
 [dependencies]
-anyhow = "1.0.40"
+anyhow = "1.0.51"
 argh = "0.1.6"
-curl = "0.4.37"
-open = "1.7.0"
-serde = { version = "1.0.126", features = ["derive"] }
+curl = "0.4.41"
+open = "2.0.2"
+serde = { version = "1.0.130", features = ["derive"] }
 toml = "0.5.8"
-
-[features]
