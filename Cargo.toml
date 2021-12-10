@@ -18,6 +18,7 @@ vectrix = { path = "crates/vectrix" }
 members = [
     "crates/advent",
     "crates/cli",
+    "crates/ascii-art",
     "crates/vectrix"
 ]
 

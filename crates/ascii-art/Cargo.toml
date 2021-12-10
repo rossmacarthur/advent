@@ -1,9 +1,11 @@
 [package]
-name = "advent"
+name = "ascii-art"
 version = "0.0.0"
 edition = "2021"
 publish = false
 
 [dependencies]
+itermore = "0.1.0"
 peter = "0.2.1"
-ascii-art = { path = "../ascii-art" }
+rand = "0.8.4"
+unicode-width = "0.1.9"

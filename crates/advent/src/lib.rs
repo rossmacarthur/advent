@@ -128,7 +128,10 @@ impl<'a> Advent<'a> {
                 }
                 self.bench()
             }
-            false => self.once(),
+            false => {
+                println!("{}", ascii_art::fun());
+                self.once()
+            }
         }
     }
 }
