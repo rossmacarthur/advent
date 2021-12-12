@@ -1,10 +1,10 @@
 mod human;
 mod stats;
 
-use std::env;
 use std::fmt::Display;
 use std::time::{Duration, Instant};
 
+use argh::FromArgs;
 use peter::Stylize;
 
 use crate::stats::Stats;
@@ -121,17 +121,31 @@ impl<'a> Advent<'a> {
     }
 
     pub fn finish(self) {
-        match env::args().any(|arg| arg == "--bench") {
-            true => {
-                if cfg!(not(profile = "release")) {
-                    panic!("--bench requires release mode");
-                }
-                self.bench()
+        /// Run the program.
+        #[derive(Debug, FromArgs)]
+        struct Opt {
+            /// whether to benchmark
+            #[argh(switch)]
+            bench: bool,
+            /// whether to not print trees
+            #[argh(switch)]
+            no_trees: bool,
+        }
+
+        let Opt { bench, no_trees } = argh::from_env();
+        if !no_trees {
+            println!("{}", ascii_art::fun());
+        }
+        if bench {
+            if cfg!(not(profile = "release")) {
+                eprintln!(
+                    "{}\n",
+                    "Note: using --bench without --release".yellow().bold()
+                );
             }
-            false => {
-                println!("{}", ascii_art::fun());
-                self.once()
-            }
+            self.bench()
+        } else {
+            self.once()
         }
     }
 }
