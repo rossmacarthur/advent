@@ -6,6 +6,7 @@ version = 3
 name = "advent"
 version = "0.0.0"
 dependencies = [
+ "argh",
  "ascii-art",
  "peter",
 ]

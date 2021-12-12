@@ -142,7 +142,7 @@ fn paste(mut bg: Image, fg: Image, (x, y): (usize, usize)) -> Image {
 
 pub fn fun() -> Image {
     let mut rng = rand::thread_rng();
-    let width = 45;
+    let width = 46;
     let height = 19;
 
     // Draw a background of snowflakes
