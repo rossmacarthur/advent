@@ -16,6 +16,7 @@ name = "advent-bins"
 version = "0.0.0"
 dependencies = [
  "advent",
+ "either",
  "itermore",
  "itertools",
  "once_cell",
