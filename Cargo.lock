@@ -107,7 +107,6 @@ checksum = "38de00daab4eac7d753e97697066238d67ce9d7e2d823ab4f72fe14af29f3f33"
 name = "ascii-art"
 version = "0.0.0"
 dependencies = [
- "itermore",
  "peter",
  "rand",
  "unicode-width",
@@ -198,9 +197,9 @@ dependencies = [
 
 [[package]]
 name = "itermore"
-version = "0.1.0"
+version = "0.2.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "e23e44d96ab47103d69ec50622c94f2329c88af877029fb6f013573cfb94a8d5"
+checksum = "0b0cdbe2bb1ccdf0542e9ce8af508e0faef28f5fcab793fac4f493213e04d123"
 
 [[package]]
 name = "itertools"

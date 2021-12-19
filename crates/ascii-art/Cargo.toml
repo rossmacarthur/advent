@@ -5,7 +5,6 @@ edition = "2021"
 publish = false
 
 [dependencies]
-itermore = "0.1.0"
 peter = "0.2.1"
 rand = "0.8.4"
 unicode-width = "0.1.9"

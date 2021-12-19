@@ -1,4 +1,4 @@
-use itermore::IterMore;
+use itermore::Itermore;
 
 fn parse_input(input: &str) -> Vec<i64> {
     input
@@ -13,11 +13,15 @@ fn default_input() -> Vec<i64> {
 }
 
 fn part1(input: &[i64]) -> usize {
-    input.iter().windows().filter(|[a, b]| b > a).count()
+    input.iter().array_windows().filter(|[a, b]| b > a).count()
 }
 
 fn part2(input: &[i64]) -> usize {
-    input.iter().windows().filter(|[a, _, _, b]| b > a).count()
+    input
+        .iter()
+        .array_windows()
+        .filter(|[a, _, _, b]| b > a)
+        .count()
 }
 
 fn main() {
