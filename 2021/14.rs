@@ -1,7 +1,7 @@
 use std::collections::HashMap;
 
 use either::Either;
-use itermore::IterMore;
+use itermore::Itermore;
 
 type Rules = HashMap<[char; 2], char>;
 
@@ -12,7 +12,7 @@ fn parse_input(input: &str) -> (&str, Rules) {
         .lines()
         .map(|line| {
             let (left, right) = line.split_once(" -> ").unwrap();
-            let pair = left.chars().chunks().next().unwrap();
+            let pair = left.chars().next_array().unwrap();
             let insert = right.chars().next().unwrap();
             (pair, insert)
         })
@@ -35,7 +35,7 @@ fn solve(template: &str, rules: Rules, steps: usize) -> usize {
     // Keep track of the count for each pair of letters.
     let mut pairs = template
         .chars()
-        .windows()
+        .array_windows()
         .fold(HashMap::new(), |mut acc, pair| {
             *acc.entry(pair).or_insert(0) += 1;
             acc

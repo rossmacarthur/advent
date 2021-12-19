@@ -1,6 +1,7 @@
 use std::collections::VecDeque;
 
 use hashbrown::HashSet;
+use itermore::Itermore;
 use itertools::Itertools;
 use vectrix::{vector, Vector3};
 
@@ -12,9 +13,11 @@ fn parse_input(input: &str) -> VecDeque<Vec<Vector>> {
         .map(|scan| {
             scan.lines()
                 .skip(1)
-                .map(|line| {
-                    let mut it = line.split(',').map(str::parse).map(Result::unwrap);
-                    [it.next().unwrap(), it.next().unwrap(), it.next().unwrap()]
+                .filter_map(|line| {
+                    line.split(',')
+                        .map(str::parse)
+                        .map(Result::unwrap)
+                        .next_array::<3>()
                 })
                 .map(Vector::from)
                 .collect()

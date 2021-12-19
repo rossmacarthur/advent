@@ -1,7 +1,7 @@
 use std::collections::HashMap;
 use std::iter;
 
-use itermore::IterMore;
+use itermore::Itermore;
 use vectrix::Vector2;
 
 type Vector = Vector2<i64>;
@@ -14,8 +14,7 @@ fn parse_input(input: &str) -> Vec<(Vector, Vector)> {
                 s.split(',')
                     .map(str::parse)
                     .map(Result::unwrap)
-                    .chunks::<2>()
-                    .next()
+                    .next_array::<2>()
                     .map(Vector::from)
                     .unwrap()
             });
