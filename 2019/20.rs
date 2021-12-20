@@ -13,7 +13,7 @@ fn parse_input(input: &str) -> HashMap<Vector, Tile> {
         Label(char),
     }
 
-    let map = parse_map(input, |c| match c {
+    let map: HashMap<_, _> = parse_map(input, |c| match c {
         ' ' => T::Space,
         '#' => T::Wall,
         '.' => T::Floor,

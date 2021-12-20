@@ -1,4 +1,4 @@
-use std::collections::{HashMap, HashSet};
+use std::collections::HashMap;
 
 pub use vectrix::*;
 
@@ -72,8 +72,9 @@ pub fn gcd(mut x: i64, mut y: i64) -> i64 {
     y.abs()
 }
 
-pub fn parse_map<F, V>(input: &str, parse: F) -> HashMap<Vector2<i64>, V>
+pub fn parse_map<M, F, V>(input: &str, parse: F) -> M
 where
+    M: FromIterator<(Vector2<i64>, V)>,
     F: Fn(char) -> V,
 {
     input
@@ -88,13 +89,14 @@ where
         .collect()
 }
 
-pub fn parse_map_set(input: &str) -> HashSet<Vector2<i64>> {
-    parse_map(input, |c| match c {
+pub fn parse_map_set<S>(input: &str) -> S
+where
+    S: FromIterator<Vector2<i64>>,
+{
+    let m: HashMap<_, _> = parse_map(input, |c| match c {
         '#' => Some(()),
         '.' => None,
         _ => panic!("unrecognized character"),
-    })
-    .into_iter()
-    .filter_map(|(k, v)| v.map(|_| k))
-    .collect()
+    });
+    m.into_iter().filter_map(|(k, v)| v.map(|_| k)).collect()
 }
