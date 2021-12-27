@@ -1,71 +1,84 @@
+//! Calculate stats for a slice of numbers.
+
 use std::cmp::Ordering;
 
-/// Calculate stats for a collection of data points.
-///
-/// Note: the provided slice implementation requires that the data is sorted.
-pub trait Stats {
-    fn min(&self) -> f64;
-    fn max(&self) -> f64;
-    fn mean(&self) -> f64;
-    fn percentile(&self, pct: f64) -> f64;
-    fn median(&self) -> f64 {
-        self.percentile(50.0)
-    }
-    fn std_dev(&self) -> f64;
+#[derive(Debug, Clone, Copy)]
+pub struct Stats {
+    pub len: usize,
+    pub min: f64,
+    pub max: f64,
+    pub mean: f64,
+    pub std_dev: f64,
 }
 
-pub fn cmp(a: &f64, b: &f64) -> Ordering {
-    a.partial_cmp(b).unwrap()
+// Copied from the standard library f64::total_cmp() function.
+//
+// See https://github.com/rust-lang/rust/issues/72599
+fn cmp(a: &f64, b: &f64) -> Ordering {
+    let mut a = a.to_bits() as i64;
+    let mut b = b.to_bits() as i64;
+    a ^= (((a >> 63) as u64) >> 1) as i64;
+    b ^= (((b >> 63) as u64) >> 1) as i64;
+    a.cmp(&b)
 }
 
-impl Stats for [f64] {
-    fn min(&self) -> f64 {
-        self.iter().next().copied().unwrap()
+pub fn basics(mut data: Vec<f64>) -> Stats {
+    data.sort_by(cmp);
+
+    // remove extreme outliers 🤷‍♂️
+    if data.len() > 1_000 {
+        let min = percentile(&data, 1.0);
+        let max = percentile(&data, 99.0);
+        data.retain(|&t| t >= min && t <= max);
     }
 
-    fn max(&self) -> f64 {
-        self.iter().last().copied().unwrap()
-    }
-
-    fn mean(&self) -> f64 {
-        let sum: f64 = self.iter().sum();
-        sum / (self.len() as f64)
-    }
-
-    fn percentile(&self, pct: f64) -> f64 {
-        let zero: f64 = 0.0;
-        let hundred: f64 = 100.0;
-        assert!(zero <= pct);
-        assert!(pct <= hundred);
-
-        if (pct - hundred).abs() < f64::EPSILON {
-            return self[self.len() - 1];
-        } else if pct == 0.0 {
-            return self[0];
-        }
-
-        let len = (self.len() - 1) as f64;
-        let rank = (pct / hundred) * len;
-        let lrank = rank.floor();
-        let d = rank - lrank;
-        let n = lrank as usize;
-        let lo = self[n];
-        let hi = self[n + 1];
-        lo + (hi - lo) * d
-    }
-
-    fn std_dev(&self) -> f64 {
-        let mean = self.mean();
-        let sum: f64 = self
+    let len = data.len();
+    let min = data[0];
+    let max = data[len - 1];
+    let mean = {
+        let sum: f64 = data.iter().sum();
+        sum / (len as f64)
+    };
+    let std_dev = {
+        let sum: f64 = data
             .iter()
             .map(|x| {
                 let y = x - mean;
                 y * y
             })
             .sum();
-        let variance = sum / (self.len() - 1) as f64;
+        let variance = sum / (len - 1) as f64;
         variance.sqrt()
+    };
+    Stats {
+        len,
+        min,
+        max,
+        mean,
+        std_dev,
     }
+}
+
+pub fn percentile(data: &[f64], pct: f64) -> f64 {
+    let zero: f64 = 0.0;
+    let hundred: f64 = 100.0;
+    assert!(zero <= pct);
+    assert!(pct <= hundred);
+
+    if (pct - hundred).abs() < f64::EPSILON {
+        return data[data.len() - 1];
+    } else if pct == 0.0 {
+        return data[0];
+    }
+
+    let len = (data.len() - 1) as f64;
+    let rank = (pct / hundred) * len;
+    let lrank = rank.floor();
+    let d = rank - lrank;
+    let n = lrank as usize;
+    let lo = data[n];
+    let hi = data[n + 1];
+    lo + (hi - lo) * d
 }
 
 #[cfg(test)]
@@ -79,13 +92,13 @@ mod tests {
     }
 
     #[test]
-    fn basic() {
-        let nums = [1.0, 2.0, 3.0];
-        assert_eq_f64!(nums.min(), 1.0);
-        assert_eq_f64!(nums.max(), 3.0);
-        assert_eq_f64!(nums.mean(), 2.0);
-        assert_eq_f64!(nums.percentile(25.0), 1.5);
-        assert_eq_f64!(nums.median(), 2.0);
-        assert_eq_f64!(nums.std_dev(), 1.0);
+    fn test_basics() {
+        let nums = vec![1.0, 2.0, 3.0];
+        let stats = basics(nums);
+
+        assert_eq_f64!(stats.min, 1.0);
+        assert_eq_f64!(stats.max, 3.0);
+        assert_eq_f64!(stats.mean, 2.0);
+        assert_eq_f64!(stats.std_dev, 1.0);
     }
 }

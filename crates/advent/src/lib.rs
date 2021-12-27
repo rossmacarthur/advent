@@ -7,8 +7,6 @@ use std::time::{Duration, Instant};
 use argh::FromArgs;
 use peter::Stylize;
 
-use crate::stats::Stats;
-
 type FnBox<'a> = Box<dyn Fn() -> Box<dyn Display + 'a> + 'a>;
 
 #[derive(Default)]
@@ -16,22 +14,21 @@ pub struct Advent<'a> {
     parts: Vec<(Option<String>, FnBox<'a>)>,
 }
 
-fn print_bench_summary(i: usize, name: Option<String>, times: &[f64]) {
+fn print_bench_summary(i: usize, name: Option<String>, stats: stats::Stats) {
     if i != 0 {
         println!();
     }
     let name = name.unwrap_or_else(|| format!("Part {}", i + 1));
-    let samples = human::Samples::new(times.len());
     println!(
         "{}{:>width$}",
         name.bold(),
-        samples.fixed(245),
+        human::Samples::new(stats.len).fixed(245),
         width = 46 - name.chars().count(),
     );
-    let mean = human::Time::new(times.mean());
-    let std_dev = human::Time::with_scale(times.std_dev(), mean.scale());
-    let min = human::Time::with_scale(times.min(), mean.scale());
-    let max = human::Time::with_scale(times.max(), mean.scale());
+    let mean = human::Time::new(stats.mean);
+    let std_dev = human::Time::with_scale(stats.std_dev, mean.scale());
+    let min = human::Time::with_scale(stats.min, mean.scale());
+    let max = human::Time::with_scale(stats.max, mean.scale());
     println!(
         "  Time ({} ± {}):       {:>9} ± {:>9}",
         "mean".green().bold(),
@@ -112,15 +109,7 @@ impl<'a> Advent<'a> {
                 times.push((t1 - t0).as_secs_f64());
             }
 
-            // remove extreme outliers 🤷‍♂️
-            times.sort_by(stats::cmp);
-            if times.len() > 1_000 {
-                let min = times.percentile(1.0);
-                let max = times.percentile(99.0);
-                times.retain(|&t| t >= min && t <= max);
-            }
-
-            print_bench_summary(i, name, &times);
+            print_bench_summary(i, name, stats::basics(times));
         }
     }
 
