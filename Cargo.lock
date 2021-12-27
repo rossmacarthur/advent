@@ -8,7 +8,13 @@ version = "0.0.0"
 dependencies = [
  "argh",
  "ascii-art",
+ "either",
+ "hashbrown",
+ "itermore",
+ "itertools",
  "peter",
+ "regex-macro",
+ "vectrix 0.2.0",
 ]
 
 [[package]]

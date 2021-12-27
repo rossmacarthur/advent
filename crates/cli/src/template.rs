@@ -1,3 +1,5 @@
+use advent::prelude::*;
+
 fn parse_input(input: &str) -> Vec<i64> {
     todo!()
 }

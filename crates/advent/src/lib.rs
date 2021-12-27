@@ -1,4 +1,5 @@
 mod human;
+pub mod prelude;
 mod stats;
 
 use std::fmt::Display;
