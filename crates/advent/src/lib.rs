@@ -21,23 +21,26 @@ fn print_bench_summary(i: usize, name: Option<String>, times: &[f64]) {
         println!();
     }
     let name = name.unwrap_or_else(|| format!("Part {}", i + 1));
+    let samples = human::Samples::new(times.len());
     println!(
         "{}{:>width$}",
         name.bold(),
-        human::fmt_samples(times.len()).fixed(245),
+        samples.fixed(245),
         width = 46 - name.chars().count(),
     );
-    let (mean, std_dev, min, max) =
-        human::fmt_time_four(times.mean(), times.std_dev(), times.min(), times.max());
+    let mean = human::Time::new(times.mean());
+    let std_dev = human::Time::with_scale(times.std_dev(), mean.scale());
+    let min = human::Time::with_scale(times.min(), mean.scale());
+    let max = human::Time::with_scale(times.max(), mean.scale());
     println!(
-        "  Time ({} ± {}):     {:>10} ± {:>10}",
+        "  Time ({} ± {}):       {:>9} ± {:>9}",
         "mean".green().bold(),
         "σ".green(),
         mean.green().bold(),
         std_dev.green(),
     );
     println!(
-        "  Range ({} … {}):   {:>10} … {:>10}",
+        "  Range ({} … {}):     {:>9} … {:>9}",
         "min".cyan(),
         "max".magenta(),
         min.cyan(),
@@ -45,7 +48,7 @@ fn print_bench_summary(i: usize, name: Option<String>, times: &[f64]) {
     );
 }
 
-fn print_run_summary(i: usize, name: Option<String>, result: String, elapsed: String) {
+fn print_run_summary(i: usize, name: Option<String>, result: String, elapsed: human::Time) {
     if i != 0 {
         println!();
     }
@@ -83,25 +86,26 @@ impl<'a> Advent<'a> {
             let start = Instant::now();
             let result = f();
             let elapsed = (Instant::now() - start).as_secs_f64();
-            print_run_summary(i, name, result.to_string(), human::fmt_time(elapsed));
+            print_run_summary(i, name, result.to_string(), human::Time::new(elapsed));
         }
     }
 
     pub fn bench(self) {
         for (i, (name, f)) in self.parts.into_iter().enumerate() {
-            let five_s = Duration::from_secs(3);
-            let three_s = Duration::from_secs(5);
+            const FIVE_SECS: Duration = Duration::from_secs(5);
+            const THREE_SECS: Duration = Duration::from_secs(3);
 
             // warm up for 3 secs
             let start = Instant::now();
-            while Instant::now() - start < five_s {
+            while Instant::now() - start < FIVE_SECS {
                 drop(f());
             }
 
             // now time for 5 secs, but with at least 25 samples
             let mut times = Vec::new();
             let start = Instant::now();
-            while times.len() < 25 || (Instant::now() - start < three_s && times.len() < 123_456) {
+            while times.len() < 25 || (Instant::now() - start < THREE_SECS && times.len() < 123_456)
+            {
                 let t0 = Instant::now();
                 drop(f());
                 let t1 = Instant::now();
