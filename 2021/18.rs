@@ -42,7 +42,7 @@ impl Node {
     }
 }
 
-fn parse(mut it: &mut Chars<'_>, depth: usize) -> Node {
+fn parse(it: &mut Chars<'_>, depth: usize) -> Node {
     if depth == 0 {
         match it.next() {
             Some('[') => {}
@@ -53,7 +53,7 @@ fn parse(mut it: &mut Chars<'_>, depth: usize) -> Node {
     let mut right = None;
     loop {
         let node = match it.next() {
-            Some('[') => parse(&mut it, depth + 1),
+            Some('[') => parse(it, depth + 1),
             Some(c @ '0'..='9') => Node::Num(c.to_digit(10).unwrap()),
             c => panic!("expected number or open bracket, got `{:?}`", c),
         };
