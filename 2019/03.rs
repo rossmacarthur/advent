@@ -1,11 +1,6 @@
-use std::collections::{HashMap, HashSet};
+use advent::prelude::*;
 
-use itertools::Itertools;
-use regex_macro::regex;
-use vectrix::{vector, Vector2};
-
-type Vector = Vector2<i64>;
-type Path = Vec<(Vector, i64)>;
+type Path = Vec<(Vector2, i64)>;
 
 fn parse_input(input: &str) -> (Path, Path) {
     input
@@ -34,9 +29,9 @@ fn default_input() -> (Path, Path) {
     parse_input(include_str!("input/03.txt"))
 }
 
-fn distances(path: &[(Vector, i64)]) -> HashMap<Vector, i64> {
+fn distances(path: &[(Vector2, i64)]) -> HashMap<Vector2, i64> {
     let mut distances = HashMap::new();
-    let mut position = Vector::zero();
+    let mut position = Vector2::zero();
     let mut distance = 0;
     for &(direction, length) in path {
         for _ in 0..length {
@@ -48,21 +43,21 @@ fn distances(path: &[(Vector, i64)]) -> HashMap<Vector, i64> {
     distances
 }
 
-fn keys(distances: &HashMap<Vector, i64>) -> HashSet<Vector> {
+fn keys(distances: &HashMap<Vector2, i64>) -> HashSet<Vector2> {
     distances.iter().map(|(k, _)| *k).collect()
 }
 
-fn part1((path1, path2): &(Path, Path)) -> i64 {
-    keys(&distances(path1))
-        .intersection(&keys(&distances(path2)))
-        .map(Vector::l1_norm)
+fn part1((p1, p2): (Path, Path)) -> i64 {
+    keys(&distances(&p1))
+        .intersection(&keys(&distances(&p2)))
+        .map(Vector2::l1_norm)
         .min()
         .unwrap()
 }
 
-fn part2((p1, p2): &(Path, Path)) -> i64 {
-    let distances1 = distances(p1);
-    let distances2 = distances(p2);
+fn part2((p1, p2): (Path, Path)) -> i64 {
+    let distances1 = distances(&p1);
+    let distances2 = distances(&p2);
     keys(&distances1)
         .intersection(&keys(&distances2))
         .into_iter()
@@ -72,36 +67,48 @@ fn part2((p1, p2): &(Path, Path)) -> i64 {
 }
 
 fn main() {
-    let input = default_input();
     let mut run = advent::start();
-    run.part(|| part1(&input));
-    run.part(|| part2(&input));
+    run.part(|| part1(default_input()));
+    run.part(|| part2(default_input()));
     run.finish();
 }
 
 #[test]
 fn example1() {
-    let input = parse_input("R8,U5,L5,D3\nU7,R6,D4,L4");
-    assert_eq!(part1(&input), 6);
-    assert_eq!(part2(&input), 30);
+    let input = parse_input(
+        "\
+R8,U5,L5,D3
+U7,R6,D4,L4",
+    );
+    assert_eq!(part1(input.clone()), 6);
+    assert_eq!(part2(input), 30);
 }
 
 #[test]
 fn example2() {
     let input = parse_input(
-        "R75,D30,R83,U83,L12,D49,R71,U7,L72\n\
-         U62,R66,U55,R34,D71,R55,D58,R83",
+        "\
+R75,D30,R83,U83,L12,D49,R71,U7,L72
+U62,R66,U55,R34,D71,R55,D58,R83",
     );
-    assert_eq!(part1(&input), 159);
-    assert_eq!(part2(&input), 610);
+    assert_eq!(part1(input.clone()), 159);
+    assert_eq!(part2(input), 610);
 }
 
 #[test]
 fn example3() {
     let input = parse_input(
-        "R98,U47,R26,D63,R33,U87,L62,D20,R33,U53,R51\n\
-         U98,R91,D20,R16,D67,R40,U7,R15,U6,R7",
+        "\
+R98,U47,R26,D63,R33,U87,L62,D20,R33,U53,R51
+U98,R91,D20,R16,D67,R40,U7,R15,U6,R7",
     );
-    assert_eq!(part1(&input), 135);
-    assert_eq!(part2(&input), 410);
+    assert_eq!(part1(input.clone()), 135);
+    assert_eq!(part2(input), 410);
+}
+
+#[test]
+fn default() {
+    let input = default_input();
+    assert_eq!(part1(input.clone()), 248);
+    assert_eq!(part2(input), 28580);
 }
