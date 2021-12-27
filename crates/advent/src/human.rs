@@ -1,120 +1,189 @@
+//! Format numbers for humans.
+
+use std::cmp::max;
 use std::fmt;
 
-const THOUSAND: f64 = 1_000.;
-const MILLION: f64 = 1_000_000.;
-const BILLION: f64 = 1_000_000_000.;
-
-const MILLIS_PER_SEC: f64 = THOUSAND;
-const MICROS_PER_SEC: f64 = MILLION;
-const NANOS_PER_SEC: f64 = BILLION;
-
+/// A number that is scaled in an easy to read way.
 #[derive(Debug, Clone, Copy)]
-pub enum SampleUnit {
-    Single,
-    Thousand,
-    Million,
-    Billion,
+pub struct Number(f64, Scale);
+
+/// The scale to represent the number.
+#[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord)]
+pub enum Scale {
+    Nano,
+    Micro,
+    Milli,
+    Unit,
+    Kilo,
+    Mega,
+    Giga,
 }
 
+/// Represents the time taken.
 #[derive(Debug, Clone, Copy)]
-pub enum TimeUnit {
-    Secs,
-    Millis,
-    Micros,
-    Nanos,
-}
+pub struct Time(Number);
 
-impl SampleUnit {
-    fn from_samples(f: f64) -> Self {
-        if f >= BILLION {
-            Self::Billion
-        } else if f >= MILLION {
-            Self::Million
-        } else if f >= THOUSAND {
-            Self::Thousand
-        } else {
-            Self::Single
-        }
+/// Represents the number of samples.
+#[derive(Debug, Clone, Copy)]
+pub struct Samples(Number);
+
+impl Number {
+    pub fn new(v: f64) -> Self {
+        let scales = [
+            (Scale::Giga, 1e-9),
+            (Scale::Mega, 1e-6),
+            (Scale::Kilo, 1e-3),
+            (Scale::Unit, 1e0),
+            (Scale::Milli, 1e3),
+            (Scale::Micro, 1e6),
+            (Scale::Nano, 1e9),
+        ];
+        let scale = scales
+            .into_iter()
+            .find_map(|(s, f)| (v * f >= 1.0).then(|| s))
+            .unwrap_or(Scale::Nano);
+        Self::with_scale(v, scale)
     }
 
-    fn scale(&self, f: f64) -> f64 {
-        match *self {
-            Self::Single => f,
-            Self::Thousand => f / THOUSAND,
-            Self::Million => f / MILLION,
-            Self::Billion => f / BILLION,
-        }
-    }
-}
-
-impl TimeUnit {
-    fn from_secs(f: f64) -> Self {
-        if f >= 1.0 {
-            Self::Secs
-        } else if f >= 1.0 / MILLIS_PER_SEC {
-            Self::Millis
-        } else if f >= 1.0 / MICROS_PER_SEC {
-            Self::Micros
-        } else {
-            Self::Nanos
-        }
-    }
-
-    fn scale(&self, f: f64) -> f64 {
-        match *self {
-            Self::Secs => f,
-            Self::Millis => f * MILLIS_PER_SEC,
-            Self::Micros => f * MICROS_PER_SEC,
-            Self::Nanos => f * NANOS_PER_SEC,
-        }
+    pub fn with_scale(v: f64, scale: Scale) -> Self {
+        let v = match scale {
+            Scale::Nano => v * 1e9,
+            Scale::Micro => v * 1e6,
+            Scale::Milli => v * 1e3,
+            Scale::Unit => v * 1e0,
+            Scale::Kilo => v * 1e-3,
+            Scale::Mega => v * 1e-6,
+            Scale::Giga => v * 1e-9,
+        };
+        Self(v, scale)
     }
 }
 
-impl fmt::Display for SampleUnit {
+impl Time {
+    pub fn new(secs: f64) -> Self {
+        Self(Number::new(secs))
+    }
+
+    pub fn with_scale(secs: f64, scale: Scale) -> Self {
+        Self(Number::with_scale(secs, scale))
+    }
+
+    pub fn scale(&self) -> Scale {
+        let Self(Number(_, scale)) = self;
+        *scale
+    }
+}
+
+impl Samples {
+    pub fn new(n: usize) -> Self {
+        Self(Number::new(n as f64))
+    }
+}
+
+impl fmt::Display for Time {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-        let unit = match *self {
-            Self::Single => " samples",
-            Self::Thousand => "K samples",
-            Self::Million => "M samples",
-            Self::Billion => "B samples",
+        // Some examples of what we need to handle nicely
+        //
+        // - 500 s
+        // - 180.4 s
+        // - 1.234 s
+        // - 42.53 ms
+        // - 978.1 µs
+        //
+        // Rules:
+        // - If very large >= 300 then use no precision
+        // - Right align number in a width of 5 characters and fill the space
+        //   if possible
+
+        let &Self(Number(v, s)) = self;
+        let p = 4 - digits(v);
+        let (precision, v, suffix) = match s {
+            Scale::Nano => (p, v, " ns"),
+            Scale::Micro => (p, v, " µs"),
+            Scale::Milli => (p, v, " ms"),
+            Scale::Unit => (if v >= 300.0 { 0 } else { p }, v, " s"),
+            Scale::Kilo => (0, v * 1e3, " s"),
+            Scale::Mega => (0, v * 1e6, " s"),
+            Scale::Giga => (0, v * 1e9, " s"),
         };
-        fmt::Display::fmt(unit, f)
+        fmt::Display::fmt(&format!("{:.p$}{}", v, suffix, p = precision), f)
     }
 }
 
-impl fmt::Display for TimeUnit {
+impl fmt::Display for Samples {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-        let unit = match *self {
-            Self::Secs => "s",
-            Self::Millis => "ms",
-            Self::Micros => "µs",
-            Self::Nanos => "ns",
+        // Some examples of what we need to handle nicely
+        //
+        // - 11 samples
+        // - 1.234k samples
+        // - 10.48M samples
+        // - 123.1G samples
+        //
+        // Rules:
+        // - If very small < 1000 then use no precision
+        // - Right align number in a width of 5 characters and fill the space.
+
+        let &Self(Number(v, s)) = self;
+        let p = 4 - digits(v);
+        let (precision, v, suffix) = match s {
+            Scale::Unit => (if v < 1000.0 { 0 } else { p }, v, " samples"),
+            Scale::Kilo => (p, v, "k samples"),
+            Scale::Mega => (p, v, "M samples"),
+            Scale::Giga => (p, v, "G samples"),
+            _ => unreachable!(),
         };
-        fmt::Display::fmt(unit, f)
+        fmt::Display::fmt(&format!("{:.p$}{}", v, suffix, p = precision), f)
     }
 }
 
-pub fn fmt_samples(i: usize) -> String {
-    let f = i as f64;
-    let unit = SampleUnit::from_samples(f);
-    if let SampleUnit::Single = unit {
-        format!("{:.0}{}", unit.scale(f), unit)
-    } else {
-        format!("{:.2}{}", unit.scale(f), unit)
+fn digits(mut v: f64) -> usize {
+    let mut n = 0;
+    while v >= 1. {
+        v *= 0.1;
+        n += 1;
     }
+    max(n, 1)
 }
 
-pub fn fmt_time(f: f64) -> String {
-    let unit = TimeUnit::from_secs(f);
-    format!("{:.3} {}", unit.scale(f), unit)
-}
+#[cfg(test)]
+mod tests {
+    use super::*;
 
-pub fn fmt_time_four(a: f64, b: f64, c: f64, d: f64) -> (String, String, String, String) {
-    let unit = TimeUnit::from_secs(a);
-    macro_rules! fmt {
-        ($i:ident) => {
-            format!("{:.3} {}", unit.scale($i), unit)
-        };
+    #[test]
+    fn f64_digits() {
+        assert_eq!(digits(1.0), 1);
+        assert_eq!(digits(0.123), 1);
+        assert_eq!(digits(10.0), 2);
+        assert_eq!(digits(15.0), 2);
+        assert_eq!(digits(199.99), 3);
+        assert_eq!(digits(123.123), 3);
     }
-    (fmt!(a), fmt!(b), fmt!(c), fmt!(d))
+
+    #[test]
+    fn time_display() {
+        let test_cases = [
+            (500.0, "500 s"),
+            (180.4, "180.4 s"),
+            (1.234, "1.234 s"),
+            (0.04253, "42.53 ms"),
+            (0.0009781, "978.1 µs"),
+        ];
+        for (t, expected) in test_cases {
+            assert_eq!(Time::new(t).to_string(), expected);
+        }
+    }
+
+    #[test]
+    fn samples_display() {
+        let test_cases = [
+            (3, "3 samples"),
+            (11, "11 samples"),
+            (123, "123 samples"),
+            (1337, "1.337k samples"),
+            (23_123, "23.12k samples"),
+        ];
+        for (t, expected) in test_cases {
+            assert_eq!(Samples::new(t).to_string(), expected);
+        }
+    }
 }
