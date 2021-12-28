@@ -32,7 +32,7 @@ fn count(layer: &[u32], pixel: u32) -> usize {
     layer.iter().filter(|&&p| p == pixel).count()
 }
 
-fn part1(img: &Image) -> usize {
+fn part1(img: Image) -> usize {
     img.data
         .chunks(img.size())
         .map(|layer| (count(layer, 0), layer))
@@ -41,7 +41,7 @@ fn part1(img: &Image) -> usize {
         .unwrap()
 }
 
-fn part2(img: &Image) -> String {
+fn part2(img: Image) -> String {
     (0..img.size())
         .map(|i| {
             (0..)
@@ -64,21 +64,20 @@ fn part2(img: &Image) -> String {
 }
 
 fn main() {
-    let input = default_input();
     let mut run = advent::start();
-    run.part(|| part1(&input));
-    run.part(|| part2(&input));
+    run.part(|| part1(default_input()));
+    run.part(|| part2(default_input()));
     run.finish();
 }
 
 #[test]
 fn example() {
     let input = parse_input("123456789012", 3, 2);
-    assert_eq!(part1(&input), 1);
+    assert_eq!(part1(input), 1);
 }
 
 #[test]
 fn default() {
     let input = default_input();
-    assert_eq!(part1(&input), 1677);
+    assert_eq!(part1(input), 1677);
 }
