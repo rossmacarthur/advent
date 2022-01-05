@@ -8,7 +8,7 @@ fn parse_input(input: &str) -> Vec<i64> {
         .chars()
         .map(|c| {
             assert!(c.is_ascii_digit());
-            c as i64 - 0x30
+            c as i64 - '0' as i64
         })
         .collect()
 }
@@ -74,10 +74,9 @@ fn part2(signal: Vec<i64>) -> String {
 }
 
 fn main() {
-    let input = default_input();
     let mut run = advent::start();
-    run.part(|| part1(input.clone()));
-    run.part(|| part2(input.clone()));
+    run.part(|| part1(default_input()));
+    run.part(|| part2(default_input()));
     run.finish();
 }
 
