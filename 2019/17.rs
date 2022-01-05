@@ -1,21 +1,14 @@
 mod intcode;
 
-use std::cmp::Reverse;
-use std::collections::{HashMap, HashSet};
-
-use itertools::Itertools;
-use vectrix::{vector, Vector2, CARDINALS, EAST, NORTH, SOUTH, WEST};
-
+use advent::prelude::*;
 use intcode::{parse_program, Computer};
-
-type Vector = Vector2<i64>;
 
 fn default_input() -> Vec<i64> {
     parse_program(include_str!("input/17.txt"))
 }
 
 impl Computer {
-    fn read_image(&mut self) -> Option<HashMap<Vector, char>> {
+    fn read_image(&mut self) -> Option<HashMap<Vector2, char>> {
         let mut map = HashMap::new();
         let mut y = 0;
         loop {
@@ -33,6 +26,12 @@ impl Computer {
     }
 }
 
+const NORTH: Vector2 = vector![0, -1];
+const SOUTH: Vector2 = vector![0, 1];
+const WEST: Vector2 = vector![-1, 0];
+const EAST: Vector2 = vector![1, 0];
+const CARDINALS: [Vector2; 4] = [NORTH, SOUTH, WEST, EAST];
+
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
 enum Move {
     Left(i64),
@@ -49,27 +48,23 @@ impl Move {
 }
 
 /// Returns the set of scaffold locations.
-fn scaffolds(image: &HashMap<Vector, char>) -> HashSet<Vector> {
+fn scaffolds(image: &HashMap<Vector2, char>) -> HashSet<Vector2> {
     image
         .iter()
         .filter_map(|(v, p)| (*p == '#').then(|| *v))
         .collect()
 }
 
-fn navigate(image: &HashMap<Vector, char>) -> Vec<Move> {
+fn navigate(image: &HashMap<Vector2, char>) -> Vec<Move> {
     // Find the droid and the direction it is facing
     let (mut droid, mut d) = image
         .iter()
-        .find(|(_, c)| matches!(c, '<' | '>' | '^' | 'v'))
-        .map(|(v, c)| {
-            let d = match c {
-                '<' => WEST,
-                '>' => EAST,
-                '^' => SOUTH, // I think these must be switched because we
-                'v' => NORTH, // parsed the image upside-down 🤷‍♂️.
-                _ => unreachable!(),
-            };
-            (*v, d)
+        .find_map(|(v, c)| match c {
+            '<' => Some((*v, WEST)),
+            '>' => Some((*v, EAST)),
+            '^' => Some((*v, NORTH)),
+            'v' => Some((*v, SOUTH)),
+            _ => None,
         })
         .unwrap();
 
@@ -77,7 +72,7 @@ fn navigate(image: &HashMap<Vector, char>) -> Vec<Move> {
 
     // Given the droid position and a direction, navigate to the next scaffold.
     let scaffolds = scaffolds(image);
-    let mut mv = |droid: Vector, d: Vector| {
+    let mut mv = |droid: Vector2, d: Vector2| {
         // Try continue in the same direction.
         let next = droid + d;
         if scaffolds.contains(&next) {
@@ -97,7 +92,7 @@ fn navigate(image: &HashMap<Vector, char>) -> Vec<Move> {
                         1 => Move::Right(1),
                         _ => unreachable!(),
                     });
-                    return Some((next, *to));
+                    return Some((next, to));
                 }
             }
             None
@@ -192,7 +187,7 @@ fn part1(program: Vec<i64>) -> i64 {
     let scaffolds = scaffolds(&image);
     scaffolds
         .iter()
-        .filter(|&s| CARDINALS.iter().all(|&d| scaffolds.contains(&(s + d))))
+        .filter(|&s| CARDINALS.into_iter().all(|d| scaffolds.contains(&(s + d))))
         .map(|s| s.x * s.y)
         .sum()
 }
@@ -217,10 +212,9 @@ fn part2(mut program: Vec<i64>) -> i64 {
 }
 
 fn main() {
-    let input = default_input();
     let mut run = advent::start();
-    run.part(|| part1(input.clone()));
-    run.part(|| part2(input.clone()));
+    run.part(|| part1(default_input()));
+    run.part(|| part2(default_input()));
     run.finish();
 }
 
