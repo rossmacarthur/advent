@@ -1,9 +1,7 @@
 mod intcode;
 
-use std::collections::BTreeMap;
-use std::iter;
-
-use crate::intcode::{parse_program, Computer, State};
+use advent::prelude::*;
+use intcode::{parse_program, Computer, State};
 
 fn default_input() -> Vec<i64> {
     parse_program(include_str!("input/23.txt"))
@@ -50,10 +48,10 @@ impl Computer {
 
 impl Network {
     /// Initialize a new network with 50 NICs running the provided intcode.
-    fn new(input: &[i64]) -> Self {
+    fn new(input: Vec<i64>) -> Self {
         let nics = (0..50)
             .map(|addr| {
-                let mut c = Computer::new(input.to_vec());
+                let mut c = Computer::new(input.clone());
                 c.feed([addr, -1]);
                 (addr, c)
             })
@@ -91,7 +89,7 @@ impl Network {
     }
 }
 
-fn part1(input: &[i64]) -> i64 {
+fn part1(input: Vec<i64>) -> i64 {
     let mut net = Network::new(input);
     loop {
         let packets = net.poll();
@@ -102,7 +100,7 @@ fn part1(input: &[i64]) -> i64 {
     }
 }
 
-fn part2(input: &[i64]) -> i64 {
+fn part2(input: Vec<i64>) -> i64 {
     let mut net = Network::new(input);
     let mut prev: Option<Packet> = None;
     loop {
@@ -122,16 +120,15 @@ fn part2(input: &[i64]) -> i64 {
 }
 
 fn main() {
-    let input = default_input();
     let mut run = advent::start();
-    run.part(|| part1(&input));
-    run.part(|| part2(&input));
+    run.part(|| part1(default_input()));
+    run.part(|| part2(default_input()));
     run.finish();
 }
 
 #[test]
 fn default() {
     let input = default_input();
-    assert_eq!(part1(&input), 18982);
-    assert_eq!(part2(&input), 11088);
+    assert_eq!(part1(input.clone()), 18982);
+    assert_eq!(part2(input), 11088);
 }
