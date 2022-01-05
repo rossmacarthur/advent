@@ -1,11 +1,7 @@
 mod intcode;
 
-use std::collections::{HashMap, HashSet};
-use std::iter;
-
-use itertools::Itertools;
-
-use crate::intcode::{parse_program, Computer};
+use advent::prelude::*;
+use intcode::{parse_program, Computer};
 
 fn default_input() -> Vec<i64> {
     parse_program(include_str!("input/25.txt"))
@@ -178,8 +174,8 @@ const DANGEROUS: &[&str] = &[
     "photons",
 ];
 
-fn part1(input: &[i64]) -> i64 {
-    let mut c = Computer::new(input.to_vec());
+fn part1(input: Vec<i64>) -> i64 {
+    let mut c = Computer::new(input);
     let mut path: Vec<Direction> = Vec::new();
     let mut visited: HashMap<String, HashSet<Direction>> = HashMap::new();
     let mut items = Vec::new();
@@ -236,14 +232,13 @@ fn part1(input: &[i64]) -> i64 {
 }
 
 fn main() {
-    let input = default_input();
     let mut run = advent::start();
-    run.part(|| part1(&input));
+    run.part(|| part1(default_input()));
     run.finish();
 }
 
 #[test]
 fn default() {
     let input = default_input();
-    assert_eq!(part1(&input), 134349952);
+    assert_eq!(part1(input), 134349952);
 }
