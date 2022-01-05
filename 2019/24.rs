@@ -1,6 +1,6 @@
 #![allow(clippy::unusual_byte_groupings)]
 
-use std::collections::{HashSet, VecDeque};
+use advent::prelude::*;
 
 fn parse_input(input: &str) -> u32 {
     input
@@ -224,10 +224,9 @@ fn part2(layer: u32, n: usize) -> u32 {
 }
 
 fn main() {
-    let input = default_input();
     let mut run = advent::start();
-    run.part(|| part1(input));
-    run.part(|| part2(input, 200));
+    run.part(|| part1(default_input()));
+    run.part(|| part2(default_input(), 200));
     run.finish();
 }
 
