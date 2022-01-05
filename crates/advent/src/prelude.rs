@@ -23,3 +23,32 @@ pub fn gcd(mut x: i64, mut y: i64) -> i64 {
     }
     y.abs()
 }
+
+/// Parses a 2D map into a data structure of type `M`.
+pub fn parse_map<M, F, V>(input: &str, parse: F) -> M
+where
+    M: FromIterator<(Vector2, V)>,
+    F: Fn(char) -> V,
+{
+    input
+        .lines()
+        .enumerate()
+        .flat_map(|(y, line)| {
+            line.chars()
+                .enumerate()
+                .map(|(x, c)| (x, parse(c)))
+                .map(move |(x, v)| (vector![x as i64, y as i64], v))
+        })
+        .collect()
+}
+
+/// Parses a 2D map that uses '.' for spaces and '#' for walls as a set of the
+/// the '#' points.
+pub fn parse_map_set(input: &str) -> HashSet<Vector2> {
+    let map: HashMap<_, _> = parse_map(input, |c| match c {
+        '#' => Some(()),
+        '.' => None,
+        c => panic!("unrecognized character `{}`", c),
+    });
+    map.into_iter().filter_map(|(k, v)| v.map(|_| k)).collect()
+}
