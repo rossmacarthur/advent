@@ -1,4 +1,4 @@
-pub use std::cmp::{max, min, Reverse};
+pub use std::cmp::{max, min, Ordering, Reverse};
 pub use std::collections::{BTreeMap, BTreeSet, VecDeque};
 pub use std::iter;
 pub use std::mem;
