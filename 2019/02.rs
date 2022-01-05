@@ -48,22 +48,22 @@ impl Computer {
     }
 }
 
-fn run(input: &[usize], noun: usize, verb: usize) -> usize {
-    let mut computer = Computer::new(input.to_vec());
+fn run(input: Vec<usize>, noun: usize, verb: usize) -> usize {
+    let mut computer = Computer::new(input);
     computer.mem[1] = noun;
     computer.mem[2] = verb;
     computer.run();
     computer.mem[0]
 }
 
-fn part1(input: &[usize]) -> usize {
+fn part1(input: Vec<usize>) -> usize {
     run(input, 12, 2)
 }
 
-fn part2(input: &[usize]) -> usize {
+fn part2(input: Vec<usize>) -> usize {
     for noun in 0..input.len() {
         for verb in 0..input.len() {
-            if run(input, noun, verb) == 19690720 {
+            if run(input.clone(), noun, verb) == 19690720 {
                 return 100 * noun + verb;
             }
         }
@@ -72,10 +72,9 @@ fn part2(input: &[usize]) -> usize {
 }
 
 fn main() {
-    let input = default_input();
     let mut run = advent::start();
-    run.part(|| part1(&input));
-    run.part(|| part2(&input));
+    run.part(|| part1(default_input()));
+    run.part(|| part2(default_input()));
     run.finish();
 }
 
@@ -89,6 +88,6 @@ fn example() {
 #[test]
 fn default() {
     let input = default_input();
-    assert_eq!(part1(&input), 3850704);
-    assert_eq!(part2(&input), 6718);
+    assert_eq!(part1(input.clone()), 3850704);
+    assert_eq!(part2(input), 6718);
 }
