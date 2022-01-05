@@ -1,12 +1,7 @@
 mod intcode;
 
-use std::iter;
-
-use vectrix::{vector, Vector2};
-
+use advent::prelude::*;
 use intcode::{parse_program, Computer};
-
-type Vector = Vector2<i64>;
 
 fn default_input() -> Vec<i64> {
     parse_program(include_str!("input/13.txt"))
@@ -22,7 +17,7 @@ enum Tile {
 }
 
 enum Output {
-    Tile(Vector, Tile),
+    Tile(Vector2, Tile),
     Score(i64),
 }
 
@@ -60,7 +55,7 @@ fn part2(mut program: Vec<i64>) -> i64 {
 
     let mut computer = Computer::new(program);
     let mut score = 0;
-    let mut paddle = Vector::zero();
+    let mut paddle = Vector2::zero();
 
     while let Some(output) = computer.next_output() {
         match output {
@@ -77,10 +72,9 @@ fn part2(mut program: Vec<i64>) -> i64 {
 }
 
 fn main() {
-    let input = default_input();
     let mut run = advent::start();
-    run.part(|| part1(input.clone()));
-    run.part(|| part2(input.clone()));
+    run.part(|| part1(default_input()));
+    run.part(|| part2(default_input()));
     run.finish();
 }
 
