@@ -1,13 +1,10 @@
-use std::cmp::Ordering;
-use std::collections::HashMap;
-
-use itertools::Itertools;
+use advent::prelude::*;
 
 type Pair<'a> = (i64, &'a str);
 type Formulae<'a> = HashMap<&'a str, Formula<'a>>;
 
 fn parse_pair(s: &str) -> Pair<'_> {
-    let (c, chem) = s.split_whitespace().next_tuple().unwrap();
+    let [c, chem] = s.split_whitespace().next_array().unwrap();
     (c.parse().unwrap(), chem)
 }
 
@@ -15,7 +12,7 @@ fn parse_input(input: &str) -> HashMap<&str, Formula<'_>> {
     input
         .lines()
         .map(|line| {
-            let (lhs, rhs) = line.split(" => ").next_tuple().unwrap();
+            let [lhs, rhs] = line.split(" => ").next_array().unwrap();
             let input = lhs.split(", ").map(parse_pair).collect();
             let (result, chem) = parse_pair(rhs);
             (chem, Formula { input, result })
@@ -27,6 +24,7 @@ fn default_input() -> HashMap<&'static str, Formula<'static>> {
     parse_input(include_str!("input/14.txt"))
 }
 
+#[derive(Clone)]
 struct Formula<'a> {
     input: Vec<Pair<'a>>,
     result: i64,
@@ -55,20 +53,20 @@ fn fuel_to_ore(formulae: &Formulae<'_>, fuel: i64) -> i64 {
     }
 }
 
-fn part1(formulae: &Formulae<'_>) -> i64 {
-    fuel_to_ore(formulae, 1)
+fn part1(formulae: Formulae<'_>) -> i64 {
+    fuel_to_ore(&formulae, 1)
 }
 
-fn part2(formulae: &Formulae<'_>) -> i64 {
+fn part2(formulae: Formulae<'_>) -> i64 {
     let have = 1_000_000_000_000;
-    let mut f0 = have / fuel_to_ore(formulae, 1);
+    let mut f0 = have / fuel_to_ore(&formulae, 1);
     let mut f1 = 2 * f0;
     loop {
         let fuel = (f0 + f1) / 2;
         if fuel == f0 || fuel == f1 {
             break fuel;
         }
-        match fuel_to_ore(formulae, fuel).cmp(&have) {
+        match fuel_to_ore(&formulae, fuel).cmp(&have) {
             Ordering::Equal => break fuel,
             Ordering::Less => f0 = fuel,
             Ordering::Greater => f1 = fuel,
@@ -77,10 +75,9 @@ fn part2(formulae: &Formulae<'_>) -> i64 {
 }
 
 fn main() {
-    let input = default_input();
     let mut run = advent::start();
-    run.part(|| part1(&input));
-    run.part(|| part2(&input));
+    run.part(|| part1(default_input()));
+    run.part(|| part2(default_input()));
     run.finish();
 }
 
@@ -94,7 +91,7 @@ fn example1() {
 7 A, 1 D => 1 E
 7 A, 1 E => 1 FUEL",
     );
-    assert_eq!(part1(&input), 31);
+    assert_eq!(part1(input), 31);
 }
 
 #[test]
@@ -108,7 +105,7 @@ fn example2() {
 4 C, 1 A => 1 CA
 2 AB, 3 BC, 4 CA => 1 FUEL",
     );
-    assert_eq!(part1(&input), 165);
+    assert_eq!(part1(input), 165);
 }
 
 #[test]
@@ -124,8 +121,8 @@ fn example3() {
 165 ORE => 2 GPVTF
 3 DCFZ, 7 NZVS, 5 HKGWZ, 10 PSHF => 8 KHKGT",
     );
-    assert_eq!(part1(&input), 13312);
-    assert_eq!(part2(&input), 82892753);
+    assert_eq!(part1(input.clone()), 13312);
+    assert_eq!(part2(input), 82892753);
 }
 
 #[test]
@@ -144,8 +141,8 @@ fn example4() {
 1 VJHF, 6 MNCFX => 4 RFSQX
 176 ORE => 6 VJHF",
     );
-    assert_eq!(part1(&input), 180697);
-    assert_eq!(part2(&input), 5586022);
+    assert_eq!(part1(input.clone()), 180697);
+    assert_eq!(part2(input), 5586022);
 }
 
 #[test]
@@ -169,13 +166,13 @@ fn example5() {
 7 XCVML => 6 RJRHP
 5 BHXH, 4 VRPVC => 5 LTCX",
     );
-    assert_eq!(part1(&input), 2210736);
-    assert_eq!(part2(&input), 460664);
+    assert_eq!(part1(input.clone()), 2210736);
+    assert_eq!(part2(input), 460664);
 }
 
 #[test]
 fn default() {
     let input = default_input();
-    assert_eq!(part1(&input), 158482);
-    assert_eq!(part2(&input), 7993831);
+    assert_eq!(part1(input.clone()), 158482);
+    assert_eq!(part2(input), 7993831);
 }
