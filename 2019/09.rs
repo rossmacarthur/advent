@@ -15,10 +15,9 @@ fn part2(input: Vec<i64>) -> i64 {
 }
 
 fn main() {
-    let input = default_input();
     let mut run = advent::start();
-    run.part(|| part1(input.clone()));
-    run.part(|| part2(input.clone()));
+    run.part(|| part1(default_input()));
+    run.part(|| part2(default_input()));
     run.finish();
 }
 
@@ -26,10 +25,7 @@ fn main() {
 fn example1() {
     let input = parse_program("109,1,204,-1,1001,100,1,100,1008,100,16,101,1006,101,0,99");
     let mut computer = Computer::new(input.clone());
-    let mut result = Vec::new();
-    for _ in 0..input.len() {
-        result.push(computer.next().unwrap());
-    }
+    let result: Vec<_> = std::iter::from_fn(|| computer.next()).collect();
     assert_eq!(input, result);
 }
 
