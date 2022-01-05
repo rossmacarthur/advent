@@ -1,8 +1,4 @@
-use itertools::Itertools;
-use regex_macro::regex;
-use vectrix::{gcd, vector, Vector3};
-
-type Vector = Vector3<i64>;
+use advent::prelude::*;
 
 fn parse_input(input: &str) -> Vec<Moon> {
     regex!(r"<x=(-?\d+), y=(-?\d+), z=(-?\d+)>")
@@ -13,7 +9,7 @@ fn parse_input(input: &str) -> Vec<Moon> {
                 caps[2].parse().unwrap(),
                 caps[3].parse().unwrap()
             ];
-            let vel = Vector::zero();
+            let vel = Vector3::zero();
             Moon { pos, vel }
         })
         .collect()
@@ -30,8 +26,8 @@ fn default_input() -> Vec<Moon> {
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
 struct Moon {
-    pos: Vector,
-    vel: Vector,
+    pos: Vector3,
+    vel: Vector3,
 }
 
 impl Moon {
@@ -102,10 +98,9 @@ fn part2(mut moons: Vec<Moon>) -> i64 {
 }
 
 fn main() {
-    let input = default_input();
     let mut run = advent::start();
-    run.part(|| part1(input.clone(), 1000));
-    run.part(|| part2(input.clone()));
+    run.part(|| part1(default_input(), 1000));
+    run.part(|| part2(default_input()));
     run.finish();
 }
 
