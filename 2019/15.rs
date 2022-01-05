@@ -1,17 +1,17 @@
 mod intcode;
 
-use std::cmp;
-use std::collections::{HashMap, HashSet};
-
-use vectrix::{Vector2, CARDINALS, EAST, NORTH, SOUTH, WEST};
-
+use advent::prelude::*;
 use intcode::{parse_program, Computer};
-
-type Vector = Vector2<i64>;
 
 fn default_input() -> Vec<i64> {
     parse_program(include_str!("input/15.txt"))
 }
+
+const NORTH: Vector2 = vector![0, 1];
+const WEST: Vector2 = vector![-1, 0];
+const SOUTH: Vector2 = vector![0, -1];
+const EAST: Vector2 = vector![1, 0];
+const CARDINALS: [Vector2; 4] = [NORTH, SOUTH, WEST, EAST];
 
 enum Status {
     Wall,
@@ -26,7 +26,7 @@ enum Tile {
 }
 
 impl Computer {
-    fn next_status(&mut self, direction: Vector) -> Option<Status> {
+    fn next_status(&mut self, direction: Vector2) -> Option<Status> {
         self.input(match direction {
             NORTH => 1,
             SOUTH => 2,
@@ -45,9 +45,9 @@ impl Computer {
 
 fn shortest(
     computer: &mut Computer,
-    map: &mut HashMap<Vector, Tile>,
-    mut path: HashSet<Vector>,
-    pos: Vector,
+    map: &mut HashMap<Vector2, Tile>,
+    mut path: HashSet<Vector2>,
+    pos: Vector2,
 ) -> usize {
     let mut min = usize::MAX;
     path.insert(pos);
@@ -56,7 +56,7 @@ fn shortest(
         if map.contains_key(&next) || path.contains(&next) {
             continue;
         }
-        match computer.next_status(*d).unwrap() {
+        match computer.next_status(d).unwrap() {
             Status::Wall => {
                 map.insert(next, Tile::Wall);
                 continue;
@@ -76,7 +76,7 @@ fn shortest(
     min
 }
 
-fn longest(map: &HashMap<Vector, Tile>, mut path: HashSet<Vector>, pos: Vector) -> usize {
+fn longest(map: &HashMap<Vector2, Tile>, mut path: HashSet<Vector2>, pos: Vector2) -> usize {
     let mut max = path.len();
     path.insert(pos);
     for d in CARDINALS {
@@ -90,32 +90,31 @@ fn longest(map: &HashMap<Vector, Tile>, mut path: HashSet<Vector>, pos: Vector) 
     max
 }
 
-fn solve(program: Vec<i64>) -> (HashMap<Vector, Tile>, usize) {
+fn solve(program: Vec<i64>) -> (HashMap<Vector2, Tile>, usize) {
     let mut computer = Computer::new(program);
     let mut map = HashMap::new();
-    let min = shortest(&mut computer, &mut map, HashSet::new(), Vector::zero());
+    let min = shortest(&mut computer, &mut map, HashSet::new(), Vector2::zero());
     (map, min)
 }
 
 fn part1(program: Vec<i64>) -> usize {
-    solve(program).1
+    let (_, min) = solve(program);
+    min
 }
 
 fn part2(program: Vec<i64>) -> usize {
     let (map, _) = solve(program);
     let pos = map
         .iter()
-        .find(|(_, tile)| matches!(tile, Tile::OxygenTank))
-        .map(|(pos, _)| *pos)
+        .find_map(|(pos, tile)| matches!(tile, Tile::OxygenTank).then(|| *pos))
         .unwrap();
     longest(&map, HashSet::new(), pos)
 }
 
 fn main() {
-    let input = default_input();
     let mut run = advent::start();
-    run.part(|| part1(input.clone()));
-    run.part(|| part2(input.clone()));
+    run.part(|| part1(default_input()));
+    run.part(|| part2(default_input()));
     run.finish();
 }
 
