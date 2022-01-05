@@ -15,19 +15,18 @@ fn fuel_for_mass(mass: u64) -> u64 {
     }
 }
 
-fn part1(masses: &[u64]) -> u64 {
-    masses.iter().map(|mass| (mass / 3) - 2).sum()
+fn part1(masses: Vec<u64>) -> u64 {
+    masses.into_iter().map(|mass| (mass / 3) - 2).sum()
 }
 
-fn part2(masses: &[u64]) -> u64 {
-    masses.iter().copied().map(fuel_for_mass).sum()
+fn part2(masses: Vec<u64>) -> u64 {
+    masses.into_iter().map(fuel_for_mass).sum()
 }
 
 fn main() {
-    let input = default_input();
     let mut run = advent::start();
-    run.part(|| part1(&input));
-    run.part(|| part2(&input));
+    run.part(|| part1(default_input()));
+    run.part(|| part2(default_input()));
     run.finish();
 }
 
@@ -39,6 +38,6 @@ fn example() {
 #[test]
 fn default() {
     let masses = default_input();
-    assert_eq!(part1(&masses), 3432671);
-    assert_eq!(part2(&masses), 5146132);
+    assert_eq!(part1(masses.clone()), 3432671);
+    assert_eq!(part2(masses), 5146132);
 }
