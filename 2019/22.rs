@@ -6,9 +6,9 @@ fn parse_input(input: &str) -> Vec<Method> {
             s => {
                 let value: i128 = s
                     .rsplit(char::is_whitespace)
+                    .map(str::parse)
+                    .map(Result::unwrap)
                     .next()
-                    .unwrap()
-                    .parse()
                     .unwrap();
                 if s.starts_with("deal with increment") {
                     Method::Deal(value)
@@ -61,8 +61,8 @@ impl Method {
     ///  "deal with increment v" => f(x) = (vx + 0) mod m
     ///  "cut v"                 => f(x) = ( x - v) mod m
     ///
-    fn fx(&self) -> Fx {
-        match *self {
+    fn fx(self) -> Fx {
+        match self {
             Self::Stack => (-1, -1),
             Self::Deal(v) => (v, 0),
             Self::Cut(v) => (1, -v),
@@ -90,9 +90,9 @@ fn compose(fx: Fx, gx: Fx, m: i128) -> Fx {
 ///
 /// This function first finds f by composing all the methods into a single
 /// function. Then it finds the result of composing f into itself k times.
-fn make_fk(methods: &[Method], mut k: i128, m: i128) -> Fx {
+fn make_fk(methods: Vec<Method>, mut k: i128, m: i128) -> Fx {
     let mut fx = methods
-        .iter()
+        .into_iter()
         .map(Method::fx)
         .fold(I, |f, g| compose(f, g, m));
     let mut rx = I;
@@ -125,7 +125,7 @@ fn inv(mut a: i128, m: i128) -> i128 {
     r
 }
 
-fn part1(methods: &[Method]) -> i128 {
+fn part1(methods: Vec<Method>) -> i128 {
     const M: i128 = 10007;
     const K: i128 = 1;
     let (a, b) = make_fk(methods, K, M);
@@ -146,7 +146,7 @@ fn part1(methods: &[Method]) -> i128 {
 ///
 /// Thus we can easily reduce our sequence of shuffle methods into a single
 /// function of the cards position.
-fn part2(methods: &[Method]) -> i128 {
+fn part2(methods: Vec<Method>) -> i128 {
     const M: i128 = 119315717514047;
     const K: i128 = 101741582076661;
     let (a, b) = make_fk(methods, K, M);
@@ -154,18 +154,17 @@ fn part2(methods: &[Method]) -> i128 {
 }
 
 fn main() {
-    let input = default_input();
     let mut run = advent::start();
-    run.part(|| part1(&input));
-    run.part(|| part2(&input));
+    run.part(|| part1(default_input()));
+    run.part(|| part2(default_input()));
     run.finish();
 }
 
 #[cfg(test)]
-fn shuffle(methods: &[Method], m: i128) -> Vec<i128> {
+fn shuffle(methods: Vec<Method>, m: i128) -> Vec<i128> {
     let tree: std::collections::BTreeMap<_, _> = (0..m)
         .map(|i| {
-            let (a, b) = make_fk(methods, 1, m);
+            let (a, b) = make_fk(methods.clone(), 1, m);
             ((a * i + b).rem_euclid(m), i)
         })
         .collect();
@@ -180,7 +179,7 @@ deal with increment 7
 deal into new stack
 deal into new stack",
     );
-    assert_eq!(shuffle(&methods, 10), [0, 3, 6, 9, 2, 5, 8, 1, 4, 7]);
+    assert_eq!(shuffle(methods, 10), [0, 3, 6, 9, 2, 5, 8, 1, 4, 7]);
 }
 
 #[test]
@@ -191,7 +190,7 @@ cut 6
 deal with increment 7
 deal into new stack",
     );
-    assert_eq!(shuffle(&methods, 10), [3, 0, 7, 4, 1, 8, 5, 2, 9, 6]);
+    assert_eq!(shuffle(methods, 10), [3, 0, 7, 4, 1, 8, 5, 2, 9, 6]);
 }
 
 #[test]
@@ -209,12 +208,12 @@ deal with increment 9
 deal with increment 3
 cut -1",
     );
-    assert_eq!(shuffle(&methods, 10), [9, 2, 5, 8, 1, 4, 7, 0, 3, 6]);
+    assert_eq!(shuffle(methods, 10), [9, 2, 5, 8, 1, 4, 7, 0, 3, 6]);
 }
 
 #[test]
 fn default() {
     let input = default_input();
-    assert_eq!(part1(&input), 3293);
-    assert_eq!(part2(&input), 54168121233945);
+    assert_eq!(part1(input.clone()), 3293);
+    assert_eq!(part2(input), 54168121233945);
 }
