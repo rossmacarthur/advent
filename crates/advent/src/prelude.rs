@@ -1,6 +1,6 @@
 pub use std::cmp;
 pub use std::cmp::{max, min, Ordering, Reverse};
-pub use std::collections::{BTreeMap, BTreeSet, VecDeque};
+pub use std::collections::{BTreeMap, BTreeSet, BinaryHeap, VecDeque};
 pub use std::iter;
 pub use std::mem;
 

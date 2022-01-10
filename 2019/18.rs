@@ -1,13 +1,8 @@
-use std::cmp::Reverse;
-use std::collections::{BinaryHeap, HashMap, HashSet, VecDeque};
-use std::iter;
 use std::ops::BitOr;
 
-use vectrix::{parse_map, vector, Vector2, CARDINALS};
+use advent::prelude::*;
 
-type Vector = Vector2<i64>;
-
-fn parse_input(input: &str) -> HashMap<Vector, Tile> {
+fn parse_input(input: &str) -> HashMap<Vector2, Tile> {
     parse_map(input, |c| match c {
         '#' => Tile::Wall,
         '.' => Tile::Floor,
@@ -18,9 +13,20 @@ fn parse_input(input: &str) -> HashMap<Vector, Tile> {
     })
 }
 
-fn default_input() -> HashMap<Vector, Tile> {
+fn default_input() -> HashMap<Vector2, Tile> {
     parse_input(include_str!("input/18.txt"))
 }
+
+const CENTER: Vector2 = vector![0, 0];
+const NORTH: Vector2 = vector![0, 1];
+const EAST: Vector2 = vector![1, 0];
+const SOUTH: Vector2 = vector![0, -1];
+const WEST: Vector2 = vector![-1, 0];
+const NORTH_EAST: Vector2 = vector![1, 1];
+const SOUTH_WEST: Vector2 = vector![-1, -1];
+const NORTH_WEST: Vector2 = vector![1, -1];
+const SOUTH_EAST: Vector2 = vector![-1, 1];
+const CARDINALS: [Vector2; 4] = [NORTH, EAST, SOUTH, WEST];
 
 #[derive(Debug, Clone, Copy)]
 enum Tile {
@@ -61,7 +67,6 @@ fn bit(c: char) -> u32 {
     match c {
         'a'..='z' => 1 << (c as u8 - b'a'),
         '0'..='3' => 1 << (c as u8 - b'0' + 26),
-        '@' => 1 << 30,
         c => panic!("unsupported character `{}`", c),
     }
 }
@@ -78,7 +83,7 @@ fn iter(bitmap: u32) -> impl Iterator<Item = u32> + 'static {
 /// This function uses a simple breadth-first search to navigate to every key
 /// from the source. The doors that are passed through are recorded as well. The
 /// result is a map of destination key to distance and doors passed through.
-fn distances(map: &HashMap<Vector, Tile>, source: Vector) -> HashMap<u32, (usize, u32)> {
+fn distances(map: &HashMap<Vector2, Tile>, source: Vector2) -> HashMap<u32, (usize, u32)> {
     let mut distances = HashMap::new();
     let mut visited = HashSet::new();
     let mut frontier = VecDeque::new();
@@ -127,7 +132,7 @@ fn distances(map: &HashMap<Vector, Tile>, source: Vector) -> HashMap<u32, (usize
 /// Each iteration we pick the state that has the shortest distance and we try
 /// and navigate each source to all the next possible nodes in the graph until
 /// we have found all the keys.
-fn shortest(map: &HashMap<Vector, Tile>) -> usize {
+fn shortest(map: &HashMap<Vector2, Tile>) -> usize {
     let graph: HashMap<_, _> = map
         .iter()
         .filter(|(_, t)| t.is_interesting())
@@ -168,37 +173,38 @@ fn shortest(map: &HashMap<Vector, Tile>) -> usize {
     panic!("no path found")
 }
 
-fn part1(map: &HashMap<Vector, Tile>) -> usize {
-    shortest(map)
+fn part1(map: HashMap<Vector2, Tile>) -> usize {
+    shortest(&map)
 }
 
-fn part2(mut map: HashMap<Vector, Tile>) -> usize {
+fn part2(mut map: HashMap<Vector2, Tile>) -> usize {
     // Update the map
+    let to_update = &[
+        (CENTER, Tile::Wall),
+        (NORTH, Tile::Wall),
+        (EAST, Tile::Wall),
+        (SOUTH, Tile::Wall),
+        (WEST, Tile::Wall),
+        (NORTH_EAST, Tile::Entrance(bit('0'))),
+        (SOUTH_EAST, Tile::Entrance(bit('1'))),
+        (SOUTH_WEST, Tile::Entrance(bit('2'))),
+        (NORTH_WEST, Tile::Entrance(bit('3'))),
+    ];
     let entrance = map
         .iter()
         .find_map(|(p, t)| t.is_entrance().then(|| *p))
         .unwrap();
-    map.insert(entrance, Tile::Wall);
-    for d in CARDINALS {
-        map.insert(entrance + d, Tile::Wall);
-    }
-    for &(d, e) in &[
-        (vector![1, 1], '0'),
-        (vector![-1, -1], '1'),
-        (vector![1, -1], '2'),
-        (vector![-1, 1], '3'),
-    ] {
-        map.insert(entrance + d, Tile::Entrance(bit(e)));
+    for &(d, t) in to_update {
+        map.insert(entrance + d, t);
     }
 
     shortest(&map)
 }
 
 fn main() {
-    let input = default_input();
     let mut run = advent::start();
-    run.part(|| part1(&input));
-    run.part(|| part2(input.clone()));
+    run.part(|| part1(default_input()));
+    run.part(|| part2(default_input()));
     run.finish();
 }
 
@@ -210,7 +216,7 @@ fn example1() {
 #b.A.@.a#
 #########",
     );
-    assert_eq!(part1(&input), 8);
+    assert_eq!(part1(input), 8);
 }
 
 #[test]
@@ -223,7 +229,7 @@ fn example2() {
 #d.....................#
 ########################",
     );
-    assert_eq!(part1(&input), 86);
+    assert_eq!(part1(input), 86);
 }
 
 #[test]
@@ -236,7 +242,7 @@ fn example3() {
 #.....@.a.B.c.d.A.e.F.g#
 ########################",
     );
-    assert_eq!(part1(&input), 132);
+    assert_eq!(part1(input), 132);
 }
 
 #[test]
@@ -253,7 +259,7 @@ fn example4() {
 #l.F..d...h..C.m#
 #################",
     );
-    assert_eq!(part1(&input), 136);
+    assert_eq!(part1(input), 136);
 }
 
 #[test]
@@ -267,7 +273,7 @@ fn example5() {
 ###g#h#i################
 ########################",
     );
-    assert_eq!(part1(&input), 81);
+    assert_eq!(part1(input), 81);
 }
 
 #[test]
@@ -282,7 +288,7 @@ fn example6() {
 #cB#Ab#
 #######",
     );
-    assert_eq!(part1(&input), 26);
+    assert_eq!(part1(input.clone()), 26);
     assert_eq!(part2(input), 8);
 }
 
@@ -298,7 +304,7 @@ fn example7() {
 #b.....#.....c#
 ###############",
     );
-    assert_eq!(part1(&input), 52);
+    assert_eq!(part1(input.clone()), 52);
     assert_eq!(part2(input), 24);
 }
 
@@ -316,13 +322,13 @@ fn example8() {
 #o#m..#i#jk.#
 #############",
     );
-    assert_eq!(part1(&input), 118);
+    assert_eq!(part1(input.clone()), 118);
     assert_eq!(part2(input), 72);
 }
 
 #[test]
 fn default() {
     let input = default_input();
-    assert_eq!(part1(&input), 3646);
+    assert_eq!(part1(input.clone()), 3646);
     assert_eq!(part2(input), 1730);
 }
