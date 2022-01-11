@@ -1,5 +1,4 @@
-use itertools::Itertools;
-use regex_macro::regex;
+use advent::prelude::*;
 
 fn parse_input(input: &str) -> Vec<String> {
     input
@@ -12,29 +11,28 @@ fn default_input() -> Vec<String> {
     parse_input(include_str!("input/04.txt"))
 }
 
-fn part1(input: &[String]) -> usize {
+fn part1(input: Vec<String>) -> usize {
     let re = regex!(r"^byr:\S+ (cid:\S+ )?ecl:\S+ eyr:\S+ hcl:\S+ hgt:\S+ iyr:\S+ pid:\S+$");
     input
-        .iter()
+        .into_iter()
         .filter(|passport| re.is_match(passport))
         .count()
 }
 
-fn part2(input: &[String]) -> usize {
+fn part2(input: Vec<String>) -> usize {
     let re = regex!(
         r"^byr:(19[2-9][0-9]|200[0-2]) (cid:\S+ )?ecl:(amb|blu|brn|gry|grn|hzl|oth) eyr:(202[0-9]|2030) hcl:#[0-9a-f]{6} hgt:((1[5-8][0-9]|19[0-3])cm|(59|6[0-9]|7[0-6])in) iyr:(201[0-9]|2020) pid:\d{9}$"
     );
     input
-        .iter()
+        .into_iter()
         .filter(|passport| re.is_match(passport))
         .count()
 }
 
 fn main() {
-    let input = default_input();
     let mut run = advent::start();
-    run.part(|| part1(&input));
-    run.part(|| part2(&input));
+    run.part(|| part1(default_input()));
+    run.part(|| part2(default_input()));
     run.finish();
 }
 
@@ -55,8 +53,8 @@ hgt:179cm
 hcl:#cfa07d eyr:2025 pid:166559648
 iyr:2011 ecl:brn hgt:59in"#,
     );
-    assert_eq!(part1(&input), 2);
-    assert_eq!(part2(&input), 2);
+    assert_eq!(part1(input.clone()), 2);
+    assert_eq!(part2(input), 2);
 }
 
 #[test]
@@ -76,8 +74,8 @@ hgt:59cm ecl:zzz
 eyr:2038 hcl:74454a iyr:2023
 pid:3556412378 byr:2007"#,
     );
-    assert_eq!(part1(&input), 4);
-    assert_eq!(part2(&input), 0);
+    assert_eq!(part1(input.clone()), 4);
+    assert_eq!(part2(input), 0);
 }
 
 #[test]
@@ -96,13 +94,13 @@ eyr:2022
 
 iyr:2010 hgt:158cm hcl:#b6652a ecl:blu byr:1944 eyr:2021 pid:093154719"#,
     );
-    assert_eq!(part1(&input), 4);
-    assert_eq!(part2(&input), 4);
+    assert_eq!(part1(input.clone()), 4);
+    assert_eq!(part2(input), 4);
 }
 
 #[test]
 fn default() {
     let input = default_input();
-    assert_eq!(part1(&input), 182);
-    assert_eq!(part2(&input), 109);
+    assert_eq!(part1(input.clone()), 182);
+    assert_eq!(part2(input), 109);
 }
