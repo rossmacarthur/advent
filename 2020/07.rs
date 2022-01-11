@@ -1,80 +1,55 @@
-use std::collections::{HashMap, HashSet};
+use advent::prelude::*;
 
-use regex_macro::regex;
+type Bags<'a> = HashMap<&'a str, Vec<(&'a str, i64)>>;
 
-type Rules<'a> = HashMap<&'a str, Vec<(&'a str, u64)>>;
-
-const COLOR: &str = "shiny gold";
-
-fn parse_input(input: &str) -> Rules<'_> {
-    input
-        .lines()
-        .map(|rule| {
-            let caps = regex!(r"^(\w+ \w+) bags contain (.*)\.$")
-                .captures(rule)
-                .unwrap();
-            let color = caps.get(1).unwrap().as_str();
-            let contents = regex!(r"(\d+) (\w+ \w+) bags?")
-                .captures_iter(caps.get(2).unwrap().as_str())
+fn parse_input(input: &str) -> Bags<'_> {
+    regex!(r"(?P<color>\w+ \w+) bags contain (?P<contents>.*)\.")
+        .captures_iter(input)
+        .map(|caps| {
+            let bag = caps.name("color").unwrap().as_str();
+            let contents = caps.name("contents").unwrap().as_str();
+            let contents = regex!(r"(?P<count>\d+) (?P<color>\w+ \w+) bags?")
+                .captures_iter(contents)
                 .map(|captures| {
-                    let count = captures.get(1).unwrap().as_str().parse().unwrap();
-                    let color = &captures.get(2).unwrap().as_str();
-                    (*color, count)
+                    let count = captures.name("count").unwrap().as_str().parse().unwrap();
+                    let bag = captures.name("color").unwrap().as_str();
+                    (bag, count)
                 })
                 .collect();
-            (color, contents)
+            (bag, contents)
         })
         .collect()
 }
 
-fn default_input() -> Rules<'static> {
+fn default_input() -> Bags<'static> {
     parse_input(include_str!("input/07.txt"))
 }
 
-fn find<'a>(
-    reversed: &'a HashMap<&'a str, Vec<&'a str>>,
-    color: &'a str,
-    found: &mut HashSet<&'a str>,
-) {
-    if let Some(colors) = reversed.get(color) {
-        for color in colors {
-            found.insert(color);
-            find(reversed, color, found);
-        }
-    }
+fn contains(bags: &Bags<'_>, bag: &str) -> bool {
+    bags[bag]
+        .iter()
+        .any(|&(b, _)| b == "shiny gold" || contains(bags, b))
 }
 
-fn count(rules: &Rules<'_>, color: &str) -> u64 {
-    rules[color]
+fn count(bags: &Bags<'_>, bag: &str) -> i64 {
+    bags[bag]
         .iter()
-        .map(|(color, i)| i * (1 + count(rules, color)))
+        .map(|(b, i)| i * (1 + count(bags, b)))
         .sum()
 }
 
-fn part1(rules: &Rules<'_>) -> usize {
-    let mut reversed = HashMap::new();
-    for (color, contains) in rules {
-        for (in_color, _) in contains {
-            reversed
-                .entry(*in_color)
-                .or_insert_with(Vec::new)
-                .push(*color);
-        }
-    }
-    let mut found = HashSet::new();
-    find(&reversed, COLOR, &mut found);
-    found.len()
+fn part1(bags: Bags<'_>) -> usize {
+    bags.keys().filter(|b| contains(&bags, b)).count()
 }
 
-fn part2(rules: &Rules<'_>) -> u64 {
-    count(rules, COLOR)
+fn part2(bags: Bags<'_>) -> i64 {
+    count(&bags, "shiny gold")
 }
 
 fn main() {
-    let input = default_input();
     let mut run = advent::start();
-    run.part(|| part1(&input));
-    run.part(|| part2(&input));
+    run.part(|| part1(default_input()));
+    run.part(|| part2(default_input()));
     run.finish();
 }
 
@@ -92,8 +67,8 @@ faded blue bags contain no other bags.
 dotted black bags contain no other bags.
 "#,
     );
-    assert_eq!(part1(&input), 4);
-    assert_eq!(part2(&input), 32);
+    assert_eq!(part1(input.clone()), 4);
+    assert_eq!(part2(input), 32);
 }
 
 #[test]
@@ -108,13 +83,13 @@ dark blue bags contain 2 dark violet bags.
 dark violet bags contain no other bags.
 "#,
     );
-    assert_eq!(part1(&input), 0);
-    assert_eq!(part2(&input), 126);
+    assert_eq!(part1(input.clone()), 0);
+    assert_eq!(part2(input), 126);
 }
 
 #[test]
 fn default() {
     let input = default_input();
-    assert_eq!(part1(&input), 101);
-    assert_eq!(part2(&input), 108636);
+    assert_eq!(part1(input.clone()), 101);
+    assert_eq!(part2(input), 108636);
 }
