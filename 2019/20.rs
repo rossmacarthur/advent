@@ -1,11 +1,6 @@
-use std::cmp::{max, min, Reverse};
-use std::collections::{BinaryHeap, HashMap, HashSet};
+use advent::prelude::*;
 
-use vectrix::{parse_map, Vector2, CARDINALS};
-
-type Vector = Vector2<i64>;
-
-fn parse_input(input: &str) -> HashMap<Vector, Tile> {
+fn parse_input(input: &str) -> HashMap<Vector2, Tile> {
     enum T {
         Space,
         Wall,
@@ -23,21 +18,19 @@ fn parse_input(input: &str) -> HashMap<Vector, Tile> {
 
     // Find the bounds of the outer rectangle of wall tiles, so that we can tell
     // if a portal is an outer or inner one later.
-    let (x_min, x_max, y_min, y_max) = map
+    let [min_x, max_x, min_y, max_y] = map
         .iter()
         .filter(|(_, t)| matches!(t, T::Wall))
         .map(|(v, _)| v)
-        .fold(
-            (i64::MAX, 0, i64::MAX, 0),
-            |(x_min, x_max, y_min, y_max), v| {
-                (
-                    min(v.x, x_min),
-                    max(v.x, x_max),
-                    min(v.y, y_min),
-                    max(v.y, y_max),
-                )
-            },
-        );
+        .fold([i64::MAX, i64::MIN, i64::MAX, i64::MIN], |acc, p| {
+            let [min_x, max_x, min_y, max_y] = acc;
+            [
+                min(min_x, p.x),
+                max(max_x, p.x),
+                min(min_y, p.y),
+                max(max_y, p.y),
+            ]
+        });
 
     // Find the labeled floor tiles by searching for floor tiles that have two
     // labels in a single adjacent direction.
@@ -51,7 +44,7 @@ fn parse_input(input: &str) -> HashMap<Vector, Tile> {
                             ('A', 'A') => Tile::Start,
                             ('Z', 'Z') => Tile::End,
                             (a, b) => {
-                                match v.x == x_min || v.x == x_max || v.y == y_min || v.y == y_max {
+                                match v.x == min_x || v.x == max_x || v.y == min_y || v.y == max_y {
                                     true => Tile::OutPortal(id(a, b)),
                                     false => Tile::InPortal(id(a, b)),
                                 }
@@ -71,9 +64,15 @@ fn parse_input(input: &str) -> HashMap<Vector, Tile> {
         .collect()
 }
 
-fn default_input() -> HashMap<Vector, Tile> {
+fn default_input() -> HashMap<Vector2, Tile> {
     parse_input(include_str!("input/20.txt"))
 }
+
+const NORTH: Vector2 = vector![0, 1];
+const EAST: Vector2 = vector![1, 0];
+const SOUTH: Vector2 = vector![0, -1];
+const WEST: Vector2 = vector![-1, 0];
+const CARDINALS: [Vector2; 4] = [NORTH, EAST, SOUTH, WEST];
 
 #[derive(Debug, Clone, Copy, PartialEq)]
 enum Tile {
@@ -116,7 +115,7 @@ fn id(a: char, b: char) -> u32 {
 /// Each iteration we pick the state that has the shortest distance and we push
 /// all valid navigation directions from that tile onto the queue until we can
 /// navigate to the end tile.
-fn shortest(map: &HashMap<Vector, Tile>, recurse: bool) -> usize {
+fn shortest(map: HashMap<Vector2, Tile>, recurse: bool) -> usize {
     // Find the location of the starting tile.
     let start = map
         .iter()
@@ -161,7 +160,7 @@ fn shortest(map: &HashMap<Vector, Tile>, recurse: bool) -> usize {
 
             // For outer portals we navigate to the valid surrounding points and
             // the matching portal. Navigating to the matching inner portal
-            // descreases the recursion level. Note: it is not valid to navigate
+            // decreases the recursion level. Note: it is not valid to navigate
             // to outer portals on the outermost level.
             portal @ Tile::OutPortal(_) if !recurse || lvl != 0 => {
                 pq.push(matching(portal, lvl.saturating_sub(1)));
@@ -182,22 +181,22 @@ fn shortest(map: &HashMap<Vector, Tile>, recurse: bool) -> usize {
             _ => {}
         }
     }
+
     panic!("no path found")
 }
 
-fn part1(map: &HashMap<Vector, Tile>) -> usize {
+fn part1(map: HashMap<Vector2, Tile>) -> usize {
     shortest(map, false)
 }
 
-fn part2(map: &HashMap<Vector, Tile>) -> usize {
+fn part2(map: HashMap<Vector2, Tile>) -> usize {
     shortest(map, true)
 }
 
 fn main() {
-    let input = default_input();
     let mut run = advent::start();
-    run.part(|| part1(&input));
-    run.part(|| part2(&input));
+    run.part(|| part1(default_input()));
+    run.part(|| part2(default_input()));
     run.finish();
 }
 
@@ -224,8 +223,8 @@ FG..#########.....#
              Z
              Z",
     );
-    assert_eq!(part1(&input), 23);
-    assert_eq!(part2(&input), 26);
+    assert_eq!(part1(input.clone()), 23);
+    assert_eq!(part2(input), 26);
 }
 
 #[test]
@@ -269,7 +268,7 @@ YN......#               VT..#....QG
            B   J   C
            U   P   P",
     );
-    assert_eq!(part1(&input), 58);
+    assert_eq!(part1(input), 58);
 }
 
 #[test]
@@ -313,12 +312,12 @@ RE....#.#                           #......RF
                A O F   N
                A A D   M",
     );
-    assert_eq!(part2(&input), 396);
+    assert_eq!(part2(input), 396);
 }
 
 #[test]
 fn default() {
     let input = default_input();
-    assert_eq!(part1(&input), 490);
-    assert_eq!(part2(&input), 5648);
+    assert_eq!(part1(input.clone()), 490);
+    assert_eq!(part2(input), 5648);
 }
