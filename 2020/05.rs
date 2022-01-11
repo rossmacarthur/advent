@@ -1,6 +1,6 @@
-use itertools::Itertools;
+use advent::prelude::*;
 
-fn parse_input(input: &str) -> Vec<u64> {
+fn parse_input(input: &str) -> Vec<i64> {
     input
         .lines()
         .map(|line| {
@@ -9,28 +9,28 @@ fn parse_input(input: &str) -> Vec<u64> {
                 .map(|c| match c {
                     'F' | 'L' => '0',
                     'B' | 'R' => '1',
-                    _ => panic!("unrecognized input"),
+                    c => panic!("invalid character `{}`", c),
                 })
                 .collect();
-            let row = u64::from_str_radix(&as_binary[..7], 2).unwrap();
-            let col = u64::from_str_radix(&as_binary[7..], 2).unwrap();
+            assert_eq!(as_binary.len(), 10);
+            let row = i64::from_str_radix(&as_binary[..7], 2).unwrap();
+            let col = i64::from_str_radix(&as_binary[7..], 2).unwrap();
             row * 8 + col
         })
         .collect()
 }
 
-fn default_input() -> Vec<u64> {
+fn default_input() -> Vec<i64> {
     parse_input(include_str!("input/05.txt"))
 }
 
-fn part1(input: &[u64]) -> u64 {
-    input.iter().max().copied().unwrap()
+fn part1(ids: Vec<i64>) -> i64 {
+    ids.into_iter().max().unwrap()
 }
 
-fn part2(input: &[u64]) -> u64 {
-    let mut ids = input.to_vec();
+fn part2(mut ids: Vec<i64>) -> i64 {
     ids.sort_unstable();
-    for (curr, next) in ids.iter().tuple_windows() {
+    for [curr, next] in ids.into_iter().array_windows() {
         if next - curr > 1 {
             return next - 1;
         }
@@ -39,22 +39,26 @@ fn part2(input: &[u64]) -> u64 {
 }
 
 fn main() {
-    let input = default_input();
     let mut run = advent::start();
-    run.part(|| part1(&input));
-    run.part(|| part2(&input));
+    run.part(|| part1(default_input()));
+    run.part(|| part2(default_input()));
     run.finish();
 }
 
 #[test]
 fn example() {
-    let input = parse_input("BFFFBBFRRR\nFFFBBBFRRR\nBBFFBBFRLL");
-    assert_eq!(part1(&input), 820);
+    let input = parse_input(
+        "\
+BFFFBBFRRR
+FFFBBBFRRR
+BBFFBBFRLL",
+    );
+    assert_eq!(part1(input), 820);
 }
 
 #[test]
 fn default() {
     let input = default_input();
-    assert_eq!(part1(&input), 883);
-    assert_eq!(part2(&input), 532);
+    assert_eq!(part1(input.clone()), 883);
+    assert_eq!(part2(input), 532);
 }
