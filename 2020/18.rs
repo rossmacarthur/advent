@@ -1,19 +1,18 @@
-use Operator::*;
-use Token::*;
+use advent::prelude::*;
 
 fn parse_input(input: &str) -> Vec<Vec<Token>> {
     input
         .lines()
         .map(|line| {
-            line.replace("(", " ( ")
-                .replace(")", " ) ")
-                .split_whitespace()
-                .map(|s| match s {
-                    "(" => LeftPar,
-                    ")" => RightPar,
-                    "+" => Op(Add),
-                    "*" => Op(Mul),
-                    s => Num(s.parse().unwrap()),
+            line.chars()
+                .filter(|c| !c.is_whitespace())
+                .map(|c| match c {
+                    '(' => Token::LeftParen,
+                    ')' => Token::RightParen,
+                    '+' => Token::Op(Op::Add),
+                    '*' => Token::Op(Op::Mul),
+                    '0'..='9' => Token::Num(c as i64 - '0' as i64),
+                    c => panic!("unexpected character `{}`", c),
                 })
                 .collect()
         })
@@ -24,105 +23,104 @@ fn default_input() -> Vec<Vec<Token>> {
     parse_input(include_str!("input/18.txt"))
 }
 
-#[derive(Debug, Clone, Copy)]
-enum Operator {
-    Add,
-    Mul,
-}
-
-#[derive(Debug, Clone, Copy)]
+#[derive(Debug, Clone)]
 enum Token {
-    LeftPar,
-    RightPar,
-    Op(Operator),
-    Num(u64),
+    LeftParen,
+    RightParen,
+    Op(Op),
+    Num(i64),
 }
 
-fn find_right_par(expr: &[Token]) -> usize {
-    let mut count = 0;
-    for (i, token) in expr.iter().enumerate() {
-        match token {
-            LeftPar => count += 1,
-            RightPar => count -= 1,
-            _ => {}
-        }
-        if count == 0 {
-            return i;
-        }
+#[derive(Debug, Clone, PartialEq, Eq, PartialOrd, Ord)]
+enum Op {
+    Mul,
+    Add,
+}
+
+impl Op {
+    fn eq(&self, _: &Op) -> Ordering {
+        Ordering::Equal
     }
-    unreachable!()
 }
 
-fn parenthesize(expr: &[Token]) -> Vec<Token> {
-    let left = [LeftPar, LeftPar, LeftPar];
-    let right = [RightPar, RightPar, RightPar];
-    let add = [RightPar, Op(Add), LeftPar];
-    let mul = [RightPar, RightPar, Op(Mul), LeftPar, LeftPar];
-    left.iter()
-        .chain(expr.iter().enumerate().flat_map(|(i, token)| match token {
-            LeftPar => left.iter(),
-            RightPar => right.iter(),
-            Op(Add) => add.iter(),
-            Op(Mul) => mul.iter(),
-            _ => expr[i..i + 1].iter(),
-        }))
-        .chain(right.iter())
-        .copied()
-        .collect()
-}
-
-fn evaluate(expr: &[Token]) -> u64 {
-    let mut left = 0;
-    let mut result = 0;
-    let mut op = Add;
-    while left < expr.len() {
-        match expr[left] {
-            LeftPar => {
-                let right = left + find_right_par(&expr[left..]);
-                let value = evaluate(&expr[left + 1..right]);
+// Evaluates the expression taking into account the operator precedance.
+fn eval<F>(tokens: Vec<Token>, prec: F) -> i64
+where
+    F: Fn(&Op, &Op) -> Ordering,
+{
+    let mut values = Vec::new();
+    for token in to_rpn(tokens, prec) {
+        let value = match token {
+            Token::Op(op) => {
+                let a = values.pop().unwrap();
+                let b = values.pop().unwrap();
                 match op {
-                    Add => result += value,
-                    Mul => result *= value,
+                    Op::Add => a + b,
+                    Op::Mul => a * b,
                 }
-                left = right + 1;
-                continue;
             }
-            RightPar => {
-                unreachable!()
-            }
-            Op(operator) => op = operator,
-            Num(value) => match op {
-                Add => result += value,
-                Mul => result *= value,
-            },
-        }
-        left += 1;
+            Token::Num(value) => value,
+            t => panic!("unexpected token `{:?}`", t),
+        };
+        values.push(value);
     }
-    result
+    values.pop().unwrap()
 }
 
-fn part1(input: &[Vec<Token>]) -> u64 {
-    input.iter().map(|expr| evaluate(expr.as_slice())).sum()
+// Converts the token stream from an infix notation expression to reverse polish
+// notation taking into account the operator precedance.
+//
+// See https://en.wikipedia.org/wiki/Shunting-yard_algorithm
+fn to_rpn<F>(tokens: Vec<Token>, prec: F) -> Vec<Token>
+where
+    F: Fn(&Op, &Op) -> Ordering,
+{
+    let mut output: Vec<Token> = Vec::new();
+    let mut ops: Vec<Token> = Vec::new();
+    for token in tokens {
+        match token {
+            Token::LeftParen => {
+                ops.push(token);
+            }
+            Token::RightParen => {
+                while matches!(ops.last(), Some(Token::Op(_))) {
+                    output.push(ops.pop().unwrap());
+                }
+                ops.pop().unwrap();
+            }
+            Token::Op(ref o1) => {
+                while matches!(ops.last(), Some(Token::Op(o2)) if prec(o2, o1).is_ge()) {
+                    output.push(ops.pop().unwrap());
+                }
+                ops.push(token);
+            }
+            Token::Num(_) => {
+                output.push(token);
+            }
+        }
+    }
+    output.extend(ops.into_iter().rev());
+    output
 }
 
-fn part2(input: &[Vec<Token>]) -> u64 {
-    input
-        .iter()
-        .map(|expr| evaluate(&parenthesize(expr.as_slice())))
-        .sum()
+fn part1(input: Vec<Vec<Token>>) -> i64 {
+    input.into_iter().map(|ts| eval(ts, Op::eq)).sum()
+}
+
+fn part2(input: Vec<Vec<Token>>) -> i64 {
+    input.into_iter().map(|ts| eval(ts, Op::cmp)).sum()
 }
 
 fn main() {
-    let input = default_input();
     let mut run = advent::start();
-    run.part(|| part1(&input));
-    run.part(|| part2(&input));
+    run.part(|| part1(default_input()));
+    run.part(|| part2(default_input()));
     run.finish();
 }
 
 #[test]
 fn example() {
-    let test_cases = &[
+    let tests = &[
         ("1 + 2 * 3 + 4 * 5 + 6", 71, 231),
         ("2 * 3 + (4 * 5)", 26, 46),
         ("5 + (8 * 3 + 9 + 3 * 4 * 3)", 437, 1445),
@@ -133,16 +131,16 @@ fn example() {
             23340,
         ),
     ];
-    for &(input, r1, r2) in test_cases {
+    for &(input, r1, r2) in tests {
         let input = parse_input(input);
-        assert_eq!(part1(&input), r1);
-        assert_eq!(part2(&input), r2);
+        assert_eq!(part1(input.clone()), r1);
+        assert_eq!(part2(input), r2);
     }
 }
 
 #[test]
 fn default() {
     let input = default_input();
-    assert_eq!(part1(&input), 7293529867931);
-    assert_eq!(part2(&input), 60807587180737);
+    assert_eq!(part1(input.clone()), 7293529867931);
+    assert_eq!(part2(input), 60807587180737);
 }
