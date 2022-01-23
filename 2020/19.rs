@@ -1,116 +1,117 @@
-use std::collections::HashMap;
+use std::ops::Deref;
 
-use itertools::Itertools;
-use once_cell::sync::Lazy;
-use regex::Regex;
+use advent::prelude::*;
 
-type Input<'a> = (HashMap<u64, Rule>, Vec<&'a str>);
-
-fn parse_rule_numbers(s: &str) -> Vec<u64> {
+fn parse_seq(s: &str) -> Seq {
     s.split_whitespace()
         .map(str::parse)
         .map(Result::unwrap)
-        .collect()
+        .fold(Seq::default(), |mut acc, id| {
+            acc.arr[acc.len] = id;
+            acc.len += 1;
+            acc
+        })
 }
 
 fn parse_rule(rule: &str) -> Rule {
     if rule.starts_with('"') {
-        Rule::Value(rule.chars().nth(1).unwrap())
+        let c = rule.chars().nth(1).unwrap();
+        Rule::Exact(c)
     } else if rule.contains('|') {
-        let (left, right) = rule.split(" | ").next_tuple().unwrap();
-        Rule::Or(parse_rule_numbers(left), parse_rule_numbers(right))
+        let (left, right) = rule.split_once(" | ").unwrap();
+        Rule::Or(parse_seq(left), parse_seq(right))
     } else {
-        Rule::And(parse_rule_numbers(rule))
+        Rule::And(parse_seq(rule))
     }
 }
 
-fn parse_input(input: &str) -> Input<'_> {
-    let (rules, messages) = input.split("\n\n").next_tuple().unwrap();
-    (
-        rules
-            .lines()
-            .map(|line| {
-                let (lhs, rest) = line.split(": ").next_tuple().unwrap();
-                let num = lhs.parse().unwrap();
-                let rule = parse_rule(rest);
-                (num, rule)
-            })
-            .collect(),
-        messages.lines().collect(),
-    )
+fn parse_input(input: &str) -> (HashMap<u8, Rule>, Vec<&str>) {
+    let (rules, messages) = input.split_once("\n\n").unwrap();
+    let rules = rules
+        .lines()
+        .map(|line| {
+            let (lhs, rest) = line.split_once(": ").unwrap();
+            let num = lhs.parse().unwrap();
+            let rule = parse_rule(rest);
+            (num, rule)
+        })
+        .collect();
+    (rules, messages.lines().collect())
 }
 
-fn default_input() -> Input<'static> {
+fn default_input() -> (HashMap<u8, Rule>, Vec<&'static str>) {
     parse_input(include_str!("input/19.txt"))
 }
 
-static EIGHT: Lazy<Rule> = Lazy::new(|| parse_rule("42 | 42 8"));
-static ELEVEN: Lazy<Rule> = Lazy::new(|| parse_rule("42 31 | 42 11 31"));
-
-#[derive(Debug, Clone)]
+#[derive(Clone)]
 enum Rule {
-    Value(char),
-    And(Vec<u64>),
-    Or(Vec<u64>, Vec<u64>),
+    Exact(char),
+    And(Seq),
+    Or(Seq, Seq),
 }
 
-fn make_regex(rules: &HashMap<u64, Rule>, rule: u64, mut recursion_count: u64) -> String {
-    let eight = &*EIGHT;
-    let eleven = &*ELEVEN;
-    let rule = match rule {
-        8 if recursion_count != 0 => {
-            recursion_count -= 1;
-            eight
-        }
-        11 if recursion_count != 0 => {
-            recursion_count -= 1;
-            eleven
-        }
-        _ => &rules[&rule],
-    };
-    match rule {
-        Rule::Value(c) => c.to_string(),
-        Rule::And(sub_rules) => sub_rules
-            .iter()
-            .map(|&rule| make_regex(rules, rule, recursion_count))
-            .collect(),
-        Rule::Or(left, right) => {
-            format!(
-                "({}|{})",
-                left.iter()
-                    .map(|&rule| make_regex(rules, rule, recursion_count))
-                    .collect::<String>(),
-                right
-                    .iter()
-                    .map(|&rule| make_regex(rules, rule, recursion_count))
-                    .collect::<String>()
-            )
-        }
+#[derive(Clone, Default)]
+struct Seq {
+    arr: [u8; 3],
+    len: usize,
+}
+
+impl Deref for Seq {
+    type Target = [u8];
+
+    fn deref(&self) -> &Self::Target {
+        &self.arr[..self.len]
     }
 }
 
-fn count_matches(input: &Input<'_>, recursion_count: u64) -> usize {
-    let (rules, messages) = input;
-    let re = Regex::new(&format!("^{}$", make_regex(rules, 0, recursion_count))).unwrap();
+/// Recursively attempts to match the given rules to the given message.
+fn matches(rules: &HashMap<u8, Rule>, msg: &str, seq: Vec<u8>) -> bool {
+    // This is our base case. If the message is fully parsed and there are no
+    // more rules to match then return true.
+    if msg.is_empty() || seq.is_empty() {
+        return msg.is_empty() && seq.is_empty();
+    }
+
+    // Get the first rule to test.
+    let (rule, rest) = seq.split_first().unwrap();
+
+    // Tests if the message matches all the provided rules.
+    let all = |seq: &Seq| {
+        let ids = seq.iter().chain(rest).copied().collect();
+        matches(rules, msg, ids)
+    };
+
+    match &rules[rule] {
+        Rule::Exact(c) => msg
+            .strip_prefix(*c)
+            .map(|part| matches(rules, part, rest.to_vec()))
+            .unwrap_or(false),
+        Rule::And(seq) => all(seq),
+        Rule::Or(left, right) => all(left) || all(right),
+    }
+}
+
+fn count(rules: &HashMap<u8, Rule>, messages: &[&str]) -> usize {
     messages
         .iter()
-        .filter(|message| re.is_match(message))
+        .filter(|msg| matches(rules, msg, vec![0]))
         .count()
 }
 
-fn part1(input: &Input<'_>) -> usize {
-    count_matches(input, 0)
+fn part1((rules, messages): (HashMap<u8, Rule>, Vec<&'static str>)) -> usize {
+    count(&rules, &messages)
 }
 
-fn part2(input: &Input<'_>) -> usize {
-    count_matches(input, 5)
+fn part2((mut rules, messages): (HashMap<u8, Rule>, Vec<&str>)) -> usize {
+    rules.insert(8, parse_rule("42 | 42 8"));
+    rules.insert(11, parse_rule("42 31 | 42 11 31"));
+    count(&rules, &messages)
 }
 
 fn main() {
-    let input = default_input();
     let mut run = advent::start();
-    run.part(|| part1(&input));
-    run.part(|| part2(&input));
+    run.part(|| part1(default_input()));
+    run.part(|| part2(default_input()));
     run.finish();
 }
 
@@ -130,7 +131,7 @@ abbbab
 aaabbb
 aaaabbb"#,
     );
-    assert_eq!(part1(&input), 2);
+    assert_eq!(part1(input), 2);
 }
 
 #[test]
@@ -184,13 +185,13 @@ aaaabbaabbaaaaaaabbbabbbaaabbaabaaa
 babaaabbbaaabaababbaabababaaab
 aabbbbbaabbbaaaaaabbbbbababaaaaabbaaabba"#,
     );
-    assert_eq!(part1(&input), 3);
-    assert_eq!(part2(&input), 12);
+    assert_eq!(part1(input.clone()), 3);
+    assert_eq!(part2(input), 12);
 }
 
 #[test]
 fn default() {
     let input = default_input();
-    assert_eq!(part1(&input), 178);
-    assert_eq!(part2(&input), 346);
+    assert_eq!(part1(input.clone()), 178);
+    assert_eq!(part2(input), 346);
 }
