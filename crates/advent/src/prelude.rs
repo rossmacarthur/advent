@@ -7,7 +7,7 @@ pub use std::mem;
 pub use either::Either;
 pub use hashbrown::{HashMap, HashSet};
 pub use itermore::Itermore;
-pub use itertools::Itertools;
+pub use itertools::{iproduct, Itertools};
 pub use regex_macro::regex;
 pub use vectrix::{vector, Vector};
 
