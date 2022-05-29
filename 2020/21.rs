@@ -1,12 +1,10 @@
-use std::collections::{HashMap, HashSet};
-
-use itertools::Itertools;
+use advent::prelude::*;
 
 fn parse_input(input: &str) -> Vec<Food<'_>> {
     input
         .lines()
         .map(|line| {
-            let (left, right) = line.split(" (contains ").next_tuple().unwrap();
+            let [left, right] = line.split(" (contains ").next_array().unwrap();
             Food {
                 ingredients: left.split_whitespace().collect(),
                 allergens: right.trim_end_matches(')').split(", ").collect(),
@@ -19,16 +17,17 @@ fn default_input() -> Vec<Food<'static>> {
     parse_input(include_str!("input/21.txt"))
 }
 
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 struct Food<'a> {
     ingredients: HashSet<&'a str>,
     allergens: HashSet<&'a str>,
 }
 
+/// Returns a mapping of allergen to foods that could possibly have it.
 fn possible<'a>(foods: &[Food<'a>]) -> HashMap<&'a str, HashSet<&'a str>> {
     let mut possible = HashMap::<_, HashSet<_>>::new();
     for food in foods {
-        for allergen in food.allergens.iter().cloned() {
+        for allergen in food.allergens.clone() {
             possible
                 .entry(allergen)
                 .and_modify(|current| {
@@ -40,21 +39,25 @@ fn possible<'a>(foods: &[Food<'a>]) -> HashMap<&'a str, HashSet<&'a str>> {
     possible
 }
 
-fn part1(foods: &[Food<'_>]) -> usize {
-    let maybe_allergens: HashSet<_> = possible(foods)
+fn part1(foods: Vec<Food<'_>>) -> usize {
+    // First calculate all the ingredients that contain at least one allergen.
+    let have_allergen: HashSet<_> = possible(&foods)
         .into_iter()
         .flat_map(|(_, ingredients)| ingredients)
         .collect();
+
+    // Now take all the ingredients and filter out the ones we just calculated.
     foods
         .iter()
-        .flat_map(|food| food.ingredients.iter())
-        .filter(|&ingredient| !maybe_allergens.contains(ingredient))
+        .flat_map(|food| &food.ingredients)
+        .filter(|&ingredient| !have_allergen.contains(ingredient))
         .count()
 }
 
-fn part2(foods: &[Food<'_>]) -> String {
+fn part2(foods: Vec<Food<'_>>) -> String {
+    // First calculate a map of allergen to possible ingredient.
     let mut maybe_dangerous = HashMap::new();
-    for (allergen, ingredients) in possible(foods) {
+    for (allergen, ingredients) in possible(&foods) {
         for ingredient in ingredients {
             maybe_dangerous
                 .entry(ingredient)
@@ -62,6 +65,10 @@ fn part2(foods: &[Food<'_>]) -> String {
                 .insert(allergen);
         }
     }
+
+    // Now we figure which allergen must belong to which ingredient by
+    // iteratively finding an ingredient that can only have one possible
+    // allergen.
     let mut dangerous = HashMap::new();
     while let Some((ingredient, allergen)) = {
         maybe_dangerous
@@ -74,6 +81,8 @@ fn part2(foods: &[Food<'_>]) -> String {
                 (*ingredient, *allergens.iter().next().unwrap())
             })
     } {
+        // Once we have found this allergen we remove it as a possible allergen
+        // from all the other ingredients.
         for allergens in maybe_dangerous.values_mut() {
             allergens.remove(allergen);
         }
@@ -87,32 +96,31 @@ fn part2(foods: &[Food<'_>]) -> String {
 }
 
 fn main() {
-    let input = default_input();
     let mut run = advent::start();
-    run.part(|| part1(&input));
-    run.part(|| part2(&input));
+    run.part(|| part1(default_input()));
+    run.part(|| part2(default_input()));
     run.finish();
 }
 
 #[test]
 fn example() {
     let foods = parse_input(
-        r#"mxmxvkd kfcds sqjhc nhms (contains dairy, fish)
+        "mxmxvkd kfcds sqjhc nhms (contains dairy, fish)
 trh fvjkl sbzzf mxmxvkd (contains dairy)
 sqjhc fvjkl (contains soy)
 sqjhc mxmxvkd sbzzf (contains fish)
-"#,
+",
     );
-    assert_eq!(part1(&foods), 5);
-    assert_eq!(part2(&foods), "mxmxvkd,sqjhc,fvjkl");
+    assert_eq!(part1(foods.clone()), 5);
+    assert_eq!(part2(foods), "mxmxvkd,sqjhc,fvjkl");
 }
 
 #[test]
 fn default() {
     let foods = default_input();
-    assert_eq!(part1(&foods), 2098);
+    assert_eq!(part1(foods.clone()), 2098);
     assert_eq!(
-        part2(&foods),
+        part2(foods),
         "ppdplc,gkcplx,ktlh,msfmt,dqsbql,mvqkdj,ggsz,hbhsx"
     );
 }
