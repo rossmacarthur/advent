@@ -21,8 +21,7 @@ fn find_secret(public: u64) -> u32 {
     }
 }
 
-fn part1(input: &(u64, u64)) -> u64 {
-    let &(card_public, door_public) = input;
+fn part1((card_public, door_public): (u64, u64)) -> u64 {
     let card_secret = find_secret(card_public);
     let door_secret = find_secret(door_public);
     let card_encryption_key = transform(door_public, card_secret);
@@ -32,19 +31,18 @@ fn part1(input: &(u64, u64)) -> u64 {
 }
 
 fn main() {
-    let input = default_input();
     let mut run = advent::start();
-    run.part(|| part1(&input));
+    run.part(|| part1(default_input()));
     run.finish();
 }
 
 #[test]
 fn example() {
-    assert_eq!(part1(&(5764801, 17807724)), 14897079);
+    assert_eq!(part1((5764801, 17807724)), 14897079);
 }
 
 #[test]
 fn default() {
     let input = default_input();
-    assert_eq!(part1(&input), 12929);
+    assert_eq!(part1(input), 12929);
 }
