@@ -27,7 +27,7 @@ enum Command {
     Up,
 }
 
-fn part1(input: &[(Command, i64)]) -> i64 {
+fn part1(input: Vec<(Command, i64)>) -> i64 {
     let (x, y) = input.iter().fold((0, 0), |(x, y), (cmd, v)| match cmd {
         Command::Forward => (x + v, y),
         Command::Down => (x, y + v),
@@ -36,7 +36,7 @@ fn part1(input: &[(Command, i64)]) -> i64 {
     x * y
 }
 
-fn part2(input: &[(Command, i64)]) -> i64 {
+fn part2(input: Vec<(Command, i64)>) -> i64 {
     let (x, y, _) = input
         .iter()
         .fold((0, 0, 0), |(x, y, a), &(cmd, v)| match cmd {
@@ -48,10 +48,9 @@ fn part2(input: &[(Command, i64)]) -> i64 {
 }
 
 fn main() {
-    let input = default_input();
     let mut run = advent::start();
-    run.part(|| part1(&input));
-    run.part(|| part2(&input));
+    run.part(|| part1(default_input()));
+    run.part(|| part2(default_input()));
     run.finish();
 }
 
@@ -66,13 +65,13 @@ up 3
 down 8
 forward 2",
     );
-    assert_eq!(part1(&input), 150);
-    assert_eq!(part2(&input), 900);
+    assert_eq!(part1(input.clone()), 150);
+    assert_eq!(part2(input), 900);
 }
 
 #[test]
 fn default() {
     let input = default_input();
-    assert_eq!(part1(&input), 1654760);
-    assert_eq!(part2(&input), 1956047400);
+    assert_eq!(part1(input.clone()), 1654760);
+    assert_eq!(part2(input), 1956047400);
 }
