@@ -33,11 +33,11 @@ where
     unreachable!()
 }
 
-fn part1(values: &[i64], bits: i64) -> i64 {
+fn part1(values: Vec<i64>, bits: i64) -> i64 {
     let mut gamma = 0;
     let mut epsilon = 0;
     for bit in 0..bits {
-        let (ones, zeros) = partition(values, bit);
+        let (ones, zeros) = partition(&values, bit);
         if ones.len() > zeros.len() {
             epsilon |= 1 << bit;
         } else {
@@ -47,17 +47,16 @@ fn part1(values: &[i64], bits: i64) -> i64 {
     gamma * epsilon
 }
 
-fn part2(values: &[i64], bits: i64) -> i64 {
-    let o2 = criteria(values, bits, |ones, zeros| ones >= zeros);
-    let co2 = criteria(values, bits, |ones, zeros| ones < zeros);
+fn part2(values: Vec<i64>, bits: i64) -> i64 {
+    let o2 = criteria(&values, bits, |ones, zeros| ones >= zeros);
+    let co2 = criteria(&values, bits, |ones, zeros| ones < zeros);
     o2 * co2
 }
 
 fn main() {
-    let input = default_input();
     let mut run = advent::start();
-    run.part(|| part1(&input, 12));
-    run.part(|| part2(&input, 12));
+    run.part(|| part1(default_input(), 12));
+    run.part(|| part2(default_input(), 12));
     run.finish();
 }
 
@@ -78,13 +77,13 @@ fn example() {
 00010
 01010",
     );
-    assert_eq!(part1(&input, 5), 198);
-    assert_eq!(part2(&input, 5), 230);
+    assert_eq!(part1(input.clone(), 5), 198);
+    assert_eq!(part2(input, 5), 230);
 }
 
 #[test]
 fn default() {
     let input = default_input();
-    assert_eq!(part1(&input, 12), 3958484);
-    assert_eq!(part2(&input, 12), 1613181);
+    assert_eq!(part1(input.clone(), 12), 3958484);
+    assert_eq!(part2(input, 12), 1613181);
 }
