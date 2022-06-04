@@ -1,12 +1,6 @@
-use std::collections::HashSet;
+use advent::prelude::*;
 
-use regex_macro::regex;
-
-use vectrix::Vector2;
-
-type Vector = Vector2<i64>;
-
-fn parse_input(s: &str) -> Vec<Vec<Vector>> {
+fn parse_input(s: &str) -> Vec<Vec<Vector2>> {
     s.lines()
         .map(|line| {
             regex!(r"(e|se|sw|w|nw|ne)")
@@ -20,36 +14,36 @@ fn parse_input(s: &str) -> Vec<Vec<Vector>> {
                     "ne" => [1, 1],
                     d => panic!("unexpected direction `{}`", d),
                 })
-                .map(Vector::from)
+                .map(Vector2::from)
                 .collect()
         })
         .collect()
 }
 
-fn default_input() -> Vec<Vec<Vector>> {
+fn default_input() -> Vec<Vec<Vector2>> {
     parse_input(include_str!("input/24.txt"))
 }
 
-fn neighbours(center: Vector) -> Vec<Vector> {
+fn neighbours(center: Vector2) -> Vec<Vector2> {
     [[2, 0], [1, -1], [-1, -1], [-2, 0], [-1, 1], [1, 1]]
         .iter()
         .copied()
-        .map(Vector::from)
+        .map(Vector2::from)
         .map(|direction| center + direction)
         .collect()
 }
 
-fn black_neighbours(state: &HashSet<Vector>, center: Vector) -> usize {
+fn black_neighbours(state: &HashSet<Vector2>, center: Vector2) -> usize {
     neighbours(center)
         .into_iter()
         .filter_map(|vector| state.get(&vector))
         .count()
 }
 
-fn initial_state(input: &[Vec<Vector>]) -> HashSet<Vector> {
+fn initial_state(input: Vec<Vec<Vector2>>) -> HashSet<Vector2> {
     let mut state = HashSet::new();
     for path in input {
-        let location = path.iter().copied().sum();
+        let location = path.into_iter().sum();
         if state.contains(&location) {
             state.remove(&location);
         } else {
@@ -59,7 +53,7 @@ fn initial_state(input: &[Vec<Vector>]) -> HashSet<Vector> {
     state
 }
 
-fn next_state(state: HashSet<Vector>) -> HashSet<Vector> {
+fn next_state(state: HashSet<Vector2>) -> HashSet<Vector2> {
     state
         .iter()
         .copied()
@@ -77,11 +71,11 @@ fn next_state(state: HashSet<Vector>) -> HashSet<Vector> {
         .collect()
 }
 
-fn part1(input: &[Vec<Vector>]) -> usize {
+fn part1(input: Vec<Vec<Vector2>>) -> usize {
     initial_state(input).len()
 }
 
-fn part2(input: &[Vec<Vector>]) -> usize {
+fn part2(input: Vec<Vec<Vector2>>) -> usize {
     let mut state = initial_state(input);
     for _ in 0..100 {
         state = next_state(state)
@@ -90,10 +84,9 @@ fn part2(input: &[Vec<Vector>]) -> usize {
 }
 
 fn main() {
-    let input = default_input();
     let mut run = advent::start();
-    run.part(|| part1(&input));
-    run.part(|| part2(&input));
+    run.part(|| part1(default_input()));
+    run.part(|| part2(default_input()));
     run.finish();
 }
 
@@ -121,13 +114,13 @@ eneswnwswnwsenenwnwnwwseeswneewsenese
 neswnwewnwnwseenwseesewsenwsweewe
 wseweeenwnesenwwwswnew",
     );
-    assert_eq!(part1(&input), 10);
-    assert_eq!(part2(&input), 2208);
+    assert_eq!(part1(input.clone()), 10);
+    assert_eq!(part2(input), 2208);
 }
 
 #[test]
 fn default() {
     let input = default_input();
-    assert_eq!(part1(&input), 438);
-    assert_eq!(part2(&input), 4038);
+    assert_eq!(part1(input.clone()), 438);
+    assert_eq!(part2(input), 4038);
 }
