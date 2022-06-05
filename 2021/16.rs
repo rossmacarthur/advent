@@ -1,5 +1,6 @@
-use std::iter;
 use std::vec::IntoIter;
+
+use advent::prelude::*;
 
 fn parse_input(input: &str) -> Vec<u8> {
     input
