@@ -1,4 +1,4 @@
-use std::collections::{HashMap, VecDeque};
+use advent::prelude::*;
 
 type Graph<'a> = HashMap<&'a str, Vec<&'a str>>;
 
