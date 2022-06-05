@@ -1,11 +1,6 @@
-use std::cmp::{max, min, Ordering, Reverse};
-use std::collections::BinaryHeap;
-use std::iter;
-use std::mem;
-
 use hashbrown::hash_map::Entry;
-use hashbrown::HashMap;
-use itermore::Itermore;
+
+use advent::prelude::*;
 
 fn parse_input(input: &str) -> Map<2> {
     let iter = (0..).map_while(|c| {
