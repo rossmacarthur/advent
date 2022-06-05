@@ -9,7 +9,7 @@ pub use hashbrown::{HashMap, HashSet};
 pub use itermore::Itermore;
 pub use itertools::{iproduct, Itertools};
 pub use regex_macro::regex;
-pub use vectrix::{vector, Vector};
+pub use vectrix::{vector, Matrix, Vector};
 
 pub type Vector2 = vectrix::Vector<i64, 2>;
 pub type Vector3 = vectrix::Vector<i64, 3>;
