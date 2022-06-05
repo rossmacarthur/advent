@@ -1,12 +1,6 @@
-use std::cmp::{max, min};
+use advent::prelude::*;
 
-use hashbrown::HashMap;
-use itermore::Itermore;
-use itertools::Itertools;
-use vectrix::*;
-
-type Vector = Vector2<i64>;
-type Image = HashMap<Vector, bool>;
+type Image = HashMap<Vector2, bool>;
 
 fn parse_input(input: &str) -> (Vec<bool>, Image) {
     let [alg, image] = input.split("\n\n").next_array().unwrap();
