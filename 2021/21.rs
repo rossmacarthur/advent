@@ -1,8 +1,4 @@
-use std::cmp::max;
-use std::mem;
-
-use either::Either;
-use hashbrown::HashMap;
+use advent::prelude::*;
 
 fn default_input() -> [i64; 2] {
     [6, 2]
