@@ -1,6 +1,6 @@
-use std::char;
-use std::iter;
 use std::ops::Rem;
+
+use advent::prelude::*;
 
 fn parse_input(input: &str) -> Vec<i64> {
     input
