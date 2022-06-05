@@ -35,12 +35,10 @@ fn combat([mut deck1, mut deck2]: [VecDeque<usize>; 2]) -> VecDeque<usize> {
         let card1 = deck1.pop_front().unwrap();
         let card2 = deck2.pop_front().unwrap();
 
-        let winner = if card1 > card2 {
-            Player::One
-        } else if card1 < card2 {
-            Player::Two
-        } else {
-            unreachable!()
+        let winner = match card1.cmp(&card2) {
+            Ordering::Greater => Player::One,
+            Ordering::Less => Player::Two,
+            Ordering::Equal => unreachable!(),
         };
 
         match winner {
