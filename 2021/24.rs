@@ -1,4 +1,4 @@
-use regex_macro::regex;
+use advent::prelude::*;
 
 fn parse_program(input: &str) -> Vec<[i64; 3]> {
     // The input can be chunked into instructions of the following form, with
