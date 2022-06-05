@@ -5,12 +5,12 @@ edition = "2021"
 publish = false
 
 [dependencies]
-argh = "0.1.6"
+argh = "0.1.7"
 either = "1.6.1"
 hashbrown = "0.12.1"
 itermore = "0.2.0"
-itertools = "0.10.1"
+itertools = "0.10.3"
 peter = "0.2.1"
-regex-macro = "0.1.1"
+regex-macro = "0.2.0"
 vectrix = "0.2.0"
 ascii-art = { path = "../ascii-art" }
