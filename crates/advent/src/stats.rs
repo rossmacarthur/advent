@@ -2,14 +2,7 @@
 
 use std::cmp::Ordering;
 
-#[derive(Debug, Clone, Copy)]
-pub struct Stats {
-    pub len: usize,
-    pub min: f64,
-    pub max: f64,
-    pub mean: f64,
-    pub std_dev: f64,
-}
+use crate::types::Stats;
 
 // Copied from the standard library f64::total_cmp() function.
 //
