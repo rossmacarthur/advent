@@ -1,4 +1,4 @@
-use itertools::Itertools;
+use advent::prelude::*;
 
 fn default_input() -> &'static str {
     include_str!("input/10.txt")
