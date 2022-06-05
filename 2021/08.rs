@@ -21,9 +21,9 @@ fn bitmask(s: &str) -> u32 {
     s.bytes().map(|b| 1 << (b - b'a')).fold(0, BitOr::bitor)
 }
 
-fn part1(wires: &[(Vec<u32>, Vec<u32>)]) -> usize {
+fn part1(wires: Vec<(Vec<u32>, Vec<u32>)>) -> usize {
     wires
-        .iter()
+        .into_iter()
         .flat_map(|(_, outputs)| outputs)
         .filter(|output| matches!(output.count_ones(), 2 | 3 | 4 | 7))
         .count()
@@ -59,10 +59,9 @@ fn part2(wires: Vec<(Vec<u32>, Vec<u32>)>) -> usize {
 }
 
 fn main() {
-    let input = default_input();
     let mut run = advent::start();
-    run.part(|| part1(&input));
-    run.part(|| part2(input.clone()));
+    run.part(|| part1(default_input()));
+    run.part(|| part2(default_input()));
     run.finish();
 }
 
@@ -81,13 +80,13 @@ bdfegc cbegaf gecbf dfcage bdacg ed bedf ced adcbefg gebcd | ed bcgafe cdgba cbg
 egadfb cdbfeg cegd fecab cgb gbdefca cg fgcdab egfdb bfceg | gbdfcae bgc cg cgb
 gcafb gcf dcaebfg ecagb gf abcdeg gaef cafbge fdbac fegbdc | fgae cfgab fg bagce",
     );
-    assert_eq!(part1(&input), 26);
+    assert_eq!(part1(input.clone()), 26);
     assert_eq!(part2(input), 61229);
 }
 
 #[test]
 fn default() {
     let input = default_input();
-    assert_eq!(part1(&input), 534);
+    assert_eq!(part1(input.clone()), 534);
     assert_eq!(part2(input), 1070188);
 }
