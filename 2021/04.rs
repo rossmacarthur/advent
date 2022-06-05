@@ -1,4 +1,4 @@
-use vectrix::Matrix;
+use advent::prelude::*;
 
 type Board = Matrix<(i64, bool), 5, 5>;
 
@@ -83,10 +83,9 @@ fn part2((draws, mut boards): (Vec<i64>, Vec<Board>)) -> i64 {
 }
 
 fn main() {
-    let input = default_input();
     let mut run = advent::start();
-    run.part(|| part1(input.clone()));
-    run.part(|| part2(input.clone()));
+    run.part(|| part1(default_input()));
+    run.part(|| part2(default_input()));
     run.finish();
 }
 #[test]
