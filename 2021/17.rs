@@ -1,8 +1,4 @@
-use itertools::Itertools;
-use regex_macro::regex;
-use vectrix::{vector, Vector2};
-
-type Vector = Vector2<i64>;
+use advent::prelude::*;
 
 fn parse_input(input: &str) -> Target {
     let caps = regex!(r"target area: x=(-?\d+)..(-?\d+), y=(-?\d+)..(-?\d+)")
@@ -28,13 +24,13 @@ struct Target {
 }
 
 impl Target {
-    fn contains(&self, p: Vector) -> bool {
+    fn contains(&self, p: Vector2) -> bool {
         let &Target { x0, x1, y0, y1 } = self;
         p.x >= x0 && p.x <= x1 && p.y >= y0 && p.y <= y1
     }
 }
 
-fn launch(mut v: Vector, t: Target) -> Option<i64> {
+fn launch(mut v: Vector2, t: Target) -> Option<i64> {
     let mut maxy = 0;
     let mut p = vector![0, 0];
     while p.y >= t.y0 {
