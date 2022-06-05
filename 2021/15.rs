@@ -1,23 +1,23 @@
-use std::cmp::Reverse;
-use std::collections::{BinaryHeap, HashMap, HashSet};
+use advent::prelude::*;
 
-use itertools::Itertools;
-use vectrix::{parse_map, vector, Vector2, CARDINALS};
-
-type Vector = Vector2<i64>;
-
-fn parse_input(input: &str) -> HashMap<Vector, i64> {
+fn parse_input(input: &str) -> HashMap<Vector2, i64> {
     parse_map(input, |c| match c {
         c @ '0'..='9' => c as i64 - '0' as i64,
         c => panic!("unexpected character `{}`", c),
     })
 }
 
-fn default_input() -> HashMap<Vector, i64> {
+fn default_input() -> HashMap<Vector2, i64> {
     parse_input(include_str!("input/15.txt"))
 }
 
-fn solve(map: HashMap<Vector, i64>) -> i64 {
+const NORTH: Vector2 = vector![0, -1];
+const SOUTH: Vector2 = vector![0, 1];
+const WEST: Vector2 = vector![-1, 0];
+const EAST: Vector2 = vector![1, 0];
+const CARDINALS: [Vector2; 4] = [NORTH, SOUTH, WEST, EAST];
+
+fn solve(map: HashMap<Vector2, i64>) -> i64 {
     let start = vector![0, 0];
     let end = vector![
         map.keys().map(|p| p.x).max().unwrap(),
@@ -44,11 +44,11 @@ fn solve(map: HashMap<Vector, i64>) -> i64 {
     panic!("no path found")
 }
 
-fn part1(input: HashMap<Vector, i64>) -> i64 {
+fn part1(input: HashMap<Vector2, i64>) -> i64 {
     solve(input)
 }
 
-fn part2(input: HashMap<Vector, i64>) -> i64 {
+fn part2(input: HashMap<Vector2, i64>) -> i64 {
     let w = input.keys().map(|p| p.x).max().unwrap() + 1;
     let h = input.keys().map(|p| p.y).max().unwrap() + 1;
 
