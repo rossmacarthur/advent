@@ -1,22 +1,28 @@
-use std::collections::{HashMap, HashSet, VecDeque};
-use std::iter;
+use advent::prelude::*;
 
-use vectrix::{parse_map, Vector2, CARDINALS_8};
-
-type Vector = Vector2<i64>;
-
-fn parse_input(input: &str) -> HashMap<Vector, i64> {
+fn parse_input(input: &str) -> HashMap<Vector2, i64> {
     parse_map(input, |c| match c {
         c @ '0'..='9' => c as i64 - '0' as i64,
         c => panic!("unexpected character `{}`", c),
     })
 }
 
-fn default_input() -> HashMap<Vector, i64> {
+fn default_input() -> HashMap<Vector2, i64> {
     parse_input(include_str!("input/11.txt"))
 }
 
-fn step(map: &mut HashMap<Vector, i64>) -> usize {
+const CARDINALS: [Vector2; 8] = [
+    vector![0, 1],
+    vector![-1, 1],
+    vector![-1, 0],
+    vector![-1, -1],
+    vector![0, -1],
+    vector![1, -1],
+    vector![1, 0],
+    vector![1, 1],
+];
+
+fn step(map: &mut HashMap<Vector2, i64>) -> usize {
     // Increase all energy levels
     for e in map.values_mut() {
         *e += 1;
@@ -33,7 +39,7 @@ fn step(map: &mut HashMap<Vector, i64>) -> usize {
             continue;
         }
         flashed.insert(p);
-        for d in CARDINALS_8 {
+        for d in CARDINALS {
             let next = p + d;
             if let Some(e) = map.get_mut(&next) {
                 *e += 1;
@@ -54,11 +60,11 @@ fn step(map: &mut HashMap<Vector, i64>) -> usize {
     flashed.len()
 }
 
-fn part1(mut map: HashMap<Vector, i64>) -> usize {
+fn part1(mut map: HashMap<Vector2, i64>) -> usize {
     iter::repeat_with(|| step(&mut map)).take(100).sum()
 }
 
-fn part2(mut map: HashMap<Vector, i64>) -> usize {
+fn part2(mut map: HashMap<Vector2, i64>) -> usize {
     let limit = map.len();
     1 + iter::repeat_with(|| step(&mut map))
         .position(|n| n == limit)
