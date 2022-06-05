@@ -20,6 +20,10 @@ pub struct Advent<'a> {
     parts: Vec<(Option<String>, FnBox<'a>)>,
 }
 
+pub fn start<'a>() -> Advent<'a> {
+    Advent::default()
+}
+
 impl<'a> Advent<'a> {
     pub fn part<F, R>(&mut self, f: F)
     where
@@ -55,7 +59,7 @@ impl<'a> Advent<'a> {
         Summary::Run(runs)
     }
 
-    fn bench(self) -> Summary {
+    pub fn bench(self) -> Summary {
         let mut benches = Vec::new();
 
         for (i, (name, f)) in self.parts.into_iter().enumerate() {
@@ -89,19 +93,9 @@ impl<'a> Advent<'a> {
     }
 
     pub fn finish(self) {
-        /// Run the program.
-        #[derive(Debug, FromArgs)]
-        struct Opt {
-            /// whether to benchmark
-            #[argh(switch)]
-            bench: bool,
-            /// whether to not print trees
-            #[argh(switch)]
-            no_trees: bool,
-        }
+        let Opt { bench, output } = argh::from_env();
 
-        let Opt { bench, no_trees } = argh::from_env();
-        if !no_trees {
+        if let Output::Festive = output {
             println!("{}", ascii_art::fun());
         }
         let summary = if bench {
@@ -116,10 +110,54 @@ impl<'a> Advent<'a> {
             self.run()
         };
 
-        output::print_summary(io::stdout(), &summary).unwrap();
+        match output {
+            #[cfg(feature = "json")]
+            Output::Json => summary.json(),
+            _ => summary.print(),
+        }
     }
 }
 
-pub fn start<'a>() -> Advent<'a> {
-    Advent::default()
+impl Summary {
+    #[cfg(feature = "json")]
+    pub fn json(&self) {
+        serde_json::to_writer(io::stdout(), self).unwrap();
+    }
+
+    pub fn print(&self) {
+        output::print_summary(io::stdout(), self).unwrap();
+    }
+}
+
+/// Run the program.
+#[derive(Debug, FromArgs)]
+struct Opt {
+    /// whether to benchmark
+    #[argh(switch)]
+    bench: bool,
+    /// the output style
+    #[argh(option, default = "Output::Festive")]
+    output: Output,
+}
+
+#[derive(Debug)]
+enum Output {
+    Boring,
+    Festive,
+    #[cfg(feature = "json")]
+    Json,
+}
+
+impl argh::FromArgValue for Output {
+    fn from_arg_value(value: &str) -> Result<Self, String> {
+        match value {
+            "boring" => Ok(Self::Boring),
+            "festive" => Ok(Self::Festive),
+            #[cfg(feature = "json")]
+            "json" => Ok(Self::Json),
+            #[cfg(not(feature = "json"))]
+            "json" => Err("`json` requires crate feature".into()),
+            _ => Err("expected `boring`, `festive` or `json`".into()),
+        }
+    }
 }

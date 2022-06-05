@@ -12,5 +12,10 @@ itermore = "0.2.0"
 itertools = "0.10.3"
 peter = "0.2.1"
 regex-macro = "0.2.0"
+serde = { version = "1.0.137", features = ["derive"], optional = true }
+serde_json = { version = "1.0.81", optional = true }
 vectrix = "0.2.0"
 ascii-art = { path = "../ascii-art" }
+
+[features]
+json = ["serde", "serde_json"]

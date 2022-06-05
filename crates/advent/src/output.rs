@@ -22,7 +22,7 @@ fn print_bench_summary<O: io::Write>(mut buf: O, parts: &[Bench]) -> io::Result<
             buf,
             "{}{:>width$}",
             name.bold(),
-            human::Samples::new(stats.len).fixed(245),
+            human::Samples::new(stats.samples).fixed(245),
             width = 46 - name.chars().count(),
         )?;
         let mean = human::Time::new(stats.mean);
