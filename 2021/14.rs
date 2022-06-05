@@ -1,7 +1,4 @@
-use std::collections::HashMap;
-
-use either::Either;
-use itermore::Itermore;
+use advent::prelude::*;
 
 type Rules = HashMap<[char; 2], char>;
 
