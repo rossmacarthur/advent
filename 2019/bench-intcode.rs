@@ -40,5 +40,5 @@ fn main() {
     for (name, program, input) in benches {
         run.named(name, move || bench(program.to_vec(), input));
     }
-    run.bench();
+    run.bench().print();
 }

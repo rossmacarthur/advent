@@ -8,7 +8,7 @@ publish = false
 hashbrown = "0.12.1"
 thiserror = "1.0.31"
 vectrix = "0.2.0"
-advent = { path = "crates/advent"}
+advent = { path = "crates/advent" }
 
 [workspace]
 members = [
@@ -16,6 +16,9 @@ members = [
     "crates/cli",
     "crates/ascii-art",
 ]
+
+[features]
+json = ["advent/json"]
 
 [[bin]]
 name = "2019-bench-intcode"

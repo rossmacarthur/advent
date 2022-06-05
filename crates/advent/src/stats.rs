@@ -44,7 +44,7 @@ pub fn basics(mut data: Vec<f64>) -> Stats {
         variance.sqrt()
     };
     Stats {
-        len,
+        samples: len,
         min,
         max,
         mean,
