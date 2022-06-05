@@ -1,9 +1,6 @@
-use hashbrown::HashMap;
-use vectrix::{parse_map, vector, Vector2};
+use advent::prelude::*;
 
-type Vector = Vector2<i64>;
-
-fn parse_input(input: &str) -> HashMap<Vector, Tile> {
+fn parse_input(input: &str) -> HashMap<Vector2, Tile> {
     parse_map(input, |c| match c {
         '>' => Tile::Occupied(Cucumber::East),
         'v' => Tile::Occupied(Cucumber::South),
@@ -12,7 +9,7 @@ fn parse_input(input: &str) -> HashMap<Vector, Tile> {
     })
 }
 
-fn default_input() -> HashMap<Vector, Tile> {
+fn default_input() -> HashMap<Vector2, Tile> {
     parse_input(include_str!("input/25.txt"))
 }
 
@@ -29,14 +26,14 @@ enum Cucumber {
 }
 
 impl Cucumber {
-    const fn direction(&self) -> Vector {
+    const fn direction(&self) -> Vector2 {
         match *self {
             Self::East => vector![1, 0],
             Self::South => vector![0, 1],
         }
     }
 
-    fn wrap(&self, p: Vector) -> Vector {
+    fn wrap(&self, p: Vector2) -> Vector2 {
         match *self {
             Self::East => vector![0, p.y],
             Self::South => vector![p.x, 0],
@@ -44,7 +41,7 @@ impl Cucumber {
     }
 }
 
-fn move_herd(map: &mut HashMap<Vector, Tile>, cucumber: Cucumber) -> bool {
+fn move_herd(map: &mut HashMap<Vector2, Tile>, cucumber: Cucumber) -> bool {
     let moves: Vec<_> = map
         .iter()
         .filter(|(_, t)| matches!(t, Tile::Occupied(c) if *c == cucumber))
@@ -70,7 +67,7 @@ fn move_herd(map: &mut HashMap<Vector, Tile>, cucumber: Cucumber) -> bool {
     !moves.is_empty()
 }
 
-fn part1(mut map: HashMap<Vector, Tile>) -> i64 {
+fn part1(mut map: HashMap<Vector2, Tile>) -> i64 {
     let mut step = 1;
     loop {
         let moved_east = move_herd(&mut map, Cucumber::East);
