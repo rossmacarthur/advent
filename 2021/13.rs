@@ -1,10 +1,6 @@
-use std::collections::HashSet;
+use advent::prelude::*;
 
-use vectrix::{vector, Vector2};
-
-type Vector = Vector2<i64>;
-
-fn parse_input(input: &str) -> (HashSet<Vector>, Vec<Fold>) {
+fn parse_input(input: &str) -> (HashSet<Vector2>, Vec<Fold>) {
     let (dots, folds) = input.split_once("\n\n").unwrap();
     let dots = dots
         .lines()
@@ -29,7 +25,7 @@ fn parse_input(input: &str) -> (HashSet<Vector>, Vec<Fold>) {
     (dots, folds)
 }
 
-fn default_input() -> (HashSet<Vector>, Vec<Fold>) {
+fn default_input() -> (HashSet<Vector2>, Vec<Fold>) {
     parse_input(include_str!("input/13.txt"))
 }
 
@@ -39,7 +35,7 @@ struct Fold {
     value: i64,
 }
 
-fn fold(dots: HashSet<Vector>, Fold { axis, value }: Fold) -> HashSet<Vector> {
+fn fold(dots: HashSet<Vector2>, Fold { axis, value }: Fold) -> HashSet<Vector2> {
     dots.into_iter()
         .map(|mut v| {
             v[axis] = value - (v[axis] - value).abs();
@@ -48,11 +44,11 @@ fn fold(dots: HashSet<Vector>, Fold { axis, value }: Fold) -> HashSet<Vector> {
         .collect()
 }
 
-fn part1((dots, folds): (HashSet<Vector>, Vec<Fold>)) -> usize {
+fn part1((dots, folds): (HashSet<Vector2>, Vec<Fold>)) -> usize {
     fold(dots, folds[0]).len()
 }
 
-fn part2((mut dots, folds): (HashSet<Vector>, Vec<Fold>)) -> String {
+fn part2((mut dots, folds): (HashSet<Vector2>, Vec<Fold>)) -> String {
     for f in folds {
         dots = fold(dots, f);
     }
