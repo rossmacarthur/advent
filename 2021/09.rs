@@ -1,21 +1,23 @@
-use std::collections::{HashMap, HashSet, VecDeque};
+use advent::prelude::*;
 
-use vectrix::{parse_map, Vector2, CARDINALS};
-
-type Vector = Vector2<i64>;
-
-fn parse_input(input: &str) -> HashMap<Vector, i64> {
+fn parse_input(input: &str) -> HashMap<Vector2, i64> {
     parse_map(input, |c| match c {
         c @ '0'..='9' => c as i64 - b'0' as i64,
         c => panic!("unexpected character `{}`", c),
     })
 }
 
-fn default_input() -> HashMap<Vector, i64> {
+fn default_input() -> HashMap<Vector2, i64> {
     parse_input(include_str!("input/09.txt"))
 }
 
-fn low_points(map: &HashMap<Vector, i64>) -> impl Iterator<Item = (Vector, i64)> + '_ {
+const NORTH: Vector2 = vector![0, -1];
+const SOUTH: Vector2 = vector![0, 1];
+const WEST: Vector2 = vector![-1, 0];
+const EAST: Vector2 = vector![1, 0];
+const CARDINALS: [Vector2; 4] = [NORTH, SOUTH, WEST, EAST];
+
+fn low_points(map: &HashMap<Vector2, i64>) -> impl Iterator<Item = (Vector2, i64)> + '_ {
     map.iter()
         .filter(|(p, height)| {
             CARDINALS
@@ -26,13 +28,13 @@ fn low_points(map: &HashMap<Vector, i64>) -> impl Iterator<Item = (Vector, i64)>
         .map(|(p, h)| (*p, *h))
 }
 
-fn part1(map: &HashMap<Vector, i64>) -> i64 {
-    low_points(map).map(|(_, h)| h + 1).sum()
+fn part1(map: HashMap<Vector2, i64>) -> i64 {
+    low_points(&map).map(|(_, h)| h + 1).sum()
 }
 
-fn part2(map: &HashMap<Vector, i64>) -> usize {
+fn part2(map: HashMap<Vector2, i64>) -> usize {
     let mut basins = Vec::new();
-    for (p, _) in low_points(map) {
+    for (p, _) in low_points(&map) {
         let mut q = VecDeque::from([p]);
         let mut visited = HashSet::new();
         while let Some(p) = q.pop_front() {
@@ -54,10 +56,9 @@ fn part2(map: &HashMap<Vector, i64>) -> usize {
 }
 
 fn main() {
-    let input = default_input();
     let mut run = advent::start();
-    run.part(|| part1(&input));
-    run.part(|| part2(&input));
+    run.part(|| part1(default_input()));
+    run.part(|| part2(default_input()));
     run.finish();
 }
 
@@ -71,13 +72,13 @@ fn example() {
 8767896789
 9899965678",
     );
-    assert_eq!(part1(&input), 15);
-    assert_eq!(part2(&input), 1134);
+    assert_eq!(part1(input.clone()), 15);
+    assert_eq!(part2(input), 1134);
 }
 
 #[test]
 fn default() {
     let input = default_input();
-    assert_eq!(part1(&input), 423);
-    assert_eq!(part2(&input), 1198704);
+    assert_eq!(part1(input.clone()), 423);
+    assert_eq!(part2(input), 1198704);
 }
