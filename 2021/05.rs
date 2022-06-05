@@ -1,12 +1,6 @@
-use std::collections::HashMap;
-use std::iter;
+use advent::prelude::*;
 
-use itermore::Itermore;
-use vectrix::Vector2;
-
-type Vector = Vector2<i64>;
-
-fn parse_input(input: &str) -> Vec<(Vector, Vector)> {
+fn parse_input(input: &str) -> Vec<(Vector2, Vector2)> {
     input
         .lines()
         .map(|line| {
@@ -15,7 +9,7 @@ fn parse_input(input: &str) -> Vec<(Vector, Vector)> {
                     .map(str::parse)
                     .map(Result::unwrap)
                     .next_array::<2>()
-                    .map(Vector::from)
+                    .map(Vector2::from)
                     .unwrap()
             });
             (it.next().unwrap(), it.next().unwrap())
@@ -23,11 +17,11 @@ fn parse_input(input: &str) -> Vec<(Vector, Vector)> {
         .collect()
 }
 
-fn default_input() -> Vec<(Vector, Vector)> {
+fn default_input() -> Vec<(Vector2, Vector2)> {
     parse_input(include_str!("input/05.txt"))
 }
 
-fn solve(input: impl Iterator<Item = (Vector, Vector)>) -> usize {
+fn solve(input: impl Iterator<Item = (Vector2, Vector2)>) -> usize {
     input
         .flat_map(|(p1, p2)| {
             let d = (p2 - p1).map(i64::signum);
@@ -42,7 +36,7 @@ fn solve(input: impl Iterator<Item = (Vector, Vector)>) -> usize {
         .count()
 }
 
-fn part1(input: Vec<(Vector, Vector)>) -> usize {
+fn part1(input: Vec<(Vector2, Vector2)>) -> usize {
     solve(
         input
             .into_iter()
@@ -50,15 +44,14 @@ fn part1(input: Vec<(Vector, Vector)>) -> usize {
     )
 }
 
-fn part2(input: Vec<(Vector, Vector)>) -> usize {
+fn part2(input: Vec<(Vector2, Vector2)>) -> usize {
     solve(input.into_iter())
 }
 
 fn main() {
-    let input = default_input();
     let mut run = advent::start();
-    run.part(|| part1(input.clone()));
-    run.part(|| part2(input.clone()));
+    run.part(|| part1(default_input()));
+    run.part(|| part2(default_input()));
     run.finish();
 }
 
