@@ -1,13 +1,6 @@
-use std::collections::VecDeque;
+use advent::prelude::*;
 
-use hashbrown::HashSet;
-use itermore::Itermore;
-use itertools::Itertools;
-use vectrix::{vector, Vector3};
-
-type Vector = Vector3<i64>;
-
-fn parse_input(input: &str) -> VecDeque<Vec<Vector>> {
+fn parse_input(input: &str) -> VecDeque<Vec<Vector3>> {
     input
         .split("\n\n")
         .map(|scan| {
@@ -19,25 +12,25 @@ fn parse_input(input: &str) -> VecDeque<Vec<Vector>> {
                         .map(Result::unwrap)
                         .next_array::<3>()
                 })
-                .map(Vector::from)
+                .map(Vector3::from)
                 .collect()
         })
         .collect()
 }
 
-fn default_input() -> VecDeque<Vec<Vector>> {
+fn default_input() -> VecDeque<Vec<Vector3>> {
     parse_input(include_str!("input/19.txt"))
 }
 
-fn roll(bs: Vec<Vector>) -> Vec<Vector> {
+fn roll(bs: Vec<Vector3>) -> Vec<Vector3> {
     bs.into_iter().map(|b| vector![b.x, b.z, -b.y]).collect()
 }
 
-fn turn(bs: Vec<Vector>) -> Vec<Vector> {
+fn turn(bs: Vec<Vector3>) -> Vec<Vector3> {
     bs.into_iter().map(|b| vector![-b.y, b.x, b.z]).collect()
 }
 
-fn is_match(beacons: &HashSet<Vector>, scan: &[Vector]) -> Option<(Vector, Vec<Vector>)> {
+fn is_match(beacons: &HashSet<Vector3>, scan: &[Vector3]) -> Option<(Vector3, Vec<Vector3>)> {
     beacons
         .iter()
         .cartesian_product(scan)
@@ -49,7 +42,7 @@ fn is_match(beacons: &HashSet<Vector>, scan: &[Vector]) -> Option<(Vector, Vec<V
         })
 }
 
-fn find_match(beacons: &mut HashSet<Vector>, mut scan: Vec<Vector>) -> Option<Vector> {
+fn find_match(beacons: &mut HashSet<Vector3>, mut scan: Vec<Vector3>) -> Option<Vector3> {
     for _ in 0..2 {
         for _ in 0..3 {
             scan = roll(scan);
@@ -70,7 +63,7 @@ fn find_match(beacons: &mut HashSet<Vector>, mut scan: Vec<Vector>) -> Option<Ve
     None
 }
 
-fn solve(mut scans: VecDeque<Vec<Vector>>) -> (HashSet<Vector>, Vec<Vector>) {
+fn solve(mut scans: VecDeque<Vec<Vector3>>) -> (HashSet<Vector3>, Vec<Vector3>) {
     let mut beacons: HashSet<_> = scans.pop_front().unwrap().into_iter().collect();
     let mut scanners = vec![vector![0, 0, 0]];
     while let Some(scan) = scans.pop_front() {
@@ -82,12 +75,12 @@ fn solve(mut scans: VecDeque<Vec<Vector>>) -> (HashSet<Vector>, Vec<Vector>) {
     (beacons, scanners)
 }
 
-fn part1(scans: VecDeque<Vec<Vector>>) -> usize {
+fn part1(scans: VecDeque<Vec<Vector3>>) -> usize {
     let (beacons, _) = solve(scans);
     beacons.len()
 }
 
-fn part2(scans: VecDeque<Vec<Vector>>) -> i64 {
+fn part2(scans: VecDeque<Vec<Vector3>>) -> i64 {
     let (_, scanners) = solve(scans);
     scanners
         .into_iter()
