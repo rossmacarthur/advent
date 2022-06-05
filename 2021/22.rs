@@ -1,10 +1,4 @@
-use std::cmp::{max, min};
-use std::iter;
-
-use either::Either;
-use hashbrown::HashMap;
-use itermore::Itermore;
-use regex_macro::regex;
+use advent::prelude::*;
 
 type Cuboid = [i64; 6];
 
