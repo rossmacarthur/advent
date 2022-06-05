@@ -1,10 +1,9 @@
 #![allow(clippy::option_map_unit_fn)]
 
 use std::fmt;
-use std::mem;
 use std::str::Chars;
 
-use itertools::Itertools;
+use advent::prelude::*;
 
 fn parse_input(input: &str) -> Vec<Node> {
     input.lines().map(Node::parse).collect()
