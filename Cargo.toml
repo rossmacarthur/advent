@@ -5,7 +5,6 @@ edition = "2021"
 publish = false
 
 [dependencies]
-hashbrown = "0.12.1"
 thiserror = "1.0.31"
 vectrix = "0.2.0"
 advent = { path = "crates/advent" }

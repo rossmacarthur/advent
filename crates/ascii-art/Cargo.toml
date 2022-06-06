@@ -7,4 +7,3 @@ publish = false
 [dependencies]
 peter = "0.2.1"
 rand = "0.8.5"
-unicode-width = "0.1.9"

@@ -1,4 +1,4 @@
-use hashbrown::hash_map::Entry;
+use std::collections::hash_map::Entry;
 
 use advent::prelude::*;
 
