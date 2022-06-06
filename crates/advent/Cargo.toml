@@ -5,9 +5,9 @@ edition = "2021"
 publish = false
 
 [dependencies]
+ahash = "0.7.6"
 argh = "0.1.7"
 either = "1.6.1"
-hashbrown = "0.12.1"
 itermore = "0.2.0"
 itertools = "0.10.3"
 peter = "0.2.1"
