@@ -1,7 +1,5 @@
 use peter::Stylize;
 
-use crate::human;
-
 #[derive(Debug)]
 #[cfg_attr(feature = "json", derive(serde::Serialize))]
 pub enum Summary {

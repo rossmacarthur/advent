@@ -16,6 +16,7 @@ serde = { version = "1.0.137", features = ["derive"], optional = true }
 serde_json = { version = "1.0.81", optional = true }
 vectrix = "0.2.0"
 ascii-art = { path = "../ascii-art" }
+human = { path = "../human" }
 
 [features]
 json = ["serde", "serde_json"]

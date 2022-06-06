@@ -13,8 +13,9 @@ advent = { path = "crates/advent" }
 [workspace]
 members = [
     "crates/advent",
-    "crates/cli",
     "crates/ascii-art",
+    "crates/cli",
+    "crates/human",
 ]
 
 [features]

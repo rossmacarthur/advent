@@ -1,4 +1,3 @@
-mod human;
 pub mod prelude;
 mod stats;
 mod summary;
