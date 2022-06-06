@@ -2,7 +2,7 @@
 
 use std::cmp::Ordering;
 
-use crate::types::Stats;
+use crate::summary::Stats;
 
 // Copied from the standard library f64::total_cmp() function.
 //

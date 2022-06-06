@@ -1,17 +1,16 @@
 mod human;
-mod output;
 pub mod prelude;
 mod stats;
-mod types;
+mod summary;
 
 use std::fmt::Display;
-use std::io;
 use std::time::{Duration, Instant};
 
 use argh::FromArgs;
 use peter::Stylize;
 
-use crate::types::{Bench, Run, Summary};
+pub use crate::summary::Summary;
+use crate::summary::{Bench, Run};
 
 type FnBox<'a> = Box<dyn Fn() -> Box<dyn Display + 'a> + 'a>;
 
@@ -42,7 +41,7 @@ impl<'a> Advent<'a> {
         self.parts.push((name, Box::new(move || Box::new(f()))))
     }
 
-    fn run(self) -> Summary {
+    pub fn run(self) -> Summary {
         let mut runs = Vec::new();
 
         for (i, (name, f)) in self.parts.into_iter().enumerate() {
@@ -112,20 +111,9 @@ impl<'a> Advent<'a> {
 
         match output {
             #[cfg(feature = "json")]
-            Output::Json => summary.json(),
+            Output::Json => summary.print_json(),
             _ => summary.print(),
         }
-    }
-}
-
-impl Summary {
-    #[cfg(feature = "json")]
-    pub fn json(&self) {
-        serde_json::to_writer(io::stdout(), self).unwrap();
-    }
-
-    pub fn print(&self) {
-        output::print_summary(io::stdout(), self).unwrap();
     }
 }
 
