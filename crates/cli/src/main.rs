@@ -1,3 +1,5 @@
+mod bench;
+
 use std::env;
 use std::fs;
 use std::path::PathBuf;
@@ -5,6 +7,8 @@ use std::path::PathBuf;
 use anyhow::{Context, Result};
 use argh::FromArgs;
 use serde::{Deserialize, Serialize};
+
+use crate::bench::bench;
 
 #[derive(Debug, Clone, PartialEq, Eq, PartialOrd, Ord, Deserialize, Serialize)]
 struct Binary {
@@ -122,14 +126,14 @@ fn open(year: u32, day: u32) -> Result<()> {
 struct Opt {
     /// the puzzle year.
     #[argh(option, short = 'y')]
-    year: u32,
+    year: Option<u32>,
 
     /// the puzzle day.
     #[argh(option, short = 'd')]
-    day: u32,
+    day: Option<u32>,
 
     /// the command.
-    #[argh(positional, arg_name = "new|open")]
+    #[argh(positional, arg_name = "new|open|bench")]
     command: Command,
 }
 
@@ -137,6 +141,7 @@ struct Opt {
 enum Command {
     New,
     Open,
+    Bench,
 }
 
 impl argh::FromArgValue for Command {
@@ -144,7 +149,8 @@ impl argh::FromArgValue for Command {
         match value {
             "new" => Ok(Self::New),
             "open" => Ok(Self::Open),
-            _ => Err("expected `new` or `open`".into()),
+            "bench" => Ok(Self::Bench),
+            _ => Err("expected `new`,`open`, or `bench`".into()),
         }
     }
 }
@@ -152,7 +158,16 @@ impl argh::FromArgValue for Command {
 fn main() -> Result<()> {
     let Opt { year, day, command } = argh::from_env();
     match command {
-        Command::New => new(year, day),
-        Command::Open => open(year, day),
+        Command::New => {
+            let year = year.context("`year` is required")?;
+            let day = day.context("`day` is required")?;
+            new(year, day)
+        }
+        Command::Open => {
+            let year = year.context("`year` is required")?;
+            let day = day.context("`day` is required")?;
+            open(year, day)
+        }
+        Command::Bench => bench(),
     }
 }
