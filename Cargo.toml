@@ -97,6 +97,10 @@ name = "201819"
 path = "2018/19.rs"
 
 [[bin]]
+name = "201820"
+path = "2018/20.rs"
+
+[[bin]]
 name = "2019-bench-intcode"
 path = "2019/bench-intcode.rs"
 
