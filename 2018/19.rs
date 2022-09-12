@@ -1,77 +1,9 @@
-use advent::prelude::*;
+mod device;
 
-fn parse_input(input: &str) -> (usize, Vec<(Op, [usize; 3])>) {
-    let (ip_config, instrs) = input.split_once('\n').unwrap();
-    let ipr = ip_config.trim_start_matches("#ip ").parse().unwrap();
-    let instrs = instrs
-        .lines()
-        .map(|line| {
-            let [o, a, b, c] = line.split_whitespace().next_array().unwrap();
-            let op = match o {
-                "addr" => Op::Addr,
-                "addi" => Op::Addi,
-                "mulr" => Op::Mulr,
-                "muli" => Op::Muli,
-                "banr" => Op::Banr,
-                "bani" => Op::Bani,
-                "borr" => Op::Borr,
-                "bori" => Op::Bori,
-                "setr" => Op::Setr,
-                "seti" => Op::Seti,
-                "gtir" => Op::Gtir,
-                "gtri" => Op::Gtri,
-                "gtrr" => Op::Gtrr,
-                "eqir" => Op::Eqir,
-                "eqri" => Op::Eqri,
-                "eqrr" => Op::Eqrr,
-                i => panic!("unexpected instruction `{}`", i),
-            };
-            let a = a.parse().unwrap();
-            let b = b.parse().unwrap();
-            let c = c.parse().unwrap();
-            (op, [a, b, c])
-        })
-        .collect();
-    (ipr, instrs)
-}
+use device::{compute, parse_program, Program};
 
-fn default_input() -> (usize, Vec<(Op, [usize; 3])>) {
-    parse_input(include_str!("input/19.txt"))
-}
-
-#[rustfmt::skip]
-#[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
-enum Op {
-    Addr, Addi,
-    Mulr, Muli,
-    Banr, Bani,
-    Borr, Bori,
-    Setr, Seti,
-    Gtir, Gtri, Gtrr,
-    Eqir, Eqri, Eqrr,
-}
-
-fn compute(mut regs: [usize; 6], op: Op, a: usize, b: usize, c: usize) -> [usize; 6] {
-    let res = match op {
-        Op::Addr => regs[a] + regs[b],
-        Op::Addi => regs[a] + b,
-        Op::Mulr => regs[a] * regs[b],
-        Op::Muli => regs[a] * b,
-        Op::Banr => regs[a] & regs[b],
-        Op::Bani => regs[a] & b,
-        Op::Borr => regs[a] | regs[b],
-        Op::Bori => regs[a] | b,
-        Op::Setr => regs[a],
-        Op::Seti => a,
-        Op::Gtir => (a > regs[b]) as usize,
-        Op::Gtri => (regs[a] > b) as usize,
-        Op::Gtrr => (regs[a] > regs[b]) as usize,
-        Op::Eqir => (a == regs[b]) as usize,
-        Op::Eqri => (regs[a] == b) as usize,
-        Op::Eqrr => (regs[a] == regs[b]) as usize,
-    };
-    regs[c] = res;
-    regs
+fn default_input() -> Program {
+    parse_program(include_str!("input/19.txt"))
 }
 
 fn sum_of_divisors(n: usize) -> usize {
@@ -90,11 +22,11 @@ fn sum_of_divisors(n: usize) -> usize {
     sum
 }
 
-fn part1((ip, instrs): (usize, Vec<(Op, [usize; 3])>)) -> usize {
+fn part1(prog: Program) -> usize {
+    let Program { ip, instrs } = prog;
     let mut regs = [0; 6];
     while regs[ip] < instrs.len() {
-        let (op, [a, b, c]) = instrs[regs[ip]];
-        regs = compute(regs, op, a, b, c);
+        regs = compute(regs, instrs[regs[ip]]);
         regs[ip] += 1;
     }
     regs[0]
@@ -124,7 +56,8 @@ fn part1((ip, instrs): (usize, Vec<(Op, [usize; 3])>)) -> usize {
 // seems to be involved with constructing the value used for the above code and
 // involved in part 1.
 //
-fn part2((ip, instrs): (usize, Vec<(Op, [usize; 3])>)) -> usize {
+fn part2(prog: Program) -> usize {
+    let Program { ip, instrs } = prog;
     let mut regs = [0; 6];
     regs[0] = 1;
     while regs[ip] < instrs.len() {
@@ -133,8 +66,7 @@ fn part2((ip, instrs): (usize, Vec<(Op, [usize; 3])>)) -> usize {
             // we're calculating the sum of factors for.
             return sum_of_divisors(regs[2]);
         }
-        let (op, [a, b, c]) = instrs[regs[ip]];
-        regs = compute(regs, op, a, b, c);
+        regs = compute(regs, instrs[regs[ip]]);
         regs[ip] += 1;
     }
     unreachable!()
