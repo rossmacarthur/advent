@@ -1,4 +1,7 @@
+mod device;
+
 use advent::prelude::*;
+use device::{compute, Op};
 
 fn parse_nums(s: &str) -> [usize; 4] {
     s.split_whitespace()
@@ -34,18 +37,6 @@ struct Sample {
     after: [usize; 4],
 }
 
-#[rustfmt::skip]
-#[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
-enum Op {
-    Addr, Addi,
-    Mulr, Muli,
-    Banr, Bani,
-    Borr, Bori,
-    Setr, Seti,
-    Gtir, Gtri, Gtrr,
-    Eqir, Eqri, Eqrr,
-}
-
 impl Op {
     #[rustfmt::skip]
     fn iter() -> impl Iterator<Item = Self> {
@@ -62,36 +53,13 @@ impl Op {
     }
 }
 
-fn compute(mut regs: [usize; 4], op: Op, a: usize, b: usize, c: usize) -> [usize; 4] {
-    let res = match op {
-        Op::Addr => regs[a] + regs[b],
-        Op::Addi => regs[a] + b,
-        Op::Mulr => regs[a] * regs[b],
-        Op::Muli => regs[a] * b,
-        Op::Banr => regs[a] & regs[b],
-        Op::Bani => regs[a] & b,
-        Op::Borr => regs[a] | regs[b],
-        Op::Bori => regs[a] | b,
-        Op::Setr => regs[a],
-        Op::Seti => a,
-        Op::Gtir => (a > regs[b]) as usize,
-        Op::Gtri => (regs[a] > b) as usize,
-        Op::Gtrr => (regs[a] > regs[b]) as usize,
-        Op::Eqir => (a == regs[b]) as usize,
-        Op::Eqri => (regs[a] == b) as usize,
-        Op::Eqrr => (regs[a] == regs[b]) as usize,
-    };
-    regs[c] = res;
-    regs
-}
-
 fn part1((samples, _): (Vec<Sample>, Vec<[usize; 4]>)) -> usize {
     samples
         .iter()
         .filter(|s| {
             let [_, a, b, c] = s.instr;
             let n = Op::iter()
-                .filter(move |&op| compute(s.before, op, a, b, c) == s.after)
+                .filter(move |&op| compute(s.before, (op, [a, b, c])) == s.after)
                 .count();
             n >= 3
         })
@@ -104,7 +72,7 @@ fn part2((samples, prog): (Vec<Sample>, Vec<[usize; 4]>)) -> usize {
         .iter()
         .map(|s| {
             let [o, a, b, c] = s.instr;
-            let ops = Op::iter().filter(move |&op| compute(s.before, op, a, b, c) == s.after);
+            let ops = Op::iter().filter(move |&op| compute(s.before, (op, [a, b, c])) == s.after);
             (o, ops)
         })
         .fold(HashMap::new(), |mut acc, (o, ops)| {
@@ -134,7 +102,7 @@ fn part2((samples, prog): (Vec<Sample>, Vec<[usize; 4]>)) -> usize {
     let mut regs = [0; 4];
     for [o, a, b, c] in prog {
         let op = resolved[&o];
-        regs = compute(regs, op, a, b, c);
+        regs = compute(regs, (op, [a, b, c]));
     }
     regs[0]
 }
@@ -157,24 +125,24 @@ After:  [3, 2, 2, 1]",
     let [_, a, b, c] = s.instr;
 
     // behaves like these opcodes
-    assert_eq!(compute(s.before, Op::Addi, a, b, c), s.after);
-    assert_eq!(compute(s.before, Op::Mulr, a, b, c), s.after);
-    assert_eq!(compute(s.before, Op::Seti, a, b, c), s.after);
+    assert_eq!(compute(s.before, (Op::Addi, [a, b, c])), s.after);
+    assert_eq!(compute(s.before, (Op::Mulr, [a, b, c])), s.after);
+    assert_eq!(compute(s.before, (Op::Seti, [a, b, c])), s.after);
 
     // does not behave like the rest
-    assert_ne!(compute(s.before, Op::Addr, a, b, c), s.after);
-    assert_ne!(compute(s.before, Op::Muli, a, b, c), s.after);
-    assert_ne!(compute(s.before, Op::Banr, a, b, c), s.after);
-    assert_ne!(compute(s.before, Op::Bani, a, b, c), s.after);
-    assert_ne!(compute(s.before, Op::Borr, a, b, c), s.after);
-    assert_ne!(compute(s.before, Op::Bori, a, b, c), s.after);
-    assert_ne!(compute(s.before, Op::Setr, a, b, c), s.after);
-    assert_ne!(compute(s.before, Op::Gtir, a, b, c), s.after);
-    assert_ne!(compute(s.before, Op::Gtri, a, b, c), s.after);
-    assert_ne!(compute(s.before, Op::Gtrr, a, b, c), s.after);
-    assert_ne!(compute(s.before, Op::Eqir, a, b, c), s.after);
-    assert_ne!(compute(s.before, Op::Eqri, a, b, c), s.after);
-    assert_ne!(compute(s.before, Op::Eqrr, a, b, c), s.after);
+    assert_ne!(compute(s.before, (Op::Addr, [a, b, c])), s.after);
+    assert_ne!(compute(s.before, (Op::Muli, [a, b, c])), s.after);
+    assert_ne!(compute(s.before, (Op::Banr, [a, b, c])), s.after);
+    assert_ne!(compute(s.before, (Op::Bani, [a, b, c])), s.after);
+    assert_ne!(compute(s.before, (Op::Borr, [a, b, c])), s.after);
+    assert_ne!(compute(s.before, (Op::Bori, [a, b, c])), s.after);
+    assert_ne!(compute(s.before, (Op::Setr, [a, b, c])), s.after);
+    assert_ne!(compute(s.before, (Op::Gtir, [a, b, c])), s.after);
+    assert_ne!(compute(s.before, (Op::Gtri, [a, b, c])), s.after);
+    assert_ne!(compute(s.before, (Op::Gtrr, [a, b, c])), s.after);
+    assert_ne!(compute(s.before, (Op::Eqir, [a, b, c])), s.after);
+    assert_ne!(compute(s.before, (Op::Eqri, [a, b, c])), s.after);
+    assert_ne!(compute(s.before, (Op::Eqrr, [a, b, c])), s.after);
 }
 
 #[test]
