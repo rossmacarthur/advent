@@ -3,6 +3,7 @@ mod stats;
 mod summary;
 
 use std::fmt::Display;
+use std::panic::UnwindSafe;
 use std::time::{Duration, Instant};
 
 use argh::FromArgs;
@@ -11,7 +12,7 @@ use yansi::Paint;
 pub use crate::summary::Summary;
 use crate::summary::{Bench, Run};
 
-type FnBox<'a> = Box<dyn Fn() -> Box<dyn Display + 'a> + 'a>;
+type FnBox<'a> = Box<dyn Fn() -> Box<dyn Display + 'a> + UnwindSafe + 'a>;
 
 #[derive(Default)]
 pub struct Advent<'a> {
@@ -26,7 +27,7 @@ impl<'a> Advent<'a> {
     pub fn part<F, R>(&mut self, f: F)
     where
         R: Display + 'a,
-        F: Fn() -> R + 'a,
+        F: Fn() -> R + UnwindSafe + 'a,
     {
         self.parts.push((None, Box::new(move || Box::new(f()))))
     }
@@ -34,7 +35,7 @@ impl<'a> Advent<'a> {
     pub fn named<F, R>(&mut self, name: &str, f: F)
     where
         R: Display + 'a,
-        F: Fn() -> R + 'a,
+        F: Fn() -> R + UnwindSafe + 'a,
     {
         let name = Some(String::from(name));
         self.parts.push((name, Box::new(move || Box::new(f()))))
@@ -45,11 +46,15 @@ impl<'a> Advent<'a> {
 
         for (i, (name, f)) in self.parts.into_iter().enumerate() {
             let start = Instant::now();
-            let result = f();
+            let result = std::panic::catch_unwind(f);
             let elapsed = (Instant::now() - start).as_secs_f64();
+            let result = match result {
+                Ok(result) => result.to_string(),
+                Err(_) => "🚨👻🚨".to_owned(),
+            };
             runs.push(Run {
                 name: name.unwrap_or_else(|| format!("Part {}", i + 1)),
-                result: result.to_string(),
+                result,
                 elapsed,
             })
         }
