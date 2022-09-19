@@ -96,7 +96,7 @@ fn print_run_summary(parts: &[Run]) {
         println!(
             "{}: {:>width$}\n{}",
             Paint::cyan(name).bold(),
-            format!("({})", Paint::fixed(245, human::Time::new(*elapsed))),
+            format_args!("({})", Paint::fixed(245, human::Time::new(*elapsed))),
             Paint::new(result).bold(),
             width = width,
         );
