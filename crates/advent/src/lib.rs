@@ -6,7 +6,7 @@ use std::fmt::Display;
 use std::time::{Duration, Instant};
 
 use argh::FromArgs;
-use peter::Stylize;
+use yansi::Paint;
 
 pub use crate::summary::Summary;
 use crate::summary::{Bench, Run};
@@ -100,7 +100,7 @@ impl<'a> Advent<'a> {
             if cfg!(not(profile = "release")) {
                 eprintln!(
                     "{}\n",
-                    "Note: using --bench without --release".yellow().bold()
+                    Paint::yellow("Note: using --bench without --release").bold()
                 );
             }
             self.bench()
