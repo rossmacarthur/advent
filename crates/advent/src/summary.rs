@@ -1,4 +1,4 @@
-use peter::Stylize;
+use yansi::Paint;
 
 #[derive(Debug)]
 #[cfg_attr(feature = "json", derive(serde::Serialize))]
@@ -57,8 +57,8 @@ fn print_bench_summary(parts: &[Bench]) {
         }
         println!(
             "{}{:>width$}",
-            name.bold(),
-            human::Samples::new(stats.samples).fixed(245),
+            Paint::new(name).bold(),
+            Paint::fixed(245, human::Samples::new(stats.samples)),
             width = 46 - name.chars().count(),
         );
         let mean = human::Time::new(stats.mean);
@@ -67,17 +67,17 @@ fn print_bench_summary(parts: &[Bench]) {
         let max = human::Time::with_scale(stats.max, mean.scale());
         println!(
             "  Time ({} ± {}):       {:>9} ± {:>9}",
-            "mean".green().bold(),
-            "σ".green(),
-            mean.green().bold(),
-            std_dev.green(),
+            Paint::green("mean").bold(),
+            Paint::green("σ"),
+            Paint::green(mean).bold(),
+            Paint::green(std_dev),
         );
         println!(
             "  Range ({} … {}):     {:>9} … {:>9}",
-            "min".cyan(),
-            "max".magenta(),
-            min.cyan(),
-            max.magenta(),
+            Paint::cyan("min"),
+            Paint::magenta("max"),
+            Paint::cyan(min),
+            Paint::magenta(max),
         );
     }
 }
@@ -95,9 +95,9 @@ fn print_run_summary(parts: &[Run]) {
         let width = 46_usize.saturating_sub(name.chars().count() + 2);
         println!(
             "{}: {:>width$}\n{}",
-            name.bold().cyan(),
-            format!("({})", human::Time::new(*elapsed)).fixed(245),
-            result.bold(),
+            Paint::cyan(name).bold(),
+            format!("({})", Paint::fixed(245, human::Time::new(*elapsed))),
+            Paint::new(result).bold(),
             width = width,
         );
     }

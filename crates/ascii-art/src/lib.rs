@@ -1,7 +1,7 @@
 use std::fmt;
 
-use peter::{Color, Stylize};
 use rand::prelude::*;
+use yansi::{Color, Paint};
 
 #[derive(Debug, Clone, Copy, Default, PartialEq)]
 struct Pixel {
@@ -34,7 +34,7 @@ impl fmt::Display for Pixel {
                 write!(f, " ")
             }
             (v, Some(color)) => {
-                write!(f, "{}", v.fg(color))
+                write!(f, "{}", Paint::new(v).fg(color))
             }
             (v, None) => {
                 write!(f, "{}", v)
