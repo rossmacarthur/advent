@@ -107,7 +107,7 @@ impl Computer {
             .map(|bullet| Direction::from_str(&bullet))
             .collect();
         // Parse the items
-        let items = parse_list(&mut lines, "Items here:").unwrap_or_else(Vec::new);
+        let items = parse_list(&mut lines, "Items here:").unwrap_or_default();
 
         // Parse the prompt or alert or santa
         match &*lines.remove(0) {

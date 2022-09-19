@@ -5,7 +5,7 @@ fn parse_input(input: &str) -> (HashSet<Vector2>, Vec<Fold>) {
     let dots = dots
         .lines()
         .map(|line| {
-            let (x, y) = line.split_once(",").unwrap();
+            let (x, y) = line.split_once(',').unwrap();
             vector![x.parse().unwrap(), y.parse().unwrap()]
         })
         .collect();

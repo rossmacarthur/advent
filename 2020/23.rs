@@ -9,7 +9,7 @@ fn default_input() -> Vec<usize> {
 }
 
 fn play(cups: &[usize], moves: usize, n: Option<usize>) -> Vec<usize> {
-    let n = n.unwrap_or_else(|| cups.len());
+    let n = n.unwrap_or(cups.len());
 
     let start = cups[0];
 
