@@ -1,22 +1,9 @@
 //! Calculate stats for a slice of numbers.
 
-use std::cmp::Ordering;
-
 use crate::summary::Stats;
 
-// Copied from the standard library f64::total_cmp() function.
-//
-// See https://github.com/rust-lang/rust/issues/72599
-fn cmp(a: &f64, b: &f64) -> Ordering {
-    let mut a = a.to_bits() as i64;
-    let mut b = b.to_bits() as i64;
-    a ^= (((a >> 63) as u64) >> 1) as i64;
-    b ^= (((b >> 63) as u64) >> 1) as i64;
-    a.cmp(&b)
-}
-
 pub fn basics(mut data: Vec<f64>) -> Stats {
-    data.sort_by(cmp);
+    data.sort_by(f64::total_cmp);
 
     // remove extreme outliers 🤷‍♂️
     if data.len() > 1_000 {
