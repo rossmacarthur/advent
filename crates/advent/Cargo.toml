@@ -5,16 +5,16 @@ edition = "2021"
 publish = false
 
 [dependencies]
-ahash = "0.7.6"
-argh = "0.1.7"
-either = "1.6.1"
-itermore = "0.2.0"
-itertools = "0.10.3"
-regex-macro = "0.2.0"
-serde = { version = "1.0.137", features = ["derive"], optional = true }
-serde_json = { version = "1.0.81", optional = true }
-vectrix = "0.2.0"
-yansi = "0.5.1"
+ahash = { workspace = true }
+argh = { workspace = true }
+either = { workspace = true }
+itermore = { workspace = true }
+itertools = { workspace = true }
+regex-macro = { workspace = true }
+serde = { workspace = true, optional = true }
+serde_json = { workspace = true, optional = true }
+vectrix = { workspace = true }
+yansi = { workspace = true }
 ascii-art = { path = "../ascii-art" }
 human = { path = "../human" }
 
