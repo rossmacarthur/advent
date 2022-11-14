@@ -29,10 +29,7 @@ fn step(map: &mut HashMap<Vector2, i64>) -> usize {
     }
 
     // Handle flashes
-    let mut q: VecDeque<_> = map
-        .iter()
-        .filter_map(|(&p, &e)| (e > 9).then(|| p))
-        .collect();
+    let mut q: VecDeque<_> = map.iter().filter_map(|(&p, &e)| (e > 9).some(p)).collect();
     let mut flashed = HashSet::new();
     while let Some(p) = q.pop_front() {
         if flashed.contains(&p) {

@@ -8,6 +8,7 @@ pub use either::Either;
 pub use itermore::Itermore;
 pub use itertools::{iproduct, Itertools};
 pub use regex_macro::regex;
+pub use some::Some;
 pub use vectrix::{vector, Matrix, Vector};
 
 pub type HashMap<K, V> = std::collections::HashMap<K, V, ahash::RandomState>;

@@ -16,6 +16,7 @@ dependencies = [
  "regex-macro",
  "serde",
  "serde_json",
+ "some",
  "vectrix",
  "yansi",
 ]
@@ -179,6 +180,9 @@ checksum = "2540771e65fc8cb83cd6e8a237f70c319bd5c29f78ed1084ba5d50eeac86f7f9"
 [[package]]
 name = "human"
 version = "0.0.0"
+dependencies = [
+ "some",
+]
 
 [[package]]
 name = "itermore"
@@ -415,6 +419,10 @@ dependencies = [
  "libc",
  "winapi",
 ]
+
+[[package]]
+name = "some"
+version = "0.0.0"
 
 [[package]]
 name = "stride"

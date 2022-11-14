@@ -223,7 +223,7 @@ fn roughness(img: &HashSet<Vector2>, monster: &HashSet<Vector2>) -> Option<usize
             rem = rem.difference(&monster).copied().collect();
         }
     }
-    (img.len() != rem.len()).then(|| rem.len())
+    (img.len() != rem.len()).some(rem.len())
 }
 
 fn part1(tiles: HashMap<i64, Tile>) -> i64 {
@@ -240,11 +240,10 @@ fn part1(tiles: HashMap<i64, Tile>) -> i64 {
             let adjacents = possible_edges
                 .iter()
                 .filter_map(|(&other_id, other_edges)| {
-                    (id != other_id && edges.intersection(other_edges).count() > 0)
-                        .then(|| other_id)
+                    (id != other_id && edges.intersection(other_edges).count() > 0).some(other_id)
                 })
                 .count();
-            (adjacents == 2).then(|| id)
+            (adjacents == 2).some(id)
         })
         .product()
 }

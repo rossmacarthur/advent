@@ -135,8 +135,7 @@ fn shortest(map: HashMap<Vector2, Tile>, recurse: bool) -> usize {
         let cardinals = || {
             CARDINALS.iter().filter_map(|d| {
                 let next = pos + d;
-                map.contains_key(&next)
-                    .then(|| (Reverse(dist + 1), next, lvl))
+                map.contains_key(&next).some((Reverse(dist + 1), next, lvl))
             })
         };
 
@@ -144,7 +143,7 @@ fn shortest(map: HashMap<Vector2, Tile>, recurse: bool) -> usize {
         let matching = |portal: Tile, lvl: usize| {
             let next = map
                 .iter()
-                .find_map(|(v, t)| (*v != pos && portal.complements(t)).then(|| *v))
+                .find_map(|(v, t)| (*v != pos && portal.complements(t)).some(*v))
                 .unwrap();
             (Reverse(dist + 1), next, lvl)
         };

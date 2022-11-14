@@ -9,7 +9,7 @@ fn parse_input(input: &str) -> (BTreeSet<i32>, Vec<i32>) {
         .unwrap()
         .chars()
         .enumerate()
-        .filter_map(|(i, c)| (c == '#').then(|| i as i32))
+        .filter_map(|(i, c)| (c == '#').some(i as i32))
         .collect();
 
     // Parse each rule as a 5-bit number.

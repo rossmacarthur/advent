@@ -3,6 +3,8 @@
 use std::cmp::max;
 use std::fmt;
 
+use some::Some;
+
 /// A number that is scaled in an easy to read way.
 #[derive(Debug, Clone, Copy)]
 pub struct Number(f64, Scale);
@@ -40,7 +42,7 @@ impl Number {
         ];
         let scale = scales
             .into_iter()
-            .find_map(|(s, f)| (v * f >= 1.0).then(|| s))
+            .find_map(|(s, f)| (v * f >= 1.0).some(s))
             .unwrap_or(Scale::Nano);
         Self::with_scale(v, scale)
     }

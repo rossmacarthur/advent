@@ -15,7 +15,7 @@ where
             scores.push(sum / 10);
             scores.push(sum % 10);
         } else {
-            scores.push(sum as u8);
+            scores.push(sum);
         }
         i = (i + scores[i] as usize + 1) % scores.len();
         j = (j + scores[j] as usize + 1) % scores.len();

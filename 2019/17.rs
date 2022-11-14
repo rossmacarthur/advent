@@ -51,7 +51,7 @@ impl Move {
 fn scaffolds(image: &HashMap<Vector2, char>) -> HashSet<Vector2> {
     image
         .iter()
-        .filter_map(|(v, p)| (*p == '#').then(|| *v))
+        .filter_map(|(v, p)| (*p == '#').some(*v))
         .collect()
 }
 
