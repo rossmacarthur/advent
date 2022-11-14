@@ -17,6 +17,7 @@ vectrix = { workspace = true }
 yansi = { workspace = true }
 ascii-art = { path = "../ascii-art" }
 human = { path = "../human" }
+some = { path = "../some" }
 
 [features]
 json = ["serde", "serde_json"]

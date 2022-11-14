@@ -113,7 +113,7 @@ fn new(year: u32, day: u32) -> Result<()> {
 
 fn open(year: u32, day: u32) -> Result<()> {
     let url = format!("https://adventofcode.com/{}/day/{}", year, day);
-    open::with(&url, "firefox")?;
+    open::with(url, "firefox")?;
     Ok(())
 }
 

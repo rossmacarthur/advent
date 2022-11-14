@@ -60,7 +60,7 @@ fn part2(claims: Vec<Claim>) -> i64 {
     let f = fabric(&claims);
     claims
         .iter()
-        .find_map(|claim| squares(claim).all(|sq| f[&sq] == 1).then(|| claim.id))
+        .find_map(|claim| squares(claim).all(|sq| f[&sq] == 1).some(claim.id))
         .unwrap()
 }
 

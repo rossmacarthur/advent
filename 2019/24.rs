@@ -195,7 +195,7 @@ fn grow_recursive(mut space: VecDeque<u32>) -> VecDeque<u32> {
             let upper = space.get(i + 1).copied().unwrap_or(0);
             // Grow the layer
             let layer = grow(layer, |bit| {
-                let masks = &MASKS[bit as usize];
+                let masks = &MASKS[bit];
                 (lower & masks.lower).count_ones()
                     + (layer & masks.current).count_ones()
                     + (upper & masks.upper).count_ones()

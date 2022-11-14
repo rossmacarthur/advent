@@ -35,7 +35,7 @@ fn intersection(a: Cuboid, b: Cuboid) -> Option<Cuboid> {
     let y1 = min(ay1, by1);
     let z0 = max(az0, bz0);
     let z1 = min(az1, bz1);
-    (x0 <= x1 && y0 <= y1 && z0 <= z1).then(|| [x0, x1, y0, y1, z0, z1])
+    (x0 <= x1 && y0 <= y1 && z0 <= z1).some([x0, x1, y0, y1, z0, z1])
 }
 
 fn solve(steps: Vec<(bool, Cuboid)>) -> i64 {

@@ -192,7 +192,7 @@ fn part2(mut map: HashMap<Vector2, Tile>) -> usize {
     ];
     let entrance = map
         .iter()
-        .find_map(|(p, t)| t.is_entrance().then(|| *p))
+        .find_map(|(p, t)| t.is_entrance().some(*p))
         .unwrap();
     for &(d, t) in to_update {
         map.insert(entrance + d, t);

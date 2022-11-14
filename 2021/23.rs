@@ -1,3 +1,5 @@
+#![allow(unstable_name_collisions)]
+
 use std::collections::hash_map::Entry;
 
 use advent::prelude::*;
