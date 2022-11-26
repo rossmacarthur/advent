@@ -1,10 +1,66 @@
 use std::env;
 use std::fs;
 use std::path::PathBuf;
+use std::process;
 
 use anyhow::{Context, Result};
 use argh::FromArgs;
 use serde::{Deserialize, Serialize};
+
+/// 🎄 Festive Advent of Code solution management
+#[derive(Debug, FromArgs)]
+#[argh(example = "cargo advent -y 2021 -d 17 run")]
+struct Opt {
+    /// the puzzle year
+    #[argh(option, short = 'y')]
+    year: u32,
+
+    /// the puzzle day
+    #[argh(option, short = 'd')]
+    day: u32,
+
+    /// the subcommand: new, open, run, or test
+    #[argh(positional)]
+    command: Command,
+
+    #[argh(positional, greedy)]
+    args: Vec<String>,
+}
+
+#[derive(Debug)]
+enum Command {
+    New,
+    Open,
+    Run,
+    Test,
+}
+
+impl argh::FromArgValue for Command {
+    fn from_arg_value(value: &str) -> Result<Self, String> {
+        match value {
+            "new" => Ok(Self::New),
+            "open" => Ok(Self::Open),
+            "run" => Ok(Self::Run),
+            "test" => Ok(Self::Test),
+            _ => Err("expected `new`, `open`, `run`, or `test`".into()),
+        }
+    }
+}
+
+fn main() -> Result<()> {
+    let Opt {
+        year,
+        day,
+        command,
+        args,
+    } = argh::from_env();
+    match command {
+        Command::New => new(year, day),
+        Command::Open => open(year, day),
+        Command::Run => run(year, day, args),
+        Command::Test => test(year, day, args),
+    }
+}
 
 #[derive(Debug, Clone, PartialEq, Eq, PartialOrd, Ord, Deserialize, Serialize)]
 struct Binary {
@@ -106,7 +162,7 @@ fn new(year: u32, day: u32) -> Result<()> {
     }
 
     println!("All done!");
-    println!("Use `cargo run --release --bin {}` to run", name);
+    println!("Use `cargo advent -y {} -d {} run` to run", year, day);
 
     Ok(())
 }
@@ -117,42 +173,24 @@ fn open(year: u32, day: u32) -> Result<()> {
     Ok(())
 }
 
-/// Add a puzzle template or open the puzzle description.
-#[derive(Debug, FromArgs)]
-struct Opt {
-    /// the puzzle year.
-    #[argh(option, short = 'y')]
-    year: u32,
+fn run(year: u32, day: u32, rest: Vec<String>) -> Result<()> {
+    let name = format!("{:04}{:02}", year, day);
 
-    /// the puzzle day.
-    #[argh(option, short = 'd')]
-    day: u32,
+    let status = process::Command::new(env!("CARGO"))
+        .args(["run", "--release", "--bin", &name])
+        .args(rest)
+        .status()?;
 
-    /// the command.
-    #[argh(positional, arg_name = "new|open")]
-    command: Command,
+    process::exit(status.code().unwrap())
 }
 
-#[derive(Debug)]
-enum Command {
-    New,
-    Open,
-}
+fn test(year: u32, day: u32, rest: Vec<String>) -> Result<()> {
+    let name = format!("{:04}{:02}", year, day);
 
-impl argh::FromArgValue for Command {
-    fn from_arg_value(value: &str) -> Result<Self, String> {
-        match value {
-            "new" => Ok(Self::New),
-            "open" => Ok(Self::Open),
-            _ => Err("expected `new` or `open`".into()),
-        }
-    }
-}
+    let status = process::Command::new(env!("CARGO"))
+        .args(["test", "--release", "--bin", &name])
+        .args(rest)
+        .status()?;
 
-fn main() -> Result<()> {
-    let Opt { year, day, command } = argh::from_env();
-    match command {
-        Command::New => new(year, day),
-        Command::Open => open(year, day),
-    }
+    process::exit(status.code().unwrap())
 }
