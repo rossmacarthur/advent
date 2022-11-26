@@ -4,6 +4,7 @@ pub use std::collections::{BTreeMap, BTreeSet, BinaryHeap, VecDeque};
 pub use std::iter;
 pub use std::mem;
 
+pub use ahash::{HashMap, HashMapExt as _, HashSet, HashSetExt as _};
 pub use either::Either;
 pub use itermore::Itermore;
 pub use itertools::{iproduct, Itertools};
@@ -11,40 +12,8 @@ pub use regex_macro::regex;
 pub use some::Some;
 pub use vectrix::{vector, Matrix, Vector};
 
-pub type HashMap<K, V> = std::collections::HashMap<K, V, ahash::RandomState>;
-pub type HashSet<T> = std::collections::HashSet<T, ahash::RandomState>;
-
 pub type Vector2 = vectrix::Vector<i64, 2>;
 pub type Vector3 = vectrix::Vector<i64, 3>;
-
-pub trait CollectionExt {
-    fn new() -> Self;
-    fn with_capacity(capacity: usize) -> Self;
-}
-
-impl<K, V> CollectionExt for HashMap<K, V> {
-    #[inline]
-    fn new() -> Self {
-        HashMap::with_hasher(ahash::RandomState::new())
-    }
-
-    #[inline]
-    fn with_capacity(capacity: usize) -> Self {
-        HashMap::with_capacity_and_hasher(capacity, ahash::RandomState::new())
-    }
-}
-
-impl<T> CollectionExt for HashSet<T> {
-    #[inline]
-    fn new() -> Self {
-        HashSet::with_hasher(ahash::RandomState::new())
-    }
-
-    #[inline]
-    fn with_capacity(capacity: usize) -> Self {
-        HashSet::with_capacity_and_hasher(capacity, ahash::RandomState::new())
-    }
-}
 
 /// Returns the greatest common divisor of two numbers.
 pub fn gcd(mut x: i64, mut y: i64) -> i64 {
