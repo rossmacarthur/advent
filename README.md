@@ -9,40 +9,51 @@ and benchmarker with free Christmas trees 🎄.
 
 ## Getting started
 
-To run a specific solution just use `cargo run` and pass in the binary name in
-`YYYYDD` format. For example, the following will run the solution for 2020 day
-18.
+To run a specific solution just use the provided `cargo advent` alias and pass
+in the year and day. For example, the following will run the solution for 2020
+day 18.
 
 ```
-cargo run --release --bin 202018
+cargo advent -y 2020 -d 18 run
+```
+
+Tests can be run using the `test` subcommand.
+
+```
+cargo advent -y 2020 -d 18 test
 ```
 
 Benchmarks can be run by passing `--bench` to the binary.
 
 ```
-cargo run --release --bin 202018 -- --bench
+cargo advent -y 2020 -d 18 run -- -- --bench
 ```
 
-Tests can be run using `cargo test`. Passing `--release` is recommended.
+Note the double `--`. Arguments after the first `--` will be passed to Cargo and
+arguments after the second `--` will be passed to the actual binary. For
+example if we wanted the JSON output of the solution.
 
 ```
-cargo test --release --bin 202018
+cargo advent -y 2020 -d 18 run -- --features=json -- --output json
 ```
+
+All of the above will be built using `--release`.
 
 ## Development
 
 Use the following to add a [template](./crates/cli/src/template.rs) for a new
-solution, if the `ADVENT_SESSION` environment variable is set then the raw input
-will be fetched for the problem.
+solution. To fetch the input the `ADVENT_SESSION` environment variable needs to
+be set which can be extracted from a logged in Advent of Code browser session
+under the cookie name "session".
 
 ```
-cargo run -p advent-cli -- new -y 2020 -d 7
+cargo advent -y 2022 -d 1 new
 ```
 
 Open the browser for the given problem
 
 ```
-cargo run -p advent-cli -- open -y 2020 -d 7
+cargo advent -y 2020 -d 7 new
 ```
 
 ## License

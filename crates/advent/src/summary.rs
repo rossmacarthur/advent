@@ -45,7 +45,8 @@ impl Summary {
 
     #[cfg(feature = "json")]
     pub fn print_json(&self) {
-        serde_json::to_writer(std::io::stdout(), self).unwrap();
+        let s = serde_json::to_string(self).unwrap();
+        println!("{}", s);
     }
 }
 
