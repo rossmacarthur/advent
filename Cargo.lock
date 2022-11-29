@@ -99,6 +99,12 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "149f75bbec1827618262e0855a68f0f9a7f2edc13faebf33c4f16d6725edb6a9"
 
 [[package]]
+name = "arrays"
+version = "0.1.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "d5e905f66e9c54490e46ba7d948909926acd98c77baf457ea2393cde62576697"
+
+[[package]]
 name = "ascii-art"
 version = "0.0.0"
 dependencies = [
@@ -185,10 +191,23 @@ dependencies = [
 ]
 
 [[package]]
-name = "itermore"
-version = "0.2.0"
+name = "iterchunks"
+version = "0.1.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "0b0cdbe2bb1ccdf0542e9ce8af508e0faef28f5fcab793fac4f493213e04d123"
+checksum = "e0efa9ab51a2d6e86a3b87efd3ee0b39c433eb43a44abc0d235fd547ac606af9"
+dependencies = [
+ "arrays",
+]
+
+[[package]]
+name = "itermore"
+version = "0.3.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "36185038accfa9a1362ad1de67c2df0b704e526a98a6af2607eb1f7398ab828f"
+dependencies = [
+ "iterchunks",
+ "iterwindows",
+]
 
 [[package]]
 name = "itertools"
@@ -197,6 +216,15 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "b0fd2260e829bddf4cb6ea802289de2f86d6a7a690192fbe91b3f46e0f2c8473"
 dependencies = [
  "either",
+]
+
+[[package]]
+name = "iterwindows"
+version = "0.1.2"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "d203bc947b86e8269309ea6c4df76f3d3521bcdddb07c34be871b558b0f2d04b"
+dependencies = [
+ "arrays",
 ]
 
 [[package]]

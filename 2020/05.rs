@@ -30,7 +30,7 @@ fn part1(ids: Vec<i64>) -> i64 {
 
 fn part2(mut ids: Vec<i64>) -> i64 {
     ids.sort_unstable();
-    for [curr, next] in ids.into_iter().array_windows() {
+    for [curr, next] in ids.into_iter().windows() {
         if next - curr > 1 {
             return next - 1;
         }
