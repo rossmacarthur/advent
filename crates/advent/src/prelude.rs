@@ -6,7 +6,7 @@ pub use std::mem;
 
 pub use ahash::{HashMap, HashMapExt as _, HashSet, HashSetExt as _};
 pub use either::Either;
-pub use itermore::Itermore;
+pub use itermore::{IterChunks, IterWindows};
 pub use itertools::{iproduct, Itertools};
 pub use regex_macro::regex;
 pub use some::Some;

@@ -18,17 +18,17 @@ fn digits(mut num: u64) -> Digits {
 }
 
 fn has_increasing(digits: &Digits) -> bool {
-    digits[1..7].iter().array_windows().all(|[x, y]| x <= y)
+    digits[1..7].iter().windows().all(|[x, y]| x <= y)
 }
 
 fn has_two_adjacent(digits: &Digits) -> bool {
-    digits[1..7].iter().array_windows().any(|[x, y]| x == y)
+    digits[1..7].iter().windows().any(|[x, y]| x == y)
 }
 
 fn has_two_adjacent_excl(digits: &Digits) -> bool {
     digits
         .iter()
-        .array_windows()
+        .windows()
         .any(|[w, x, y, z]| w != x && x == y && y != z)
 }
 
