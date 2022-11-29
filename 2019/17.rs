@@ -121,10 +121,7 @@ fn is_valid_routine(moves: &[Move], routine: &[(&[Move], Vec<usize>)]) -> bool {
             indexes
         })
         .collect();
-    indexes
-        .iter()
-        .tuple_windows()
-        .all(|(a, b)| a.is_disjoint(b))
+    indexes.iter().windows().all(|[a, b]| a.is_disjoint(b))
         && indexes
             .into_iter()
             .flatten()

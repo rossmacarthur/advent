@@ -2,7 +2,7 @@ use advent::prelude::*;
 
 type Path = Vec<(Vector2, i64)>;
 
-fn parse_input(input: &str) -> (Path, Path) {
+fn parse_input(input: &str) -> [Path; 2] {
     input
         .lines()
         .map(|line| {
@@ -21,11 +21,11 @@ fn parse_input(input: &str) -> (Path, Path) {
                 })
                 .collect()
         })
-        .next_tuple()
+        .next_array()
         .unwrap()
 }
 
-fn default_input() -> (Path, Path) {
+fn default_input() -> [Path; 2] {
     parse_input(include_str!("input/03.txt"))
 }
 
@@ -47,7 +47,7 @@ fn keys(distances: &HashMap<Vector2, i64>) -> HashSet<Vector2> {
     distances.iter().map(|(k, _)| *k).collect()
 }
 
-fn part1((p1, p2): (Path, Path)) -> i64 {
+fn part1([p1, p2]: [Path; 2]) -> i64 {
     keys(&distances(&p1))
         .intersection(&keys(&distances(&p2)))
         .map(Vector2::l1_norm)
@@ -55,7 +55,7 @@ fn part1((p1, p2): (Path, Path)) -> i64 {
         .unwrap()
 }
 
-fn part2((p1, p2): (Path, Path)) -> i64 {
+fn part2([p1, p2]: [Path; 2]) -> i64 {
     let distances1 = distances(&p1);
     let distances2 = distances(&p2);
     keys(&distances1)
