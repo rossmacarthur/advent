@@ -5,8 +5,8 @@ type Orbits<'a> = HashMap<&'a str, &'a str>;
 fn parse_input(input: &str) -> Orbits<'_> {
     input
         .lines()
-        .map(|line| line.split(')').next_tuple().unwrap())
-        .map(|(v, k)| (k, v))
+        .map(|line| line.split(')').next_array().unwrap())
+        .map(|[v, k]| (k, v))
         .collect()
 }
 
