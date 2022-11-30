@@ -1,0 +1,11 @@
+[package]
+name = "count-imports"
+version = "0.0.0"
+edition = "2021"
+publish = false
+
+[dependencies]
+anyhow = { workspace = true }
+serde = { workspace = true }
+syn = { workspace = true }
+toml = { workspace = true }
