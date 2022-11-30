@@ -23,18 +23,19 @@ Tests can be run using the `test` subcommand.
 cargo advent -y 2020 -d 18 test
 ```
 
-Benchmarks can be run by passing `--bench` to the binary.
+Benchmarks can be run using the  `bench` subcommand.
 
 ```
-cargo advent -y 2020 -d 18 run -- -- --bench
+cargo advent -y 2020 -d 18 bench
 ```
 
-Note the double `--`. Arguments after the first `--` will be passed to Cargo and
-arguments after the second `--` will be passed to the actual binary. For
-example if we wanted the JSON output of the solution.
+Extra arguments can be passed to both Cargo and the binary. Arguments after the
+first `--` argument will be passed to Cargo and arguments after the second `--`
+will be passed to the actual binary. For example if we wanted the JSON output of
+the benchmark we could run the following.
 
 ```
-cargo advent -y 2020 -d 18 run -- --features=json -- --output json
+cargo advent -y 2020 -d 18 bench -- --features=json -- --output json
 ```
 
 All of the above will be built using `--release`.
@@ -53,7 +54,7 @@ cargo advent -y 2022 -d 1 new
 Open the browser for the given problem
 
 ```
-cargo advent -y 2020 -d 7 new
+cargo advent -y 2020 -d 7 open
 ```
 
 ## License

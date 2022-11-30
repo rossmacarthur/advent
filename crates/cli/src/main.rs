@@ -19,7 +19,7 @@ struct Opt {
     #[argh(option, short = 'd')]
     day: u32,
 
-    /// the subcommand: new, open, run, or test
+    /// the subcommand: bench, new, open, run, or test
     #[argh(positional)]
     command: Command,
 
@@ -29,6 +29,7 @@ struct Opt {
 
 #[derive(Debug)]
 enum Command {
+    Bench,
     New,
     Open,
     Run,
@@ -38,11 +39,12 @@ enum Command {
 impl argh::FromArgValue for Command {
     fn from_arg_value(value: &str) -> Result<Self, String> {
         match value {
+            "bench" => Ok(Self::Bench),
             "new" => Ok(Self::New),
             "open" => Ok(Self::Open),
             "run" => Ok(Self::Run),
             "test" => Ok(Self::Test),
-            _ => Err("expected `new`, `open`, `run`, or `test`".into()),
+            _ => Err("expected one of: bench, new, open, run, test".into()),
         }
     }
 }
@@ -54,11 +56,13 @@ fn main() -> Result<()> {
         command,
         args,
     } = argh::from_env();
+
     match command {
+        Command::Bench => bench(year, day, &args),
         Command::New => new(year, day),
         Command::Open => open(year, day),
-        Command::Run => run(year, day, args),
-        Command::Test => test(year, day, args),
+        Command::Run => run(year, day, &args),
+        Command::Test => test(year, day, &args),
     }
 }
 
@@ -173,23 +177,41 @@ fn open(year: u32, day: u32) -> Result<()> {
     Ok(())
 }
 
-fn run(year: u32, day: u32, rest: Vec<String>) -> Result<()> {
+fn bench(year: u32, day: u32, args: &[String]) -> Result<()> {
     let name = format!("{:04}{:02}", year, day);
+
+    let (cargo_args, bin_args) = match args.iter().position(|a| a == "--") {
+        Some(i) => (&args[..i], &args[i + 1..]),
+        None => (args, &[][..]),
+    };
 
     let status = process::Command::new(env!("CARGO"))
         .args(["run", "--release", "--bin", &name])
-        .args(rest)
+        .args(cargo_args)
+        .args(["--", "--bench"])
+        .args(bin_args)
         .status()?;
 
     process::exit(status.code().unwrap())
 }
 
-fn test(year: u32, day: u32, rest: Vec<String>) -> Result<()> {
+fn run(year: u32, day: u32, args: &[String]) -> Result<()> {
+    let name = format!("{:04}{:02}", year, day);
+
+    let status = process::Command::new(env!("CARGO"))
+        .args(["run", "--release", "--bin", &name])
+        .args(args)
+        .status()?;
+
+    process::exit(status.code().unwrap())
+}
+
+fn test(year: u32, day: u32, args: &[String]) -> Result<()> {
     let name = format!("{:04}{:02}", year, day);
 
     let status = process::Command::new(env!("CARGO"))
         .args(["test", "--release", "--bin", &name])
-        .args(rest)
+        .args(args)
         .status()?;
 
     process::exit(status.code().unwrap())
