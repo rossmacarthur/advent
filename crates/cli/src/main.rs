@@ -82,6 +82,7 @@ fn download(url: &str) -> Result<String> {
     let mut easy = curl::easy::Easy::new();
     easy.fail_on_error(true)?;
     easy.follow_location(true)?;
+    easy.useragent("github.com/rossmacarthur/advent by ross@macarthur.io")?;
     easy.cookie(&format!(
         "session={}",
         env::var("ADVENT_SESSION").context("`ADVENT_SESSION` must be set")?
@@ -119,7 +120,7 @@ fn new(year: u32, day: u32) -> Result<()> {
     // Download input
     if input.exists() {
         println!(
-            "{} already exists",
+            "• {} already exists",
             input.strip_prefix(&workspace_dir)?.display()
         );
     } else {
@@ -127,7 +128,7 @@ fn new(year: u32, day: u32) -> Result<()> {
         let text = download(&url)?;
         fs::write(&input, text)?;
         println!(
-            "Downloaded input to {}",
+            "• {} was downloaded",
             input.strip_prefix(&workspace_dir)?.display()
         );
     }
@@ -136,12 +137,15 @@ fn new(year: u32, day: u32) -> Result<()> {
     const TEMPLATE: &str = include_str!("template.rs");
     if bin.exists() {
         println!(
-            "{} already exists",
+            "• {} already exists",
             bin.strip_prefix(&workspace_dir)?.display()
         );
     } else {
         fs::write(&bin, TEMPLATE.replace("{day}", &format!("{:02}", day)))?;
-        println!("Created {}", bin.strip_prefix(&workspace_dir)?.display());
+        println!(
+            "• {} was created",
+            bin.strip_prefix(&workspace_dir)?.display()
+        );
     }
 
     // Update Cargo.toml
@@ -160,13 +164,15 @@ fn new(year: u32, day: u32) -> Result<()> {
     let binaries = toml::to_string(&bins)?;
     fs::write(&manifest_path, main.to_owned() + &binaries)?;
     if added {
-        println!("Added {} binary to Cargo manifest", name);
+        println!("• {} binary added to Cargo manifest", name);
     } else {
-        println!("{} binary already exists in Cargo manifest", name);
+        println!("• {} binary already exists in Cargo manifest", name);
     }
 
-    println!("All done!");
-    println!("Use `cargo advent -y {} -d {} run` to run", year, day);
+    println!(
+        "All done! Use `cargo advent -y {} -d {} run` to run",
+        year, day
+    );
 
     Ok(())
 }
