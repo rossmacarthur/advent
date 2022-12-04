@@ -32,7 +32,7 @@ fn solve(template: &str, rules: Rules, steps: usize) -> usize {
     // Keep track of the count for each pair of letters.
     let mut pairs = template
         .chars()
-        .windows()
+        .array_windows()
         .fold(HashMap::new(), |mut acc, pair| {
             *acc.entry(pair).or_insert(0) += 1;
             acc

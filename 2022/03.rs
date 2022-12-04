@@ -36,7 +36,7 @@ fn part2(rucksacks: Vec<Vec<i64>>) -> i64 {
     rucksacks
         .into_iter()
         .map(HashSet::from_iter)
-        .chunked()
+        .array_chunked()
         .map(|[a, b, c]| {
             let tmp = a.intersection(&b).copied().collect();
             c.intersection(&tmp).copied().sum::<i64>()
