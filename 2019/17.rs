@@ -121,7 +121,10 @@ fn is_valid_routine(moves: &[Move], routine: &[(&[Move], Vec<usize>)]) -> bool {
             indexes
         })
         .collect();
-    indexes.iter().windows().all(|[a, b]| a.is_disjoint(b))
+    indexes
+        .iter()
+        .array_windows()
+        .all(|[a, b]| a.is_disjoint(b))
         && indexes
             .into_iter()
             .flatten()
@@ -155,8 +158,8 @@ fn routine(moves: &[Move]) -> (String, Vec<String>) {
     //
     // A routine is valid if all moves can be made using it and there are no
     // overlapping functions.
-    let routine: Vec<(&[Move], Vec<usize>)> = functions
-        .combinations(3)
+    let routine: [(&[Move], Vec<usize>); 3] = functions
+        .array_combinations::<3>()
         .find(|routine| is_valid_routine(moves, routine))
         .unwrap();
     // Finally, we have the three functions and the non-overlapping ranges of

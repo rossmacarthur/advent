@@ -19,7 +19,7 @@ fn default_input() -> Vec<i64> {
 fn part1(joltages: Vec<i64>) -> i64 {
     let mut ones = 0;
     let mut threes = 0;
-    for [curr, next] in joltages.iter().windows() {
+    for [curr, next] in joltages.iter().array_windows() {
         match next - curr {
             1 => ones += 1,
             3 => threes += 1,

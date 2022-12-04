@@ -84,8 +84,8 @@ fn part2(scans: VecDeque<Vec<Vector3>>) -> i64 {
     let (_, scanners) = solve(scans);
     scanners
         .into_iter()
-        .tuple_combinations()
-        .map(|(b1, b2)| (b1 - b2).l1_norm())
+        .array_combinations()
+        .map(|[b1, b2]| (b1 - b2).l1_norm())
         .max()
         .unwrap()
 }

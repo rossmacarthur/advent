@@ -13,13 +13,17 @@ fn default_input() -> Vec<i64> {
 }
 
 fn part1(input: Vec<i64>) -> usize {
-    input.into_iter().windows().filter(|[a, b]| b > a).count()
+    input
+        .into_iter()
+        .array_windows()
+        .filter(|[a, b]| b > a)
+        .count()
 }
 
 fn part2(input: Vec<i64>) -> usize {
     input
         .into_iter()
-        .windows()
+        .array_windows()
         .filter(|[a, _, _, b]| b > a)
         .count()
 }

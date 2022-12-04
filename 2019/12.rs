@@ -43,7 +43,7 @@ fn lcm(x: i64, y: i64) -> i64 {
 
 /// Simulate a set of moons moving, applies acceleration and velocity.
 fn simulate(moons: &mut [Moon]) {
-    for (m, n) in (0..moons.len()).tuple_combinations() {
+    for [m, n] in (0..moons.len()).array_combinations() {
         let (lower, upper) = moons.split_at_mut(n);
         let m = &mut lower[m];
         let n = &mut upper[0];
@@ -59,7 +59,7 @@ fn simulate(moons: &mut [Moon]) {
 
 /// Simulate a set of moons on the given axis only.
 fn simulate_axis(moons: &mut [Moon], d: usize) {
-    for (m, n) in (0..moons.len()).tuple_combinations() {
+    for [m, n] in (0..moons.len()).array_combinations() {
         let (lower, upper) = moons.split_at_mut(n);
         let m = &mut lower[m];
         let n = &mut upper[0];
