@@ -54,9 +54,9 @@ fn part2(values: Vec<i64>, bits: i64) -> i64 {
 }
 
 fn main() {
-    let mut run = advent::start();
-    run.part(|| part1(default_input(), 12));
-    run.part(|| part2(default_input(), 12));
+    let mut run = advent::with(default_input);
+    run.part(|i| part1(i, 12));
+    run.part(|i| part2(i, 12));
     run.finish();
 }
 
