@@ -87,9 +87,9 @@ fn part2(instrs: Vec<(u8, u8)>, workers: usize, dt: usize) -> usize {
 }
 
 fn main() {
-    let mut run = advent::start();
-    run.part(|| part1(default_input()));
-    run.part(|| part2(default_input(), 5, 60));
+    let mut run = advent::with(default_input);
+    run.part(part1);
+    run.part(|i| part2(i, 5, 60));
     run.finish();
 }
 
