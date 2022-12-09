@@ -31,8 +31,8 @@ fn part1((card_public, door_public): (u64, u64)) -> u64 {
 }
 
 fn main() {
-    let mut run = advent::start();
-    run.part(|| part1(default_input()));
+    let mut run = advent::with(default_input);
+    run.part(part1);
     run.finish();
 }
 
