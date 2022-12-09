@@ -22,13 +22,16 @@ type FnParse<'a, I> = Box<dyn Fn() -> I + 'a>;
 type FnPart<'a, I> = Box<dyn Fn(I) -> Box<dyn Display + 'a> + UnwindSafe + 'a>;
 
 pub struct Advent<'a, I> {
-    parse: Option<FnParse<'a, I>>,
+    parse: FnParse<'a, I>,
     parts: Vec<(Option<String>, FnPart<'a, I>)>,
 }
 
-pub fn new<'a, I>() -> Advent<'a, I> {
+pub fn with<'a, F, I>(parse: F) -> Advent<'a, I>
+where
+    F: Fn() -> I + UnwindSafe + 'a,
+{
     Advent {
-        parse: None,
+        parse: Box::new(parse),
         parts: Vec::new(),
     }
 }
@@ -54,17 +57,10 @@ where
         self.parts.push((name, Box::new(move |i| Box::new(f(i)))))
     }
 
-    pub fn input<F>(&mut self, f: F)
-    where
-        F: Fn() -> I + UnwindSafe + 'a,
-    {
-        self.parse = Some(Box::new(f))
-    }
-
     pub fn run(self) -> Summary {
         let mut runs = Vec::new();
 
-        let input = self.parse.expect("no input provided")();
+        let input = (self.parse)();
 
         // Time each part
         for (i, (name, f)) in self.parts.into_iter().enumerate() {
@@ -96,17 +92,15 @@ where
     pub fn bench(self) -> Summary {
         let mut benches = Vec::new();
 
-        let parse_fn = self.parse.expect("no input provided");
-
         // Benchmark the parsing
-        let stats = bench(&parse_fn);
+        let stats = bench(&self.parse);
         benches.push(Bench {
             name: "Parse".to_owned(),
             stats,
         });
 
         // Benchmark each part
-        let input = parse_fn();
+        let input = (self.parse)();
         for (i, (name, f)) in self.parts.into_iter().enumerate() {
             let name = name.unwrap_or_else(|| format!("Part {}", i + 1));
             let stats = bench_with_input(input.clone(), &f);
