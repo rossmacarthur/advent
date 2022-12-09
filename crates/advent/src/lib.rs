@@ -23,7 +23,16 @@ type FnPart<'a, I> = Box<dyn Fn(I) -> Box<dyn Display + 'a> + UnwindSafe + 'a>;
 
 pub struct Advent<'a, I> {
     parse: FnParse<'a, I>,
+    parse_ok: bool,
     parts: Vec<(Option<String>, FnPart<'a, I>)>,
+}
+
+pub fn new<'a>() -> Advent<'a, ()> {
+    Advent {
+        parse: Box::new(|| ()),
+        parse_ok: false,
+        parts: Vec::new(),
+    }
 }
 
 pub fn with<'a, F, I>(parse: F) -> Advent<'a, I>
@@ -32,6 +41,7 @@ where
 {
     Advent {
         parse: Box::new(parse),
+        parse_ok: true,
         parts: Vec::new(),
     }
 }
@@ -51,10 +61,10 @@ where
     pub fn named<F, R>(&mut self, name: &str, f: F)
     where
         R: Display + 'a,
-        F: Fn(I) -> R + UnwindSafe + 'a,
+        F: Fn() -> R + UnwindSafe + 'a,
     {
         let name = Some(String::from(name));
-        self.parts.push((name, Box::new(move |i| Box::new(f(i)))))
+        self.parts.push((name, Box::new(move |_| Box::new(f()))))
     }
 
     pub fn run(self) -> Summary {
@@ -93,11 +103,13 @@ where
         let mut benches = Vec::new();
 
         // Benchmark the parsing
-        let stats = bench(&self.parse);
-        benches.push(Bench {
-            name: "Parse".to_owned(),
-            stats,
-        });
+        if self.parse_ok {
+            let stats = bench(&self.parse);
+            benches.push(Bench {
+                name: "Parse".to_owned(),
+                stats,
+            });
+        }
 
         // Benchmark each part
         let input = (self.parse)();
