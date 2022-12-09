@@ -1,7 +1,7 @@
 use advent::prelude::*;
 
 fn parse_input(input: &str) -> Vec<i64> {
-    todo!()
+    todo!("parsing")
 }
 
 fn default_input() -> Vec<i64> {
@@ -9,17 +9,18 @@ fn default_input() -> Vec<i64> {
 }
 
 fn part1(input: Vec<i64>) -> i64 {
-    todo!()
+    todo!("part 1")
 }
 
 fn part2(input: Vec<i64>) -> i64 {
-    todo!()
+    todo!("part 2")
 }
 
 fn main() {
-    let mut run = advent::start();
-    run.part(|| part1(default_input()));
-    run.part(|| part2(default_input()));
+    let mut run = advent::new();
+    run.input(default_input);
+    run.part(|i| part1(i));
+    run.part(|i| part2(i));
     run.finish();
 }
 
