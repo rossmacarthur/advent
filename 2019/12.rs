@@ -98,9 +98,9 @@ fn part2(mut moons: Vec<Moon>) -> i64 {
 }
 
 fn main() {
-    let mut run = advent::start();
-    run.part(|| part1(default_input(), 1000));
-    run.part(|| part2(default_input()));
+    let mut run = advent::with(default_input);
+    run.part(|i| part1(i, 1000));
+    run.part(part2);
     run.finish();
 }
 

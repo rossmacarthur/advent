@@ -16,6 +16,7 @@ fn default_input() -> Image {
     parse_input(include_str!("input/08.txt"), 25, 6)
 }
 
+#[derive(Clone)]
 struct Image {
     width: usize,
     height: usize,
@@ -64,9 +65,9 @@ fn part2(img: Image) -> String {
 }
 
 fn main() {
-    let mut run = advent::start();
-    run.part(|| part1(default_input()));
-    run.part(|| part2(default_input()));
+    let mut run = advent::with(default_input);
+    run.part(part1);
+    run.part(part2);
     run.finish();
 }
 

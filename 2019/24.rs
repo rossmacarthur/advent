@@ -224,9 +224,9 @@ fn part2(layer: u32, n: usize) -> u32 {
 }
 
 fn main() {
-    let mut run = advent::start();
-    run.part(|| part1(default_input()));
-    run.part(|| part2(default_input(), 200));
+    let mut run = advent::with(default_input);
+    run.part(part1);
+    run.part(|i| part2(i, 200));
     run.finish();
 }
 
