@@ -154,9 +154,9 @@ fn part2(methods: Vec<Method>) -> i128 {
 }
 
 fn main() {
-    let mut run = advent::start();
-    run.part(|| part1(default_input()));
-    run.part(|| part2(default_input()));
+    let mut run = advent::with(default_input);
+    run.part(part1);
+    run.part(part2);
     run.finish();
 }
 
