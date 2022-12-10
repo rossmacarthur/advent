@@ -1,8 +1,8 @@
 //! Calculate stats for a slice of numbers.
 
-use crate::summary::Stats;
+use crate::summary::Data;
 
-pub fn basics(mut data: Vec<f64>) -> Stats {
+pub fn basics(mut data: Vec<f64>) -> Data {
     data.sort_by(f64::total_cmp);
 
     // remove extreme outliers 🤷‍♂️
@@ -30,7 +30,7 @@ pub fn basics(mut data: Vec<f64>) -> Stats {
         let variance = sum / (len - 1) as f64;
         variance.sqrt()
     };
-    Stats {
+    Data {
         samples: len,
         min,
         max,
