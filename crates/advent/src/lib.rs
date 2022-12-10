@@ -1,5 +1,77 @@
+//! This crate contains a runner and benchmarker for Advent of Code solutions.
+//!
+//! # Getting started
+//!
+//! Add this crate to your Cargo manifest.
+//!
+//! ```toml
+//! advent = { git = "https://github.com/rossmacarthur/advent" }
+//! ```
+//!
+//! Now use it in your Advent of Code solution like this.
+//!
+//! ```ignore
+//! fn main() {
+//!     let mut run = advent::with(parse_input);
+//!     run.part(part1);
+//!     run.part(part2);
+//!     run.finish();
+//! }
+//! ```
+//!
+//! Where `parse_input` parses the input and `part1` and `part2` solve each part
+//! using the input parsed by `parse_input`.
+//!
+//! # Usage
+//!
+//! To use this crate your code needs to be structured as follows:
+//! - Provide a function thats parses the input
+//! - Provide a function for each part that takes the input as a parameter and
+//!   returns a value that implements [`Display`].
+//!
+//! ```ignore
+//! fn main() {
+//!     let run = advent::with(|| {
+//!         let raw = include_str!("input.txt");
+//!         let input: Vec<i64> = raw.lines().map(str::parse).map(Result::unwrap).collect();
+//!         input
+//!     });
+//!
+//!     run.part(|input| {
+//!         // solve part 1
+//!     });
+//!
+//!     run.part(|input| {
+//!         // solve part 2
+//!     })
+//!
+//!     // provides a command line interface that runs the solution by default
+//!     // and benchmarks it if --bench is passed
+//!     run.finish()
+//! }
+//! ```
+//!
+//! The command line interface looks like this.
+//!
+//! ```text
+//! Usage: example [--bench] [--output <output>]
+//!
+//! Run the program.
+//!
+//! Options:
+//!   --bench           whether to benchmark
+//!   --output          the output style
+//!   --help            display usage information
+//! ```
+//!
+//! The output style can be `boring`, `festive`, or `json`. To use json this
+//! crate requires the `json` feature to be set.
+//!
+//!
+//!
+
 mod stats;
-mod summary;
+pub mod summary;
 
 use std::fmt::Display;
 use std::mem;
@@ -12,18 +84,19 @@ use argh::FromArgs;
 pub use prelude;
 use yansi::Paint;
 
-pub use crate::summary::Summary;
-use crate::summary::{Bench, Run};
+use crate::summary::{Bench, Run, Summary};
 
 type FnParse<'a, I> = Box<dyn Fn() -> I + 'a>;
 type FnPart<'a, I> = Box<dyn Fn(I) -> Box<dyn Display + 'a> + UnwindSafe + 'a>;
 
+/// A runner and benchmarker for an Advent of Code solution.
 pub struct Advent<'a, I> {
     parse: FnParse<'a, I>,
     parse_ok: bool,
     parts: Vec<(Option<String>, FnPart<'a, I>)>,
 }
 
+#[doc(hidden)]
 pub fn new<'a>() -> Advent<'a, ()> {
     Advent {
         parse: Box::new(|| ()),
@@ -32,6 +105,13 @@ pub fn new<'a>() -> Advent<'a, ()> {
     }
 }
 
+/// Starts a new Advent of Code run or benchmark with the given input function.
+///
+/// # Examples
+///
+/// ```ignore
+/// let run = advent::with(parse_input);
+/// ```
 pub fn with<'a, F, I>(parse: F) -> Advent<'a, I>
 where
     F: Fn() -> I + UnwindSafe + 'a,
@@ -47,6 +127,11 @@ impl<'a, I> Advent<'a, I>
 where
     I: Clone + UnwindSafe,
 {
+    /// Adds a part to run or benchmark.
+    ///
+    /// The closure must take the parsed input as a parameter and return a
+    /// result that implements [`Display`]. The given function is simply stored.
+    /// Nothing will happen until [`finish()`][Advent::finish] is called.
     pub fn part<F, R>(&mut self, f: F)
     where
         R: Display + 'a,
@@ -55,6 +140,7 @@ where
         self.parts.push((None, Box::new(move |i| Box::new(f(i)))))
     }
 
+    #[doc(hidden)]
     pub fn named<F, R>(&mut self, name: &str, f: F)
     where
         R: Display + 'a,
@@ -64,6 +150,8 @@ where
         self.parts.push((name, Box::new(move |_| Box::new(f()))))
     }
 
+    /// Consumes this struct and runs the parts.
+    #[must_use]
     pub fn run(self) -> Summary {
         let mut runs = Vec::new();
 
@@ -96,6 +184,8 @@ where
         Summary::Run(runs)
     }
 
+    /// Consumes this struct and benchmarks the parts.
+    #[must_use]
     pub fn bench(self) -> Summary {
         let mut benches = Vec::new();
 
@@ -119,6 +209,7 @@ where
         Summary::Bench(benches)
     }
 
+    /// Parses the command line arguments and executes the run or benchmark.
     pub fn finish(self) {
         let Opt { bench, output } = argh::from_env();
 

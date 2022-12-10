@@ -1,5 +1,6 @@
 use yansi::Paint;
 
+/// The summary of a set of runs or benchmarks.
 #[derive(Debug)]
 #[cfg_attr(feature = "json", derive(serde::Serialize))]
 pub enum Summary {
@@ -9,29 +10,45 @@ pub enum Summary {
     Run(Vec<Run>),
 }
 
+/// The result of a benchmark.
 #[derive(Debug)]
 #[cfg_attr(feature = "json", derive(serde::Serialize))]
+#[non_exhaustive]
 pub struct Bench {
+    /// The name of the benchmark.
     pub name: String,
+    /// The data for the benchmark.
     #[cfg_attr(feature = "json", serde(flatten))]
     pub stats: Stats,
 }
 
+/// The result of a run.
 #[derive(Debug)]
 #[cfg_attr(feature = "json", derive(serde::Serialize))]
+#[non_exhaustive]
 pub struct Run {
+    /// The name of the run.
     pub name: String,
+    /// The output of the run.
     pub result: String,
+    /// How long this run took in seconds.
     pub elapsed: f64,
 }
 
+/// Data for a benchmark.
 #[derive(Debug, Clone, Copy)]
 #[cfg_attr(feature = "json", derive(serde::Serialize))]
+#[non_exhaustive]
 pub struct Stats {
+    /// The number of samples taken.
     pub samples: usize,
+    /// The minimum time taken in seconds for a sample.
     pub min: f64,
+    /// The maximum time taken in seconds for a sample.
     pub max: f64,
+    /// The mean time taken in seconds for all samples.
     pub mean: f64,
+    /// The standard deviation of time taken in seconds for all samples.
     pub std_dev: f64,
 }
 
