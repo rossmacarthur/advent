@@ -1,11 +1,5 @@
 [workspace]
-members = [
-    "crates/advent",
-    "crates/ascii-art",
-    "crates/cli",
-    "crates/human",
-    "crates/some",
-]
+members = ["crates/*"]
 
 [workspace.dependencies]
 ahash = "0.8.2"
@@ -34,7 +28,7 @@ publish = false
 [dependencies]
 thiserror = { workspace = true }
 vectrix = { workspace = true }
-advent = { path = "crates/advent" }
+advent = { path = "crates/advent", features = ["prelude"] }
 
 [features]
 json = ["advent/json"]

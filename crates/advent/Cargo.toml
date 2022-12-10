@@ -5,19 +5,14 @@ edition = "2021"
 publish = false
 
 [dependencies]
-ahash = { workspace = true }
 argh = { workspace = true }
-either = { workspace = true }
-itermore = { workspace = true }
-itertools = { workspace = true }
-regex-macro = { workspace = true }
 serde = { workspace = true, optional = true }
 serde_json = { workspace = true, optional = true }
-vectrix = { workspace = true }
 yansi = { workspace = true }
 ascii-art = { path = "../ascii-art" }
 human = { path = "../human" }
-some = { path = "../some" }
+prelude = { path = "../prelude", optional = true }
 
 [features]
-json = ["serde", "serde_json"]
+json = ["dep:serde", "dep:serde_json"]
+prelude = ["dep:prelude"]

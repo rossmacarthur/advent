@@ -1,4 +1,3 @@
-pub mod prelude;
 mod stats;
 mod summary;
 
@@ -9,6 +8,8 @@ use std::ptr;
 use std::time::{Duration, Instant};
 
 use argh::FromArgs;
+#[cfg(feature = "prelude")]
+pub use prelude;
 use yansi::Paint;
 
 pub use crate::summary::Summary;
