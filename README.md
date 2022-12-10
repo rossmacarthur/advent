@@ -40,7 +40,7 @@ cargo advent -y 2020 -d 18 bench -- --features=json -- --output json
 
 All of the above will be built using `--release`.
 
-## Development
+### New solutions
 
 Use the following to add a [template](./crates/cli/src/template.rs) for a new
 solution. To fetch the input the `ADVENT_SESSION` environment variable needs to
@@ -56,6 +56,32 @@ Open the browser for the given problem
 ```
 cargo advent -y 2020 -d 7 open
 ```
+
+## Using the runner/benchmarker
+
+It is possible to use the runner and benchmarker for your own solutions.
+
+Simply add the crate to Cargo manifest for your solution.
+```toml
+advent = { git = "https://github.com/rossmacarthur/advent" }
+```
+
+Then use the following as your main function.
+```rust
+fn main() {
+    let mut run = advent::with(parse_input);
+    run.part(part1);
+    run.part(part2);
+    run.finish();
+}
+```
+
+Where `parse_input` is a function that returns any type implementing `Clone`.
+And each part function takes that type as a single argument and returns a result
+implementing `Display`.
+
+See [template.rs](./crates/cli/src/template.rs) for the template I use  or any
+of the solutions in this crate for an example.
 
 ## License
 

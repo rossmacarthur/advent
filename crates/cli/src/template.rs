@@ -17,10 +17,9 @@ fn part2(input: Vec<i64>) -> i64 {
 }
 
 fn main() {
-    let mut run = advent::new();
-    run.input(default_input);
-    run.part(|i| part1(i));
-    run.part(|i| part2(i));
+    let mut run = advent::with(default_input);
+    run.part(part1);
+    run.part(part2);
     run.finish();
 }
 
