@@ -175,11 +175,7 @@ where
                 (result, elapsed)
             };
 
-            runs.push(Run {
-                name,
-                result,
-                elapsed,
-            })
+            runs.push(Run::new(name, result, elapsed))
         }
 
         Summary::Run(runs)
@@ -192,19 +188,16 @@ where
 
         // Benchmark the parsing
         if self.parse_ok {
-            let stats = bench(&self.parse);
-            benches.push(Bench {
-                name: "Parse".to_owned(),
-                stats,
-            });
+            let data = bench(&self.parse);
+            benches.push(Bench::new("Parse".to_owned(), data));
         }
 
         // Benchmark each part
         let input = (self.parse)();
         for (i, (name, f)) in self.parts.into_iter().enumerate() {
             let name = name.unwrap_or_else(|| format!("Part {}", i + 1));
-            let stats = bench_with_input(input.clone(), &f);
-            benches.push(Bench { name, stats });
+            let data = bench_with_input(input.clone(), &f);
+            benches.push(Bench::new(name, data));
         }
 
         Summary::Bench(benches)
@@ -239,14 +232,14 @@ where
     }
 }
 
-fn bench<F, O>(f: F) -> summary::Stats
+fn bench<F, O>(f: F) -> summary::Data
 where
     F: Fn() -> O,
 {
     bench_with_input((), move |()| f())
 }
 
-fn bench_with_input<F, I, O>(input: I, f: F) -> summary::Stats
+fn bench_with_input<F, I, O>(input: I, f: F) -> summary::Data
 where
     I: Clone,
     F: Fn(I) -> O,

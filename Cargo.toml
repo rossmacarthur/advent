@@ -15,6 +15,7 @@ regex-macro = "0.2.0"
 serde = { version = "1.0.147", features = ["derive"] }
 serde_json = "1.0.87"
 thiserror = "1.0.37"
+upon = "0.6.0"
 toml = "0.5.9"
 vectrix = "0.3.0"
 yansi = "0.5.1"
