@@ -70,6 +70,7 @@
 //!
 //!
 
+mod human;
 mod stats;
 pub mod summary;
 
@@ -213,9 +214,11 @@ where
     pub fn finish(self) {
         let Opt { bench, output } = argh::from_env();
 
+        #[cfg(feature = "festive")]
         if let Output::Festive = output {
             println!("{}", ascii_art::fun());
         }
+
         let summary = if bench {
             if cfg!(not(profile = "release")) {
                 eprintln!(
@@ -288,13 +291,24 @@ struct Opt {
     #[argh(switch)]
     bench: bool,
     /// the output style
-    #[argh(option, default = "Output::Festive")]
+    #[argh(option, default = "default_output()")]
     output: Output,
+}
+
+#[cfg(feature = "festive")]
+fn default_output() -> Output {
+    Output::Festive
+}
+
+#[cfg(not(feature = "festive"))]
+fn default_output() -> Output {
+    Output::Boring
 }
 
 #[derive(Debug)]
 enum Output {
     Boring,
+    #[cfg(feature = "festive")]
     Festive,
     #[cfg(feature = "json")]
     Json,
@@ -304,11 +318,26 @@ impl argh::FromArgValue for Output {
     fn from_arg_value(value: &str) -> Result<Self, String> {
         match value {
             "boring" => Ok(Self::Boring),
-            "festive" => Ok(Self::Festive),
-            #[cfg(feature = "json")]
-            "json" => Ok(Self::Json),
-            #[cfg(not(feature = "json"))]
-            "json" => Err("`json` requires crate feature".into()),
+            "festive" => {
+                #[cfg(feature = "festive")]
+                {
+                    Ok(Self::Festive)
+                }
+                #[cfg(not(feature = "festive"))]
+                {
+                    Err("`festive` requires crate feature".into())
+                }
+            }
+            "json" => {
+                #[cfg(feature = "json")]
+                {
+                    Ok(Self::Json)
+                }
+                #[cfg(not(feature = "json"))]
+                {
+                    Err("`json` requires crate feature".into())
+                }
+            }
             _ => Err("expected `boring`, `festive` or `json`".into()),
         }
     }
