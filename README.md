@@ -5,7 +5,7 @@
 My 🎅 [Advent of Code](https://adventofcode.com) solutions. Includes a runner
 and benchmarker with free Christmas trees 🎄.
 
-<img width="429" alt="screenshot of cargo run with bench" src="https://user-images.githubusercontent.com/17109887/145716328-3d7caf20-0a15-4c2e-89f1-ffed6ec22fe0.png">
+<img width="600" alt="image" src="https://user-images.githubusercontent.com/17109887/206856121-6a5078e3-5ebf-4973-b530-3639b30a2efa.png">
 
 ## Getting started
 
@@ -76,21 +76,31 @@ fn main() {
 }
 ```
 
-Where
+**Where**
+
 -  `parse_input` is a function that returns any type `I` implementing `Clone`.
 - Each part function takes `I` as an argument and returns something implementing
   `Display`.
 
 Ordinary runs of the program will run each part once and print out the output.
-Passing `--bench` to your program to perform a benchmark.
-
-That's all! You're free to structure your program however else you want. See
+Passing `--bench` to your program to perform a benchmark. That's all! You're
+free to structure your program however else you want. See
 [template.rs](./crates/cli/src/template.rs) for the template I use  or any of
 the solutions in this crate for an example.
 
+Run and benchmark output:
+
+<img width="382" alt="screenshot of run output"
+       src="https://user-images.githubusercontent.com/17109887/206855331-d5f2ee15-0245-40c8-a673-be4f89a225c4.png">
+
+<img width="380" alt="screenshot of bench output"
+       src="https://user-images.githubusercontent.com/17109887/206855396-26d868b1-a9e9-414d-b655-9b979e091b4e.png">
+
+
 ### Features
 
-There are also some optional features which pull in some other crates:
+There are also some optional features which pull in some other crates.
+
 - **`festive`** enables some festive ascii art and changes the default output to
   `--output festive`
 - **`json`** supports JSON output using `--output json`, useful for collecting
@@ -100,7 +110,7 @@ There are also some optional features which pull in some other crates:
   use advent::prelude::*;
   ```
 
-They can be enabled like this
+They can be enabled in your Cargo manifest like this:
 
 ```toml
 [dependencies]
