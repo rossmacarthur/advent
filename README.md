@@ -59,10 +59,10 @@ cargo advent -y 2020 -d 7 open
 
 ## Using the runner/benchmarker
 
-It is possible to use the runner and benchmarker for your own solutions.
-
-Simply add the crate to Cargo manifest for your solution.
+You can use the provided runner and benchmarker for your own solutions. To get
+started simply add the crate to the Cargo manifest for your solution.
 ```toml
+[dependencies]
 advent = { git = "https://github.com/rossmacarthur/advent" }
 ```
 
@@ -76,12 +76,36 @@ fn main() {
 }
 ```
 
-Where `parse_input` is a function that returns any type implementing `Clone`.
-And each part function takes that type as a single argument and returns a result
-implementing `Display`.
+Where
+-  `parse_input` is a function that returns any type `I` implementing `Clone`.
+- Each part function takes `I` as an argument and returns something implementing
+  `Display`.
 
-See [template.rs](./crates/cli/src/template.rs) for the template I use  or any
-of the solutions in this crate for an example.
+Ordinary runs of the program will run each part once and print out the output.
+Passing `--bench` to your program to perform a benchmark.
+
+That's all! You're free to structure your program however else you want. See
+[template.rs](./crates/cli/src/template.rs) for the template I use  or any of
+the solutions in this crate for an example.
+
+### Features
+
+There are also some optional features which pull in some other crates:
+- **`festive`** enables some festive ascii art and changes the default output to
+  `--output festive`
+- **`json`** supports JSON output using `--output json`, useful for collecting
+  benchmark information
+- **`prelude`** re-exports my prelude crate that can be imported using
+  ```rust
+  use advent::prelude::*;
+  ```
+
+They can be enabled like this
+
+```toml
+[dependencies]
+advent = { git = "https://github.com/rossmacarthur/advent", features = ["festive", "json"] }
+```
 
 ## License
 

@@ -28,7 +28,7 @@ publish = false
 [dependencies]
 thiserror = { workspace = true }
 vectrix = { workspace = true }
-advent = { path = "crates/advent", features = ["prelude"] }
+advent = { path = "crates/advent", features = ["festive", "prelude"] }
 
 [features]
 json = ["advent/json"]

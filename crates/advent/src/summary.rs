@@ -1,5 +1,7 @@
 use yansi::Paint;
 
+use crate::human;
+
 /// The summary of a set of runs or benchmarks.
 #[derive(Debug)]
 #[cfg_attr(feature = "json", derive(serde::Serialize))]
