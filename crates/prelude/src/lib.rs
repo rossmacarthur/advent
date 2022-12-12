@@ -15,6 +15,13 @@ pub use vectrix::{vector, Matrix, Vector};
 pub type Vector2 = vectrix::Vector<i64, 2>;
 pub type Vector3 = vectrix::Vector<i64, 3>;
 
+#[macro_export]
+macro_rules! vectors {
+    ($([$($e:expr),+]),+) => {
+        [$($crate::vector![$($e,)+],)+]
+    };
+}
+
 /// Returns the greatest common divisor of two numbers.
 pub fn gcd(mut x: i64, mut y: i64) -> i64 {
     while x != 0 {
