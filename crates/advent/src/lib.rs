@@ -2,13 +2,13 @@
 //!
 //! # Getting started
 //!
-//! Add this crate to your Cargo manifest.
+//! Add this crate to your Cargo manifest for your solution.
 //!
 //! ```toml
 //! advent = { git = "https://github.com/rossmacarthur/advent" }
 //! ```
 //!
-//! Now use it in your Advent of Code solution like this.
+//! Then use the following as your main function.
 //!
 //! ```ignore
 //! fn main() {
@@ -19,37 +19,46 @@
 //! }
 //! ```
 //!
-//! Where `parse_input` parses the input and `part1` and `part2` solve each part
-//! using the input parsed by `parse_input`.
+//! They can be enabled in your Cargo manifest like this:
 //!
-//! # Usage
-//!
-//! To use this crate your code needs to be structured as follows:
-//! - Provide a function thats parses the input
-//! - Provide a function for each part that takes the input as a parameter and
-//!   returns a value that implements [`Display`].
-//!
-//! ```ignore
-//! fn main() {
-//!     let run = advent::with(|| {
-//!         let raw = include_str!("input.txt");
-//!         let input: Vec<i64> = raw.lines().map(str::parse).map(Result::unwrap).collect();
-//!         input
-//!     });
-//!
-//!     run.part(|input| {
-//!         // solve part 1
-//!     });
-//!
-//!     run.part(|input| {
-//!         // solve part 2
-//!     })
-//!
-//!     // provides a command line interface that runs the solution by default
-//!     // and benchmarks it if --bench is passed
-//!     run.finish()
-//! }
+//! ```toml
+//! [dependencies]
+//! advent = { git = "https://github.com/rossmacarthur/advent", features = ["festive", "json"] }
 //! ```
+//!
+//! **Where**
+//!
+//! - `parse_input` is a function that returns any type `I` implementing
+//!   `Clone`.
+//! - Each part function takes `I` as an argument and returns something
+//!   implementing `Display`.
+//!
+//! Finally, `finish()` will instantiate a command line interface and run the
+//! program. Ordinary runs will run each part once and output the answers.
+//! Passing `--bench` to the program will perform a benchmark. That's all!
+//! You're free to structure your program however else you want.
+//!
+//! # Features
+//!
+//! There are also some optional features which pull in some other crates.
+//!
+//! - **`festive`** enables some festive ascii art and changes the default
+//!   output to `--output festive`
+//! - **`json`** supports JSON output using `--output json`, useful for
+//!   collecting benchmark information
+//! - **`prelude`** re-exports my prelude crate that can be imported using
+//!   ```rust
+//!   use advent::prelude::*;
+//!   ```
+//!
+//! They can be enabled in your Cargo manifest like this:
+//!
+//! ```toml
+//! [dependencies]
+//! advent = { git = "https://github.com/rossmacarthur/advent", features = ["festive", "json"] }
+//! ```
+//!
+//! # CLI
 //!
 //! The command line interface looks like this.
 //!
@@ -66,8 +75,6 @@
 //!
 //! The output style can be `boring`, `festive`, or `json`. To use json this
 //! crate requires the `json` feature to be set.
-//!
-//!
 //!
 
 mod human;

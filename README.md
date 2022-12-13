@@ -61,12 +61,14 @@ cargo advent -y 2020 -d 7 open
 
 You can use the provided runner and benchmarker for your own solutions. To get
 started simply add the crate to the Cargo manifest for your solution.
+
 ```toml
 [dependencies]
 advent = { git = "https://github.com/rossmacarthur/advent" }
 ```
 
 Then use the following as your main function.
+
 ```rust
 fn main() {
     let mut run = advent::with(parse_input);
@@ -78,15 +80,16 @@ fn main() {
 
 **Where**
 
--  `parse_input` is a function that returns any type `I` implementing `Clone`.
+- `parse_input` is a function that returns any type `I` implementing `Clone`.
 - Each part function takes `I` as an argument and returns something implementing
   `Display`.
 
-Ordinary runs of the program will run each part once and print out the output.
-Passing `--bench` to your program to perform a benchmark. That's all! You're
-free to structure your program however else you want. See
-[template.rs](./crates/cli/src/template.rs) for the template I use  or any of
-the solutions in this crate for an example.
+Finally, `finish()` will instantiate a command line interface and run the
+program. Ordinary runs will run each part once and output the answers. Passing
+`--bench` to the program will perform a benchmark. That's all! You're free to
+structure your program however else you want. See
+[template.rs](./crates/cli/src/template.rs) for the template I use or any of the
+solutions in this crate for an example.
 
 Run and benchmark output:
 
