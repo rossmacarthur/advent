@@ -1,6 +1,6 @@
 # advent
 
-[![Build Status](https://img.shields.io/github/workflow/status/rossmacarthur/advent/build/master)](https://github.com/rossmacarthur/advent/actions?query=workflow%3Abuild)
+[![Build Status](https://github.com/rossmacarthur/advent/actions/workflows/build.yaml/badge.svg)](https://github.com/rossmacarthur/advent/actions/workflows/build.yaml)
 
 My 🎅 [Advent of Code](https://adventofcode.com) solutions. Includes a runner
 and benchmarker with free Christmas trees 🎄.
