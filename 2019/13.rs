@@ -35,7 +35,7 @@ impl Computer {
                 2 => Tile::Block,
                 3 => Tile::Paddle,
                 4 => Tile::Ball,
-                t => panic!("invalid tile `{}`", t),
+                t => panic!("invalid tile `{t}`"),
             };
             let pos = vector![x, y];
             Output::Tile(pos, tile)

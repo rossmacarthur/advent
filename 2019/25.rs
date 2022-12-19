@@ -42,7 +42,7 @@ impl Direction {
             "east" => Self::East,
             "south" => Self::South,
             "west" => Self::West,
-            s => panic!("invalid direction `{}`", s),
+            s => panic!("invalid direction `{s}`"),
         }
     }
 
@@ -138,9 +138,9 @@ impl Computer {
     }
 
     fn take_item(&mut self, item: &str) {
-        self.write_line(&format!("take {}", item));
+        self.write_line(&format!("take {item}"));
         let mut lines = self.read_lines();
-        assert_eq!(lines.remove(0), format!("You take the {}.", item));
+        assert_eq!(lines.remove(0), format!("You take the {item}."));
         assert_eq!(lines.remove(0), "Command?");
         assert!(lines.is_empty());
     }
@@ -152,9 +152,9 @@ impl Computer {
     }
 
     fn drop_item(&mut self, item: &str) {
-        self.write_line(&format!("drop {}", item));
+        self.write_line(&format!("drop {item}"));
         let mut lines = self.read_lines();
-        assert_eq!(lines.remove(0), format!("You drop the {}.", item));
+        assert_eq!(lines.remove(0), format!("You drop the {item}."));
         assert_eq!(lines.remove(0), "Command?");
         assert!(lines.is_empty());
     }

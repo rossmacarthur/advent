@@ -42,7 +42,7 @@ impl Computer {
                     self.ptr += 4;
                 }
                 99 => break,
-                opcode => panic!("unknown opcode `{}`", opcode),
+                opcode => panic!("unknown opcode `{opcode}`"),
             }
         }
     }

@@ -13,7 +13,7 @@ fn parse_input(input: &str) -> HashMap<Vector2, Tile> {
         '#' => T::Wall,
         '.' => T::Floor,
         c @ 'A'..='Z' => T::Label(c),
-        c => panic!("unexpected character `{}`", c),
+        c => panic!("unexpected character `{c}`"),
     });
 
     // Find the bounds of the outer rectangle of wall tiles, so that we can tell

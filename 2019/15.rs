@@ -32,13 +32,13 @@ impl Computer {
             SOUTH => 2,
             WEST => 3,
             EAST => 4,
-            d => panic!("invalid direction `{:?}`", d),
+            d => panic!("invalid direction `{d:?}`"),
         });
         self.next().map(|v| match v {
             0 => Status::Wall,
             1 => Status::Moved,
             2 => Status::Found,
-            s => panic!("invalid status `{}`", s),
+            s => panic!("invalid status `{s}`"),
         })
     }
 }

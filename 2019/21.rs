@@ -22,9 +22,9 @@ fn run_script(input: Vec<i64>, script: &str) -> Option<i64> {
             // script failed and output all the images.
             eprint!("{}", v as u8 as char);
             while let Some(line) = c.read_line().as_deref() {
-                eprintln!("{}", line)
+                eprintln!("{line}")
             }
-            panic!("script failed:\n{}", script)
+            panic!("script failed:\n{script}")
         }
         v => Some(v),
     }
