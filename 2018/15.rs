@@ -14,7 +14,7 @@ fn parse_input(input: &str) -> HashMap<Vector2, Tile> {
             hp: 200,
             power: 3,
         }),
-        c => panic!("unexpected character `{}`", c),
+        c => panic!("unexpected character `{c}`"),
     })
 }
 

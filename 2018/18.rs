@@ -8,7 +8,7 @@ fn parse_input<const N: usize>(input: &str) -> [u128; N] {
                 '.' => OPEN,
                 '|' => WOODED,
                 '#' => LUMBERYARD,
-                c => panic!("unexpected character `{}`", c),
+                c => panic!("unexpected character `{c}`"),
             };
             set(&mut grid, x as i64, y as i64, a);
         }

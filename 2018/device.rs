@@ -48,7 +48,7 @@ fn parse_op(input: &str) -> Op {
         "eqir" => Op::Eqir,
         "eqri" => Op::Eqri,
         "eqrr" => Op::Eqrr,
-        i => panic!("unexpected instruction `{}`", i),
+        i => panic!("unexpected instruction `{i}`"),
     }
 }
 
