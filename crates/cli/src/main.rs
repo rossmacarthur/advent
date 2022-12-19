@@ -100,52 +100,39 @@ fn download(url: &str) -> Result<String> {
 }
 
 fn new(year: u32, day: u32) -> Result<()> {
-    let name = format!("{:04}{:02}", year, day);
+    let bin_name = format!("{year:04}{day:02}");
 
     let workspace_dir = PathBuf::from(env!("CARGO_WORKSPACE_DIR"));
     let manifest_path = workspace_dir.join("Cargo.toml");
 
     // Calculate bin and input file paths.
-    let bin = workspace_dir
-        .join(format!("{:04}", year))
-        .join(format!("{:02}.rs", day));
-    let input = workspace_dir
-        .join(format!("{:04}", year))
-        .join("input")
-        .join(format!("{:02}.txt", day));
-
+    let bin = workspace_dir.join(format!("{year:04}/{day:02}.rs"));
+    let input = workspace_dir.join(format!("{year:04}/input/{day:02}.txt"));
     // Create directory if not exists
     fs::create_dir_all(input.parent().unwrap())?;
 
     // Download input
+    let input_display = input
+        .strip_prefix(&workspace_dir)
+        .unwrap_or(&input)
+        .display();
     if input.exists() {
-        println!(
-            "• {} already exists",
-            input.strip_prefix(&workspace_dir)?.display()
-        );
+        println!("• {input_display} already exists");
     } else {
-        let url = format!("https://adventofcode.com/{}/day/{}/input", year, day);
+        let url = format!("https://adventofcode.com/{year}/day/{day}/input");
         let text = download(&url)?;
         fs::write(&input, text)?;
-        println!(
-            "• {} was downloaded",
-            input.strip_prefix(&workspace_dir)?.display()
-        );
+        println!("• {input_display} was downloaded");
     }
 
     // Add {year}/{day}.rs file
     const TEMPLATE: &str = include_str!("template.rs");
+    let bin_display = bin.strip_prefix(&workspace_dir).unwrap_or(&bin).display();
     if bin.exists() {
-        println!(
-            "• {} already exists",
-            bin.strip_prefix(&workspace_dir)?.display()
-        );
+        println!("• {bin_display} already exists");
     } else {
-        fs::write(&bin, TEMPLATE.replace("{day}", &format!("{:02}", day)))?;
-        println!(
-            "• {} was created",
-            bin.strip_prefix(&workspace_dir)?.display()
-        );
+        fs::write(&bin, TEMPLATE.replace("{day}", &format!("{day:02}")))?;
+        println!("• {bin_display} was created");
     }
 
     // Update Cargo.toml
@@ -154,7 +141,7 @@ fn new(year: u32, day: u32) -> Result<()> {
     let (main, binaries) = manifest.split_at(index);
     let mut bins: Binaries = toml::from_str(binaries)?;
     let to_add = Binary {
-        name: name.clone(),
+        name: bin_name.clone(),
         path: bin.strip_prefix(&workspace_dir)?.to_owned(),
     };
     let added = !bins.bin.contains(&to_add);
@@ -164,27 +151,24 @@ fn new(year: u32, day: u32) -> Result<()> {
     let binaries = toml::to_string(&bins)?;
     fs::write(&manifest_path, main.to_owned() + &binaries)?;
     if added {
-        println!("• {} binary added to Cargo manifest", name);
+        println!("• {bin_name} binary added to Cargo manifest");
     } else {
-        println!("• {} binary already exists in Cargo manifest", name);
+        println!("• {bin_name} binary already exists in Cargo manifest");
     }
 
-    println!(
-        "All done! Use `cargo advent -y {} -d {} run` to run",
-        year, day
-    );
+    println!("All done! Use `cargo advent -y {year} -d {day} run` to run");
 
     Ok(())
 }
 
 fn open(year: u32, day: u32) -> Result<()> {
-    let url = format!("https://adventofcode.com/{}/day/{}", year, day);
+    let url = format!("https://adventofcode.com/{year}/day/{day}");
     open::with(url, "firefox")?;
     Ok(())
 }
 
 fn bench(year: u32, day: u32, args: &[String]) -> Result<()> {
-    let name = format!("{:04}{:02}", year, day);
+    let bin_name = format!("{year:04}{day:02}");
 
     let (cargo_args, bin_args) = match args.iter().position(|a| a == "--") {
         Some(i) => (&args[..i], &args[i + 1..]),
@@ -192,7 +176,7 @@ fn bench(year: u32, day: u32, args: &[String]) -> Result<()> {
     };
 
     let status = process::Command::new(env!("CARGO"))
-        .args(["run", "--release", "--bin", &name])
+        .args(["run", "--release", "--bin", &bin_name])
         .args(cargo_args)
         .args(["--", "--bench"])
         .args(bin_args)
@@ -202,10 +186,10 @@ fn bench(year: u32, day: u32, args: &[String]) -> Result<()> {
 }
 
 fn run(year: u32, day: u32, args: &[String]) -> Result<()> {
-    let name = format!("{:04}{:02}", year, day);
+    let bin_name = format!("{year:04}{day:02}");
 
     let status = process::Command::new(env!("CARGO"))
-        .args(["run", "--release", "--bin", &name])
+        .args(["run", "--release", "--bin", &bin_name])
         .args(args)
         .status()?;
 
@@ -213,10 +197,10 @@ fn run(year: u32, day: u32, args: &[String]) -> Result<()> {
 }
 
 fn test(year: u32, day: u32, args: &[String]) -> Result<()> {
-    let name = format!("{:04}{:02}", year, day);
+    let bin_name = format!("{year:04}{day:02}");
 
     let status = process::Command::new(env!("CARGO"))
-        .args(["test", "--release", "--bin", &name])
+        .args(["test", "--release", "--bin", &bin_name])
         .args(args)
         .status()?;
 
