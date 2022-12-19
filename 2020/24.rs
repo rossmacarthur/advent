@@ -12,7 +12,7 @@ fn parse_input(s: &str) -> Vec<Vec<Vector2>> {
                     "w" => [-2, 0],
                     "nw" => [-1, 1],
                     "ne" => [1, 1],
-                    d => panic!("unexpected direction `{}`", d),
+                    d => panic!("unexpected direction `{d}`"),
                 })
                 .map(Vector2::from)
                 .collect()

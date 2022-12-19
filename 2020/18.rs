@@ -12,7 +12,7 @@ fn parse_input(input: &str) -> Vec<Vec<Token>> {
                     '+' => Token::Op(Op::Add),
                     '*' => Token::Op(Op::Mul),
                     '0'..='9' => Token::Num(c as i64 - '0' as i64),
-                    c => panic!("unexpected character `{}`", c),
+                    c => panic!("unexpected character `{c}`"),
                 })
                 .collect()
         })
@@ -60,7 +60,7 @@ where
                 }
             }
             Token::Num(value) => value,
-            t => panic!("unexpected token `{:?}`", t),
+            t => panic!("unexpected token `{t:?}`"),
         };
         values.push(value);
     }

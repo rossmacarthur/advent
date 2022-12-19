@@ -9,7 +9,7 @@ fn parse_input(input: &str) -> Vec<i64> {
                 .map(|c| match c {
                     'F' | 'L' => '0',
                     'B' | 'R' => '1',
-                    c => panic!("invalid character `{}`", c),
+                    c => panic!("invalid character `{c}`"),
                 })
                 .collect();
             assert_eq!(as_binary.len(), 10);

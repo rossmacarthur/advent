@@ -14,7 +14,7 @@ fn parse_input(input: &str) -> Vec<Instr> {
                 "L" => Instr::Turn(v),
                 "R" => Instr::Turn(-v),
                 "F" => Instr::Forward(v),
-                op => panic!("unexpected operation `{}`", op),
+                op => panic!("unexpected operation `{op}`"),
             }
         })
         .collect()
@@ -37,7 +37,7 @@ fn rotate(v: Vector2, a: i64) -> Vector2 {
         90 => vector![-v.y, v.x],
         180 => vector![-v.x, -v.y],
         270 => vector![v.y, -v.x],
-        a => panic!("unsupported oblique angle `{}`", a),
+        a => panic!("unsupported oblique angle `{a}`"),
     }
 }
 

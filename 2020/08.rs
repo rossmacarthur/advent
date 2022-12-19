@@ -8,7 +8,7 @@ fn parse_input(s: &str) -> Vec<(Op, i64)> {
                 "nop" => Op::Nop,
                 "acc" => Op::Acc,
                 "jmp" => Op::Jmp,
-                op => panic!("unknown operation `{}`", op),
+                op => panic!("unknown operation `{op}`"),
             };
             (op, arg.parse().unwrap())
         })
