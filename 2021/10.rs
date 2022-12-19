@@ -23,7 +23,7 @@ fn validate_line(line: &str) -> State {
                     _ => return State::Corrupted(close),
                 }
             }
-            c => panic!("unexpected character `{}`", c),
+            c => panic!("unexpected character `{c}`"),
         }
     }
     match stack.is_empty() {

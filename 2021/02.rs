@@ -8,7 +8,7 @@ fn parse_input(input: &str) -> Vec<(Command, i64)> {
                     "forward" => Command::Forward,
                     "down" => Command::Down,
                     "up" => Command::Up,
-                    d => panic!("unknown command `{}`", d),
+                    d => panic!("unknown command `{d}`"),
                 },
                 value.parse().unwrap(),
             )

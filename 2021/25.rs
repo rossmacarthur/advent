@@ -5,7 +5,7 @@ fn parse_input(input: &str) -> HashMap<Vector2, Tile> {
         '>' => Tile::Occupied(Cucumber::East),
         'v' => Tile::Occupied(Cucumber::South),
         '.' => Tile::Empty,
-        c => panic!("unexpected character `{}`", c),
+        c => panic!("unexpected character `{c}`"),
     })
 }
 

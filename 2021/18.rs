@@ -22,8 +22,8 @@ enum Node {
 impl fmt::Debug for Node {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         match self {
-            Self::Pair(a, b) => write!(f, "[{:?},{:?}]", a, b),
-            Self::Num(v) => write!(f, "{}", v),
+            Self::Pair(a, b) => write!(f, "[{a:?},{b:?}]"),
+            Self::Num(v) => write!(f, "{v}"),
         }
     }
 }
@@ -45,7 +45,7 @@ fn parse(it: &mut Chars<'_>, depth: usize) -> Node {
     if depth == 0 {
         match it.next() {
             Some('[') => {}
-            c => panic!("expected open bracket, got `{:?}`", c),
+            c => panic!("expected open bracket, got `{c:?}`"),
         }
     }
     let mut left = None;
@@ -54,7 +54,7 @@ fn parse(it: &mut Chars<'_>, depth: usize) -> Node {
         let node = match it.next() {
             Some('[') => parse(it, depth + 1),
             Some(c @ '0'..='9') => Node::Num(c.to_digit(10).unwrap()),
-            c => panic!("expected number or open bracket, got `{:?}`", c),
+            c => panic!("expected number or open bracket, got `{c:?}`"),
         };
         assert!(left.replace(node).is_none());
         mem::swap(&mut left, &mut right);
@@ -65,7 +65,7 @@ fn parse(it: &mut Chars<'_>, depth: usize) -> Node {
                 let right = Box::new(right.unwrap());
                 break Node::Pair(left, right);
             }
-            c => panic!("expected comma or close bracket, got `{:?}`", c),
+            c => panic!("expected comma or close bracket, got `{c:?}`"),
         }
     }
 }
