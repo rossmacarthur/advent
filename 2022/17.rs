@@ -7,7 +7,7 @@ fn parse_input(input: &str) -> Vec<Vector2> {
         .map(|c| match c {
             '>' => vector![1, 0],
             '<' => vector![-1, 0],
-            c => panic!("unexpected char `{}`", c),
+            c => panic!("unexpected char `{c}`"),
         })
         .collect()
 }

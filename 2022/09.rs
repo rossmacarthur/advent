@@ -10,7 +10,7 @@ fn parse_input(input: &str) -> Vec<(Vector2, i64)> {
                 "D" => vector![0, -1],
                 "L" => vector![-1, 0],
                 "R" => vector![1, 0],
-                d => panic!("unknown directon `{}`", d),
+                d => panic!("unknown direction `{d}`"),
             };
             let n = n.parse::<i64>().unwrap();
             (d, n)

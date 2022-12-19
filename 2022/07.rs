@@ -26,7 +26,7 @@ fn parse_input(input: &str) -> Vec<Command<'_>> {
                 let dir = cmd.split(' ').nth(1).unwrap();
                 Command::ChangeDir { dir }
             } else {
-                panic!("unknown command `{}`", cmd);
+                panic!("unknown command `{cmd}`");
             }
         })
         .collect()

@@ -15,7 +15,7 @@ fn priority(item: u8) -> i64 {
     let p = match item {
         b'a'..=b'z' => item - b'a' + 1,
         b'A'..=b'Z' => item - b'A' + 27,
-        i => panic!("unknown item `{}`", i),
+        i => panic!("unknown item `{i}`"),
     };
     p as i64
 }
