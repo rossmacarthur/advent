@@ -56,7 +56,7 @@ pub fn parse_map_set(input: &str) -> HashSet<Vector2> {
     let map: HashMap<_, _> = parse_map(input, |c| match c {
         '#' => Some(()),
         '.' => None,
-        c => panic!("unrecognized character `{}`", c),
+        c => panic!("unrecognized character `{c}`"),
     });
     map.into_iter().filter_map(|(k, v)| v.map(|_| k)).collect()
 }
