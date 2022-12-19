@@ -106,7 +106,7 @@ impl fmt::Display for Time {
             Scale::Mega => (0, v * 1e6, " s"),
             Scale::Giga => (0, v * 1e9, " s"),
         };
-        fmt::Display::fmt(&format!("{:.p$}{}", v, suffix, p = precision), f)
+        fmt::Display::fmt(&format!("{v:.precision$}{suffix}"), f)
     }
 }
 
@@ -132,7 +132,7 @@ impl fmt::Display for Samples {
             Scale::Giga => (p, v, "G samples"),
             _ => unreachable!(),
         };
-        fmt::Display::fmt(&format!("{:.p$}{}", v, suffix, p = precision), f)
+        fmt::Display::fmt(&format!("{v:.precision$}{suffix}"), f)
     }
 }
 
