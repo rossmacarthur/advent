@@ -125,7 +125,7 @@ fn verify(instrs: &[[i64; 3]], digits: [i64; 14]) {
         let x = ((z % 26 + b) != w) as i64;
         z = (z / a) * (25 * x + 1) + (w + c) * x;
     }
-    assert_eq!(z, 0, "digits `{:?}` are incorrect", digits)
+    assert_eq!(z, 0, "digits `{digits:?}` are incorrect")
 }
 
 fn part1(instrs: Vec<[i64; 3]>) -> i64 {

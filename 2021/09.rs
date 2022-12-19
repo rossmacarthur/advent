@@ -3,7 +3,7 @@ use advent::prelude::*;
 fn parse_input(input: &str) -> HashMap<Vector2, i64> {
     parse_map(input, |c| match c {
         c @ '0'..='9' => c as i64 - b'0' as i64,
-        c => panic!("unexpected character `{}`", c),
+        c => panic!("unexpected character `{c}`"),
     })
 }
 

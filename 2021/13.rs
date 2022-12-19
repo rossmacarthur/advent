@@ -16,7 +16,7 @@ fn parse_input(input: &str) -> (HashSet<Vector2>, Vec<Fold>) {
             let axis = match axis.chars().last().unwrap() {
                 'x' => 0,
                 'y' => 1,
-                axis => panic!("unknown axis `{}`", axis),
+                axis => panic!("unknown axis `{axis}`"),
             };
             let value = value.parse().unwrap();
             Fold { axis, value }
