@@ -25,12 +25,12 @@ impl Computer {
         let color = self.next().map(|v| match v {
             0 => Color::Black,
             1 => Color::White,
-            c => panic!("invalid color `{}`", c),
+            c => panic!("invalid color `{c}`"),
         })?;
         let turn = self.next().map(|v| match v {
             0 => Turn::Left,
             1 => Turn::Right,
-            t => panic!("invalid turn `{}`", t),
+            t => panic!("invalid turn `{t}`"),
         })?;
         Some((color, turn))
     }

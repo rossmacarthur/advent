@@ -31,7 +31,7 @@ impl Computer {
         match opcode / (10i64.pow((1 + i) as u32)) % 10 {
             0 => cast(self.mem[ptr]),
             1 => ptr,
-            mode => panic!("unknown mode `{}`", mode),
+            mode => panic!("unknown mode `{mode}`"),
         }
     }
 
@@ -92,7 +92,7 @@ impl Computer {
                     self.ptr += 4;
                 }
                 99 => break State::Complete,
-                opcode => panic!("unknown opcode `{}`", opcode),
+                opcode => panic!("unknown opcode `{opcode}`"),
             }
         }
     }

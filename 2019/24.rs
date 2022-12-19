@@ -9,7 +9,7 @@ fn parse_input(input: &str) -> u32 {
             line.chars().map(|c| match c {
                 '.' => 0,
                 '#' => 1,
-                c => panic!("unexpected character `{}`", c),
+                c => panic!("unexpected character `{c}`"),
             })
         })
         .enumerate()

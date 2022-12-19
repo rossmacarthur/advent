@@ -165,7 +165,7 @@ impl Computer {
     pub fn next_state(&mut self) -> State {
         match self.try_next_state() {
             Ok(state) => state,
-            Err(err) => panic!("oops `{}`", err),
+            Err(err) => panic!("oops `{err}`"),
         }
     }
 
@@ -180,7 +180,7 @@ impl Computer {
     #[track_caller]
     fn next_char(&mut self) -> Option<char> {
         self.next().map(|v| {
-            assert!(v < 127, "unexpected non-ascii value `{}`", v);
+            assert!(v < 127, "unexpected non-ascii value `{v}`");
             v as u8 as char
         })
     }

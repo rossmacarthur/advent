@@ -15,7 +15,7 @@ fn parse_input(input: &str) -> Vec<Method> {
                 } else if s.starts_with("cut") {
                     Method::Cut(value)
                 } else {
-                    panic!("unexpected line `{}`", line)
+                    panic!("unexpected line `{line}`")
                 }
             }
         })

@@ -41,8 +41,8 @@ enum Move {
 impl Move {
     fn to_ascii(self) -> String {
         match self {
-            Self::Left(d) => format!("L,{}", d),
-            Self::Right(d) => format!("R,{}", d),
+            Self::Left(d) => format!("L,{d}"),
+            Self::Right(d) => format!("R,{d}"),
         }
     }
 }

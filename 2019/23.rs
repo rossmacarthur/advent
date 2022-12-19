@@ -26,11 +26,11 @@ impl Computer {
     fn poll(&mut self) -> Option<i64> {
         match match self.try_next_state() {
             Ok(state) => state,
-            Err(err) => panic!("oops `{}`", err),
+            Err(err) => panic!("oops `{err}`"),
         } {
             State::Yielded(v) => Some(v),
             State::Waiting => None,
-            state => panic!("unexpected state `{:?}`", state),
+            state => panic!("unexpected state `{state:?}`"),
         }
     }
 

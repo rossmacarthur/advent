@@ -9,7 +9,7 @@ fn parse_input(input: &str) -> HashMap<Vector2, Tile> {
         '@' => Tile::Entrance(bit('0')),
         'a'..='z' => Tile::Key(bit(c)),
         'A'..='Z' => Tile::Door(bit(c.to_ascii_lowercase())),
-        c => panic!("unexpected character `{}`", c),
+        c => panic!("unexpected character `{c}`"),
     })
 }
 
@@ -53,7 +53,7 @@ impl Tile {
     fn value(&self) -> u32 {
         match *self {
             Tile::Entrance(k) | Tile::Key(k) | Tile::Door(k) => k,
-            t => panic!("no value for tile `{:?}`", t),
+            t => panic!("no value for tile `{t:?}`"),
         }
     }
 }
@@ -67,7 +67,7 @@ fn bit(c: char) -> u32 {
     match c {
         'a'..='z' => 1 << (c as u8 - b'a'),
         '0'..='3' => 1 << (c as u8 - b'0' + 26),
-        c => panic!("unsupported character `{}`", c),
+        c => panic!("unsupported character `{c}`"),
     }
 }
 
