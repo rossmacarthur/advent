@@ -16,7 +16,7 @@ fn parse_input(input: &str) -> (Vec<VecDeque<u8>>, Vec<Move>) {
                     line.as_bytes().get(m).and_then(|&b| match b {
                         b'A'..=b'Z' => Some(b),
                         b' ' => None,
-                        b => panic!("unexpected byte `{}`", b),
+                        b => panic!("unexpected byte `{b}`"),
                     })
                 })
                 .collect()

@@ -11,7 +11,7 @@ fn parse_input(input: &str) -> Vec<Instr> {
                     let n = it.next().unwrap().parse().unwrap();
                     Instr::Addx(n)
                 }
-                i => panic!("unknown instruction `{}`", i),
+                i => panic!("unknown instruction `{i}`"),
             }
         })
         .collect()
