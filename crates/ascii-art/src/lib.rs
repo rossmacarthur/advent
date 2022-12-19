@@ -34,10 +34,11 @@ impl fmt::Display for Pixel {
                 write!(f, " ")
             }
             (v, Some(color)) => {
-                write!(f, "{}", Paint::new(v).fg(color))
+                let v = Paint::new(v).fg(color);
+                write!(f, "{v}")
             }
             (v, None) => {
-                write!(f, "{}", v)
+                write!(f, "{v}")
             }
         }
     }
@@ -47,7 +48,7 @@ impl fmt::Display for Image {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         for row in &self.0 {
             for pixel in row {
-                write!(f, "{}", pixel)?;
+                write!(f, "{pixel}")?;
             }
             writeln!(f)?;
         }
