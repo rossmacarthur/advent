@@ -9,7 +9,7 @@ fn parse_tile(grid: &str) -> Tile {
         line.chars().map(|c| match c {
             '.' => Pixel::Black,
             '#' => Pixel::White,
-            c => panic!("unrecognized character `{}`", c),
+            c => panic!("unrecognized character `{c}`"),
         })
     });
     Tile([(); 10].map(|_| [(); 10].map(|_| pixels.next().unwrap())))

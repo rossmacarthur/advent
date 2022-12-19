@@ -36,7 +36,7 @@ fn to_number(mask: &[u8], x: i64) -> i64 {
             b'0' => 0,
             b'1' => 1,
             b'X' => x,
-            b => panic!("unexpected mask value `{}`", b),
+            b => panic!("unexpected mask value `{b}`"),
         };
         2 * acc + d
     })
@@ -62,7 +62,7 @@ fn combinations(addr: i64, mask: &[u8]) -> Box<dyn Iterator<Item = i64>> {
                 b'0' => Either::Left([addr]),
                 b'1' => Either::Left([addr | bit]),
                 b'X' => Either::Right([addr, addr ^ bit]),
-                b => panic!("unexpected mask value `{}`", b),
+                b => panic!("unexpected mask value `{b}`"),
             }
             .into_iter()
         });

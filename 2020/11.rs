@@ -8,7 +8,7 @@ fn parse_input(input: &str) -> Grid {
         '.' => Tile::Floor,
         'L' => Tile::EmptySeat,
         '#' => Tile::OccupiedSeat,
-        c => panic!("unexpected character `{}`", c),
+        c => panic!("unexpected character `{c}`"),
     })
 }
 
