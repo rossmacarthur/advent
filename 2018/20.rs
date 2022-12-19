@@ -14,7 +14,7 @@ fn parse_input(input: &str) -> Vec<Segment> {
                 '|' => Segment::NextOption,
                 ')' => Segment::EndBranch,
                 '^' | '$' => return None,
-                c => panic!("unexpected character `{}`", c),
+                c => panic!("unexpected character `{c}`"),
             };
             Some(r)
         })
