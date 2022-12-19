@@ -82,9 +82,8 @@ mod stats;
 pub mod summary;
 
 use std::fmt::Display;
-use std::mem;
+use std::hint;
 use std::panic::UnwindSafe;
-use std::ptr;
 use std::time::{Duration, Instant};
 
 use argh::FromArgs;
@@ -264,7 +263,7 @@ where
     // warm up for 3 secs
     let start = Instant::now();
     while Instant::now() - start < THREE_SECS {
-        black_box(f(input.clone()));
+        hint::black_box(f(input.clone()));
     }
 
     // now time for 5 secs, but with at least 25 samples
@@ -273,22 +272,12 @@ where
     while times.len() < 25 || (Instant::now() - start < FIVE_SECS && times.len() < 123_456) {
         let input = input.clone();
         let t0 = Instant::now();
-        black_box(f(input));
+        hint::black_box(f(input));
         let t1 = Instant::now();
         times.push((t1 - t0).as_secs_f64());
     }
 
     stats::basics(times)
-}
-
-/// A function that is opaque to the optimizer, used to prevent the compiler
-/// from optimizing away computations in a benchmark.
-fn black_box<T>(dummy: T) -> T {
-    unsafe {
-        let ret = ptr::read_volatile(&dummy);
-        mem::forget(dummy);
-        ret
-    }
 }
 
 /// Run the program.
