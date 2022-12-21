@@ -9,7 +9,13 @@ fn parse_input(input: &str) -> HashMap<&str, Action<'_>> {
             let action = match it.next().unwrap() {
                 n if n.chars().all(|c| c.is_ascii_digit()) => Action::Yell(n.parse().unwrap()),
                 lhs => {
-                    let op = it.next().unwrap();
+                    let op = match it.next().unwrap() {
+                        "+" => Op::Add,
+                        "-" => Op::Sub,
+                        "*" => Op::Mul,
+                        "/" => Op::Div,
+                        o => panic!("unknown operator `{o}`"),
+                    };
                     let rhs = it.next().unwrap();
                     Action::Op(lhs, op, rhs)
                 }
@@ -25,72 +31,89 @@ fn default_input() -> HashMap<&'static str, Action<'static>> {
 
 #[derive(Debug, Clone, Copy)]
 enum Action<'a> {
-    Yell(f64),
-    Op(&'a str, &'a str, &'a str),
+    Yell(i64),
+    Op(&'a str, Op, &'a str),
 }
 
-fn eval(monkeys: &HashMap<&str, Action<'_>>, name: &str) -> f64 {
+#[derive(Debug, Clone, Copy)]
+enum Op {
+    Add,
+    Sub,
+    Mul,
+    Div,
+}
+
+fn eval(monkeys: &HashMap<&str, Action<'_>>, name: &str) -> i64 {
     match monkeys[name] {
         Action::Yell(n) => n,
         Action::Op(lhs, op, rhs) => {
             let l = eval(monkeys, lhs);
             let r = eval(monkeys, rhs);
             match op {
-                "+" => l + r,
-                "-" => l - r,
-                "*" => l * r,
-                "/" => l / r,
-                _ => unreachable!(),
+                Op::Add => l + r,
+                Op::Sub => l - r,
+                Op::Mul => l * r,
+                Op::Div => l / r,
             }
         }
     }
 }
 
-fn eval_with(monkeys: &mut HashMap<&str, Action<'_>>, humn: f64) -> f64 {
-    monkeys.insert("humn", Action::Yell(humn));
-    eval(monkeys, "root")
+fn to_satisfy(monkeys: &HashMap<&str, Action<'_>>, name: &str) -> bool {
+    if name == "humn" {
+        return true;
+    }
+    match monkeys[name] {
+        Action::Yell(_) => false,
+        Action::Op(lhs, _, rhs) => to_satisfy(monkeys, lhs) || to_satisfy(monkeys, rhs),
+    }
+}
+
+fn satisfy(monkeys: &HashMap<&str, Action<'_>>, name: &str, v: i64) -> i64 {
+    match monkeys[name] {
+        Action::Yell(_) => v,
+        Action::Op(lhs, op, rhs) => {
+            // Check which side of the equation has the `humn` so we know which
+            // side to evaluate and which side to try satisfy (recurse).
+            let h = to_satisfy(monkeys, lhs);
+            let hr = to_satisfy(monkeys, rhs);
+            assert!(h != hr, "unsolvable");
+
+            // Simply evaluate the side without the `humn` and calculate a new
+            // value that we can use to satisfy the other side.
+            //
+            // The only tricky part here is if the operator is non-commutative
+            // i.e. subtraction or division then the reverse operation is not
+            // simply using the other operator. For example
+            //
+            //    eval(lhs) / rhs = value
+            // => rhs = eval(lhs) / value
+            //
+            match op {
+                Op::Add if h => satisfy(monkeys, lhs, v - eval(monkeys, rhs)),
+                Op::Sub if h => satisfy(monkeys, lhs, v + eval(monkeys, rhs)),
+                Op::Mul if h => satisfy(monkeys, lhs, v / eval(monkeys, rhs)),
+                Op::Div if h => satisfy(monkeys, lhs, v * eval(monkeys, rhs)),
+                Op::Add => satisfy(monkeys, rhs, v - eval(monkeys, lhs)),
+                Op::Sub => satisfy(monkeys, rhs, eval(monkeys, lhs) - v),
+                Op::Mul => satisfy(monkeys, rhs, v / eval(monkeys, lhs)),
+                Op::Div => satisfy(monkeys, rhs, eval(monkeys, lhs) / v),
+            }
+        }
+    }
 }
 
 fn part1(monkeys: HashMap<&str, Action<'_>>) -> i64 {
-    eval(&monkeys, "root") as i64
+    eval(&monkeys, "root")
 }
 
 fn part2(mut monkeys: HashMap<&str, Action<'_>>) -> i64 {
-    // Flip the operator for root so that we can solve for root = 0
+    // Flip the add operator for root so that we can solve for root = 0
     match monkeys.get_mut("root") {
-        Some(Action::Op(_, op @ "+", _)) => *op = "-",
+        Some(Action::Op(_, op @ Op::Add, _)) => *op = Op::Sub,
         _ => panic!("unexpected value for `root`"),
     }
-
-    // Since there is only one instance of humn and root there should be a
-    // linear relationship. Let's call humn `x` and root `y`.
-
-    // Firstly, we must figure out the slope of the linear equation in case the
-    // relationship between x and y is inversely proportional
-    let mut x0 = 0.0;
-    let mut x1 = 1e25;
-    let y0 = eval_with(&mut monkeys, x0);
-    let y1 = eval_with(&mut monkeys, x1);
-    let slope = y0.total_cmp(&y1);
-
-    // Binary search to solve for the x intercept
-    while x0 < x1 {
-        let x = (x0 + x1) / 2.;
-        match eval_with(&mut monkeys, x).total_cmp(&0.0) {
-            Ordering::Equal => return x as i64,
-            o => {
-                if o == slope {
-                    // The ordering is the same as the slope which means we're
-                    // on the right track so increase the lower bound
-                    x0 = x
-                } else {
-                    // Otherwise we've overshot so decrease the upper bound
-                    x1 = x
-                }
-            }
-        }
-    }
-    panic!("no solution found")
+    satisfy(&monkeys, "root", 0)
 }
 
 fn main() {
