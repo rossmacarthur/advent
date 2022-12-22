@@ -1,3 +1,5 @@
+use std::hash::Hash;
+
 use advent::prelude::*;
 
 fn parse_input(input: &str) -> (HashMap<Vector2, Tile>, Vec<Instr>) {
@@ -55,6 +57,10 @@ enum Direction {
 use Direction::*;
 
 impl Direction {
+    fn all() -> [Direction; 4] {
+        [Right, Down, Left, Up]
+    }
+
     fn vector(self) -> Vector2 {
         match self {
             Right => vector![1, 0],
@@ -121,17 +127,31 @@ fn wrap_cube(_: &HashMap<Vector2, Tile>, pos: Vector2, d: Direction) -> (Vector2
     (pos, d)
 }
 
+/// Returns the starting position.
+fn start(map: &HashMap<Vector2, Tile>) -> Vector2 {
+    let y = 0;
+    let x = map
+        .iter()
+        .filter_map(|(v, t)| (v.y == y && matches!(t, Tile::Open)).some(v.x))
+        .min()
+        .unwrap();
+    vector![x, 0]
+}
+
+/// Returns the length of one of the cube's side, doesn't work with all ways of
+/// folding a cube but works for all usual ways of folding.
+fn side(map: &HashMap<Vector2, Tile>) -> i64 {
+    let max_x = map.keys().map(|v| v.x).max().unwrap();
+    let max_y = map.keys().map(|v| v.y).max().unwrap();
+    (max_x + max_y) / 7
+}
+
 fn solve<W>(map: HashMap<Vector2, Tile>, instrs: Vec<Instr>, wrap: W) -> i64
 where
     W: Fn(&HashMap<Vector2, Tile>, Vector2, Direction) -> (Vector2, Direction),
 {
-    let start_x = map
-        .iter()
-        .filter_map(|(v, t)| (v.y == 0 && matches!(t, Tile::Open)).some(v.x))
-        .min()
-        .unwrap();
-
-    let (mut pos, mut facing) = (vector![start_x, 0], Right);
+    let mut pos = start(&map);
+    let mut facing = Right;
     for instr in instrs {
         match instr {
             Instr::TurnLeft => {
@@ -176,6 +196,14 @@ fn part1((map, instrs): (HashMap<Vector2, Tile>, Vec<Instr>)) -> i64 {
 }
 
 fn part2((map, instrs): (HashMap<Vector2, Tile>, Vec<Instr>)) -> i64 {
+    let start = start(&map);
+
+    let q = VecDeque::from([start]);
+    let graph: HashMap<Vector2, [Option<Direction>; 4]> = HashMap::new();
+    while let Some(pos) = q.pop_front() {
+        for d in Direction::all() {}
+    }
+
     solve(map, instrs, wrap_cube)
 }
 
