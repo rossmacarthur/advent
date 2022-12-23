@@ -30,6 +30,41 @@ where
     // All the proposed moves by elves
     let mut proposed: HashMap<Vector2, Vec<Vector2>> = HashMap::new();
 
+    use image::{ImageBuffer, Rgb};
+
+    let min_x = -14;
+    let max_x = 122;
+    let min_y = -13;
+    let max_y = 121;
+
+    let pad: u32 = 2;
+    let blk: u32 = 4;
+
+    let height = (max_y - min_y) as u32;
+    let width = (max_x - min_x) as u32;
+
+    let mut img = ImageBuffer::new(blk * (width + pad), blk * (height + pad));
+    for pixel in img.pixels_mut() {
+        *pixel = Rgb([0x1f, 0x1f, 0x1f]);
+    }
+
+    let draw_point = |img: &mut ImageBuffer<_, _>, p: Vector2, color: Rgb<u8>| {
+        for dx in 1..blk {
+            for dy in 1..blk {
+                let x = blk * ((p.x - min_x) as u32 + pad / 2) + dx;
+                let y = blk * ((p.y - min_y) as u32 + pad / 2) + dy;
+                if let Some(pixel) = img.get_pixel_mut_checked(x, y) {
+                    *pixel = color;
+                } else {
+                    panic!("{p:?} out of bounds -> {x},{y}");
+                }
+            }
+        }
+    };
+
+    let dir = std::path::PathBuf::from_iter([env!("CARGO_WORKSPACE_DIR"), "target", "visual"]);
+    std::fs::create_dir_all(&dir).unwrap();
+
     for round in rounds {
         for p in &grove {
             let is_open = |ds: &[_]| ds.iter().all(|d| !grove.contains(&(p + d)));
@@ -44,6 +79,29 @@ where
                     break;
                 }
             }
+        }
+
+        let mut moving = HashSet::new();
+        for (p, srcs) in &proposed {
+            if srcs.len() > 1 {
+                continue;
+            }
+            moving.insert(srcs[0]);
+        }
+
+        {
+            let mut img2 = img.clone();
+            for p in &grove {
+                if moving.contains(&p) {
+                    // #8BC6FC
+                    draw_point(&mut img2, *p, Rgb([0x8b, 0xc6, 0xfc]));
+                } else {
+                    draw_point(&mut img2, *p, Rgb([0xee, 0xee, 0xee]));
+                }
+            }
+            let p = dir.join(format!("{round:04}.png"));
+            println!("{}", p.display());
+            img2.save(p).unwrap();
         }
 
         // Part 2, can no longer continue, return the round number
@@ -70,7 +128,8 @@ where
 }
 
 fn part1(grove: HashSet<Vector2>) -> i64 {
-    solve(grove, 0..10)
+    // solve(grove, 0..10)
+    0
 }
 
 fn part2(grove: HashSet<Vector2>) -> i64 {
