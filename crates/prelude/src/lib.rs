@@ -32,6 +32,11 @@ pub fn gcd(mut x: i64, mut y: i64) -> i64 {
     y.abs()
 }
 
+/// Returns the least common multiple of two numbers.
+pub fn lcm(x: i64, y: i64) -> i64 {
+    x * y / gcd(x, y)
+}
+
 /// Parses a 2D map into a data structure of type `M`.
 pub fn parse_map<M, F, V>(input: &str, parse: F) -> M
 where
