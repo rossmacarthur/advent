@@ -116,10 +116,13 @@ fn shortest(
     end: Vector2,
     tick: usize,
 ) -> usize {
+    use image::{ImageBuffer, Rgb};
+
     let [min_x, max_x, min_y, max_y] = bounds;
-    let mut q = VecDeque::from([(start, tick)]);
+    let mut q = VecDeque::from([(vec![start], tick)]);
     let mut visited = HashSet::new();
-    while let Some((pos, tick)) = q.pop_front() {
+    while let Some((path, tick)) = q.pop_front() {
+        let pos = path.last().copied().unwrap();
         if !visited.insert((pos, tick)) {
             continue;
         }
@@ -127,17 +130,81 @@ fn shortest(
         for d in vectors![[0, -1], [-1, 0], [0, 1], [1, 0]] {
             let next = pos + d;
             if next == end {
+                // winning path, generate images
+                let dir = std::path::PathBuf::from_iter([
+                    env!("CARGO_WORKSPACE_DIR"),
+                    "target",
+                    "visual",
+                ]);
+                std::fs::create_dir_all(&dir).unwrap();
+                let blk = 7;
+                let draw_point = |img: &mut ImageBuffer<_, _>, p: Vector2, color: Rgb<u8>| {
+                    let xs = if color == Rgb([0x1e, 0x1e, 0x1e]) {
+                        0..blk
+                    } else {
+                        1..blk
+                    };
+                    let ys = if color == Rgb([0x1e, 0x1e, 0x1e]) {
+                        0..blk
+                    } else {
+                        1..blk
+                    };
+                    for dx in xs {
+                        for dy in ys.clone() {
+                            let x = blk * (p.x as u32) + dx;
+                            let y = blk * (p.y as u32) + dy;
+                            if let Some(pixel) = img.get_pixel_mut_checked(x, y) {
+                                *pixel = color;
+                            } else {
+                                panic!("{p:?} out of bounds -> {x},{y}");
+                            }
+                        }
+                    }
+                };
+
+                for t in 0..(tick + 1) {
+                    let b = t % blizzards.len();
+                    let path = &path[..t + 1];
+
+                    let mut img =
+                        ImageBuffer::new(blk * (max_x as u32 + 1), blk * (max_y as u32 + 1));
+                    for y in min_y..=max_y {
+                        for x in min_x..=max_x {
+                            let p = vector![x, y];
+                            let color = if p == start {
+                                Rgb([0x00, 0xc6, 0x00])
+                            } else if path.contains(&p) {
+                                Rgb([0x00, 0xc6, 0x00])
+                            } else if p == end {
+                                Rgb([0xc6, 0xc6, 0x00])
+                            } else {
+                                match blizzards[b].get(&p) {
+                                    Some(Tile::Wall) => Rgb([0x1e, 0x1e, 0x1e]),
+                                    Some(Tile::Blizzard(_)) => Rgb([0xad, 0xbc, 0xd6]),
+                                    None => Rgb([0xef, 0xef, 0xef]),
+                                }
+                            };
+                            draw_point(&mut img, p, color)
+                        }
+                    }
+                    img.save(dir.join(format!("{:04}.png", t))).unwrap();
+                }
+
                 return tick + 1;
             }
             if next.y < min_y || next.y > max_y || next.x < min_x || next.x > max_x {
                 continue;
             }
             if !blizzards[b].contains_key(&next) {
-                q.push_back((next, tick + 1));
+                let mut path = path.clone();
+                path.push(next);
+                q.push_back((path, tick + 1));
             }
         }
         if !blizzards[b].contains_key(&pos) {
-            q.push_back((pos, tick + 1));
+            let mut path = path.clone();
+            path.push(pos);
+            q.push_back((path, tick + 1));
         }
     }
     panic!("no path found")
@@ -149,6 +216,7 @@ fn part1((start, end, map): (Vector2, Vector2, HashMap<Vector2, Tile>)) -> usize
 }
 
 fn part2((start, end, map): (Vector2, Vector2, HashMap<Vector2, Tile>)) -> usize {
+    return 0;
     let (bz, bounds) = blizzards(map);
     let t1 = shortest(&bz, bounds, start, end, 0);
     let t2 = shortest(&bz, bounds, end, start, t1);
