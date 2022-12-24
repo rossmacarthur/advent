@@ -1,161 +1,100 @@
 use advent::prelude::*;
 
-fn parse_input(input: &str) -> (Vector2, Vector2, HashMap<Vector2, Tile>) {
-    let map: HashMap<_, _> = parse_map(input, |c| match c {
+fn parse_input(input: &str) -> (Vector2, Vector2, i64, HashSet<Vector3>) {
+    #[derive(Clone, Copy)]
+    enum Tile {
+        Clear,
+        Wall,
+        Blizzard([i64; 2]),
+    }
+
+    let raw: HashMap<_, _> = parse_map(input, |c| match c {
         '.' => Tile::Clear,
         '#' => Tile::Wall,
-        '>' => Tile::Blizzard(vector![1, 0]),
-        '<' => Tile::Blizzard(vector![-1, 0]),
-        '^' => Tile::Blizzard(vector![0, -1]),
-        'v' => Tile::Blizzard(vector![0, 1]),
+        '>' => Tile::Blizzard([1, 0]),
+        '<' => Tile::Blizzard([-1, 0]),
+        '^' => Tile::Blizzard([0, -1]),
+        'v' => Tile::Blizzard([0, 1]),
         _ => panic!("unexpected character `{c}`"),
     });
 
+    let max_x = raw.keys().map(|p| p.x).max().unwrap();
+    let max_y = raw.keys().map(|p| p.y).max().unwrap();
+    let cycle = lcm(max_x - 1, max_y - 1);
+
     // Find the starting and ending points
-    let (min_y, max_y) = map.keys().map(|p| p.y).minmax().into_option().unwrap();
-    let mut start = vector![-1, -1];
-    let mut end = vector![-1, -1];
-    for (&p, t) in &map {
-        if matches!(t, Tile::Clear) {
-            if p.y == min_y {
-                start = p;
-            }
-            if p.y == max_y {
-                end = p;
-            }
-        }
-    }
+    let start = raw
+        .iter()
+        .find_map(|(&p, tile)| (p.y == 0 && matches!(tile, Tile::Clear)).some(p))
+        .unwrap();
+    let end = raw
+        .iter()
+        .find_map(|(&p, tile)| (p.y == max_y && matches!(tile, Tile::Clear)).some(p))
+        .unwrap();
 
-    (start, end, map)
-}
+    // All points on the map
+    let base: HashSet<_> = iproduct!(0..=max_x, 0..=max_y, 0..cycle)
+        .map(|(x, y, z)| vector![x, y, z])
+        .collect();
 
-fn default_input() -> (Vector2, Vector2, HashMap<Vector2, Tile>) {
-    parse_input(include_str!("input/24.txt"))
-}
-
-#[derive(Clone, Copy)]
-enum Tile {
-    Clear,
-    Wall,
-    Blizzard(Vector2),
-}
-
-#[derive(Debug, Clone, PartialEq, Eq)]
-enum TileMulti {
-    Wall,
-    Blizzards(Vec<Vector2>),
-}
-
-/// Returns the next blizzard state for the given blizzard state.
-fn next_state(map: &HashMap<Vector2, TileMulti>, bounds: [i64; 4]) -> HashMap<Vector2, TileMulti> {
-    let [min_x, max_x, min_y, max_y] = bounds;
-    let mut next: HashMap<Vector2, TileMulti> = HashMap::new();
-    for (&p, t) in map {
-        match t {
-            TileMulti::Wall => {
-                next.insert(p, TileMulti::Wall);
-            }
-            TileMulti::Blizzards(bs) => {
-                for &b in bs {
-                    let mut n = p + b;
-                    if n.x == min_x {
-                        n.x = max_x - 1;
-                    } else if n.x == max_x {
-                        n.x = min_x + 1;
-                    }
-                    if n.y == min_y {
-                        n.y = max_y - 1;
-                    } else if n.y == max_y {
-                        n.y = min_y + 1;
-                    }
-                    match next
-                        .entry(n)
-                        .or_insert_with(|| TileMulti::Blizzards(Vec::new()))
-                    {
-                        TileMulti::Blizzards(bs) => bs.push(b),
-                        _ => unreachable!(),
-                    }
-                }
-            }
-        }
-    }
-    next
-}
-
-/// Generates all clear points for every tick.
-fn clear_maps(map: HashMap<Vector2, Tile>) -> Vec<HashSet<Vector2>> {
-    let (min_x, max_x) = map.keys().map(|p| p.x).minmax().into_option().unwrap();
-    let (min_y, max_y) = map.keys().map(|p| p.y).minmax().into_option().unwrap();
-    let bounds = [min_x, max_x, min_y, max_y];
-
-    let mut maps: Vec<HashSet<Vector2>> = Vec::new();
-
-    let start: HashMap<_, _> = map
-        .into_iter()
-        .filter_map(|(p, t)| {
-            let t = match t {
-                Tile::Clear => return None,
-                Tile::Wall => TileMulti::Wall,
-                Tile::Blizzard(bz) => TileMulti::Blizzards(vec![bz]),
-            };
-            Some((p, t))
+    // All unnavigatable points
+    let blizzard: HashSet<_> = (0..cycle)
+        .flat_map(|t| {
+            raw.iter().filter_map(move |(&p, tile)| match tile {
+                Tile::Clear => None,
+                Tile::Wall => Some(with_z(p, t)),
+                Tile::Blizzard([dx, dy]) => Some(vector![
+                    (p.x + t * dx - 1).rem_euclid(max_x - 1) + 1,
+                    (p.y + t * dy - 1).rem_euclid(max_y - 1) + 1,
+                    t,
+                ]),
+            })
         })
         .collect();
 
-    let mut blizzard = start.clone();
-    loop {
-        // Convert the map of blizzards to a set of clear points instead
-        let clear = iproduct!(min_x..=max_x, min_y..=max_y)
-            .filter_map(|(x, y)| {
-                let p = vector![x, y];
-                (!blizzard.contains_key(&p)).some(p)
-            })
-            .collect();
-        maps.push(clear);
-        let next = next_state(&blizzard, bounds);
-        if next == start {
-            break;
-        }
-        blizzard = next;
-    }
-    maps
+    let map = base.difference(&blizzard).copied().collect();
+
+    (start, end, cycle, map)
+}
+
+fn default_input() -> (Vector2, Vector2, i64, HashSet<Vector3>) {
+    parse_input(include_str!("input/24.txt"))
+}
+
+fn with_z(p: Vector2, z: i64) -> Vector3 {
+    vector![p.x, p.y, z]
 }
 
 /// Finds the shortest path across the map
-fn shortest(maps: &[HashSet<Vector2>], start: Vector2, end: Vector2, tick: usize) -> usize {
-    let mut q = VecDeque::from([(start, tick)]);
+fn shortest(map: &HashSet<Vector3>, cycle: i64, start: Vector3, end: Vector2) -> i64 {
+    let mut q = VecDeque::from([start]);
     let mut visited = HashSet::new();
-    while let Some((pos, tick)) = q.pop_front() {
-        if !visited.insert((pos, tick)) {
+    while let Some(pos) = q.pop_front() {
+        if !visited.insert(pos) {
             continue;
         }
-        if pos == end {
-            return tick;
+        if pos.x == end.x && pos.y == end.y {
+            return pos.z;
         }
-        let available = &maps[(tick + 1) % maps.len()];
-        for d in vectors!([0, -1], [-1, 0], [0, 1], [1, 0]) {
+        for d in vectors!([0, 0, 1], [0, -1, 1], [-1, 0, 1], [0, 1, 1], [1, 0, 1]) {
             let next = pos + d;
-            if available.contains(&next) {
-                q.push_back((next, tick + 1));
+            if map.contains(&vector![next.x, next.y, next.z % cycle]) {
+                q.push_back(next);
             }
-        }
-        if available.contains(&pos) {
-            q.push_back((pos, tick + 1));
         }
     }
     panic!("no path found")
 }
 
-fn part1((start, end, map): (Vector2, Vector2, HashMap<Vector2, Tile>)) -> usize {
-    let maps = clear_maps(map);
-    shortest(&maps, start, end, 0)
+fn part1((start, end, cycle, maps): (Vector2, Vector2, i64, HashSet<Vector3>)) -> i64 {
+    shortest(&maps, cycle, with_z(start, 0), end)
 }
 
-fn part2((start, end, map): (Vector2, Vector2, HashMap<Vector2, Tile>)) -> usize {
-    let maps = clear_maps(map);
-    let t1 = shortest(&maps, start, end, 0);
-    let t2 = shortest(&maps, end, start, t1);
-    shortest(&maps, start, end, t2)
+fn part2((start, end, cycle, maps): (Vector2, Vector2, i64, HashSet<Vector3>)) -> i64 {
+    let t1 = shortest(&maps, cycle, with_z(start, 0), end);
+    let t2 = shortest(&maps, cycle, with_z(end, t1), start);
+    let t3 = shortest(&maps, cycle, with_z(start, t2), end);
+    t3
 }
 
 fn main() {
