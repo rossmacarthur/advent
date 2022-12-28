@@ -33,7 +33,7 @@ where
             return steps;
         }
         let curr = map[&p];
-        for d in vectors![[0, -1], [-1, 0], [0, 1], [1, 0]] {
+        for d in vectors!([0, -1], [-1, 0], [0, 1], [1, 0]) {
             let next = p + d;
             if let Some(&elev) = map.get(&next) {
                 if elev.saturating_sub(curr) <= 1 {

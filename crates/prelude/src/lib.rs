@@ -17,7 +17,7 @@ pub type Vector3 = vectrix::Vector<i64, 3>;
 
 #[macro_export]
 macro_rules! vectors {
-    ($([$($e:expr),+]),+) => {
+    ($([$($e:expr),+]),+ $(,)?) => {
         [$($crate::vector![$($e,)+],)+]
     };
 }

@@ -35,7 +35,7 @@ fn solve(mut cave: HashSet<Vector2>, part2: bool) -> usize {
     let mut count = 0;
     while let Some(sand) = flowing.last().copied() {
         // Check if there is air in any of the following directions
-        match vectors![[0, 1], [-1, 1], [1, 1]]
+        match vectors!([0, 1], [-1, 1], [1, 1])
             .into_iter()
             .map(|d| sand + d)
             .find_map(|p| (!cave.contains(&p)).some(p))
