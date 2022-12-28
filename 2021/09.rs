@@ -11,11 +11,7 @@ fn default_input() -> HashMap<Vector2, i64> {
     parse_input(include_str!("input/09.txt"))
 }
 
-const NORTH: Vector2 = vector![0, -1];
-const SOUTH: Vector2 = vector![0, 1];
-const WEST: Vector2 = vector![-1, 0];
-const EAST: Vector2 = vector![1, 0];
-const CARDINALS: [Vector2; 4] = [NORTH, SOUTH, WEST, EAST];
+const CARDINALS: [Vector2; 4] = vectors!([0, -1], [0, 1], [-1, 0], [1, 0]);
 
 fn low_points(map: &HashMap<Vector2, i64>) -> impl Iterator<Item = (Vector2, i64)> + '_ {
     map.iter()

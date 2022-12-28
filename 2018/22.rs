@@ -20,11 +20,7 @@ enum Tool {
     ClimbingGear = 2,
 }
 
-const UP: Vector2 = vector![0, -1];
-const LEFT: Vector2 = vector![-1, 0];
-const DOWN: Vector2 = vector![0, 1];
-const RIGHT: Vector2 = vector![1, 0];
-const DIRECTIONS: [Vector2; 4] = [UP, DOWN, LEFT, RIGHT];
+const DIRECTIONS: [Vector2; 4] = vectors!([0, -1], [0, 1], [-1, 0], [1, 0]);
 
 fn region(erosion_level: i64) -> Region {
     match erosion_level.rem_euclid(3) {

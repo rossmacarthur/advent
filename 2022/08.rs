@@ -8,11 +8,7 @@ fn default_input() -> HashMap<Vector2, u8> {
     parse_input(include_str!("input/08.txt"))
 }
 
-const NORTH: Vector2 = vector![0, 1];
-const EAST: Vector2 = vector![1, 0];
-const SOUTH: Vector2 = vector![0, -1];
-const WEST: Vector2 = vector![-1, 0];
-const CARDINALS: [Vector2; 4] = [NORTH, EAST, SOUTH, WEST];
+const CARDINALS: [Vector2; 4] = vectors!([0, -1], [0, 1], [-1, 0], [1, 0]);
 
 fn part1(map: HashMap<Vector2, u8>) -> usize {
     map.iter()

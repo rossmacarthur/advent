@@ -68,11 +68,7 @@ fn default_input() -> HashMap<Vector2, Tile> {
     parse_input(include_str!("input/20.txt"))
 }
 
-const NORTH: Vector2 = vector![0, 1];
-const EAST: Vector2 = vector![1, 0];
-const SOUTH: Vector2 = vector![0, -1];
-const WEST: Vector2 = vector![-1, 0];
-const CARDINALS: [Vector2; 4] = [NORTH, EAST, SOUTH, WEST];
+const CARDINALS: [Vector2; 4] = vectors!([0, 1], [1, 0], [0, -1], [-1, 0]);
 
 #[derive(Debug, Clone, Copy, PartialEq)]
 enum Tile {

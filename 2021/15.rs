@@ -11,12 +11,6 @@ fn default_input() -> HashMap<Vector2, i64> {
     parse_input(include_str!("input/15.txt"))
 }
 
-const NORTH: Vector2 = vector![0, -1];
-const SOUTH: Vector2 = vector![0, 1];
-const WEST: Vector2 = vector![-1, 0];
-const EAST: Vector2 = vector![1, 0];
-const CARDINALS: [Vector2; 4] = [NORTH, SOUTH, WEST, EAST];
-
 fn solve(map: HashMap<Vector2, i64>) -> i64 {
     let start = vector![0, 0];
     let end = vector![
@@ -31,7 +25,7 @@ fn solve(map: HashMap<Vector2, i64>) -> i64 {
         if !visited.insert(p) {
             continue;
         }
-        for d in CARDINALS {
+        for d in vectors!([0, -1], [0, 1], [-1, 0], [1, 0]) {
             let next = p + d;
             if let Some(r) = map.get(&next) {
                 if next == end {

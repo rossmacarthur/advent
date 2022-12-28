@@ -11,16 +11,16 @@ fn default_input() -> HashMap<Vector2, i64> {
     parse_input(include_str!("input/11.txt"))
 }
 
-const CARDINALS: [Vector2; 8] = [
-    vector![0, 1],
-    vector![-1, 1],
-    vector![-1, 0],
-    vector![-1, -1],
-    vector![0, -1],
-    vector![1, -1],
-    vector![1, 0],
-    vector![1, 1],
-];
+const CARDINALS: [Vector2; 8] = vectors!(
+    [0, 1],
+    [-1, 1],
+    [-1, 0],
+    [-1, -1],
+    [0, -1],
+    [1, -1],
+    [1, 0],
+    [1, 1],
+);
 
 fn step(map: &mut HashMap<Vector2, i64>) -> usize {
     // Increase all energy levels

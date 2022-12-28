@@ -16,16 +16,16 @@ fn default_input() -> Grid {
     parse_input(include_str!("input/11.txt"))
 }
 
-const DIRECTIONS: [Vector2; 8] = [
-    vector![-1, -1],
-    vector![-1, 0],
-    vector![-1, 1],
-    vector![0, -1],
-    vector![0, 1],
-    vector![1, -1],
-    vector![1, 0],
-    vector![1, 1],
-];
+const DIRECTIONS: [Vector2; 8] = vectors!(
+    [-1, -1],
+    [-1, 0],
+    [-1, 1],
+    [0, -1],
+    [0, 1],
+    [1, -1],
+    [1, 0],
+    [1, 1],
+);
 
 #[derive(Debug, Clone, Copy, PartialEq)]
 enum Tile {
