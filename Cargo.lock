@@ -312,7 +312,7 @@ dependencies = [
  "itermore",
  "itertools",
  "regex-macro",
- "some",
+ "then",
  "vectrix",
 ]
 
@@ -449,10 +449,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "some"
-version = "0.0.0"
-
-[[package]]
 name = "stride"
 version = "0.3.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -468,6 +464,10 @@ dependencies = [
  "quote",
  "unicode-ident",
 ]
+
+[[package]]
+name = "then"
+version = "0.0.0"
 
 [[package]]
 name = "thiserror"
