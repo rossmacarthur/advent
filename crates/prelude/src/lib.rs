@@ -9,7 +9,7 @@ pub use either::Either;
 pub use itermore::{IterArrayChunks, IterArrayCombinations, IterArrayWindows};
 pub use itertools::{iproduct, Itertools};
 pub use regex_macro::regex;
-pub use some::Some;
+pub use then::Some;
 pub use vectrix::{vector, Matrix, Vector};
 
 pub type Vector2 = vectrix::Vector<i64, 2>;
