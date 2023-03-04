@@ -11,4 +11,4 @@ itermore = { workspace = true }
 itertools = { workspace = true }
 regex-macro = { workspace = true }
 vectrix = { workspace = true }
-then = { path = "../then" }
+then = { version = "0.1.0", path = "../then" }
