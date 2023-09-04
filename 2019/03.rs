@@ -60,7 +60,6 @@ fn part2([p1, p2]: [Path; 2]) -> i64 {
     let distances2 = distances(&p2);
     keys(&distances1)
         .intersection(&keys(&distances2))
-        .into_iter()
         .map(|position| distances1[position] + distances2[position])
         .min()
         .unwrap()

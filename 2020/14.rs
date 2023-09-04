@@ -53,19 +53,17 @@ fn combinations(addr: i64, mask: &[u8]) -> Box<dyn Iterator<Item = i64>> {
     // The current bit in the address.
     let bit = 1 << (mask.len() - 1);
     // We recurse here to get the combinations of all the rest of the bits.
-    let addrs = combinations(addr, &mask[1..])
+    let addrs = combinations(addr, &mask[1..]).flat_map(move |addr| {
+        // For every combination, we return either one or two
+        // addresses dependending on the mask value.
+        match b {
+            b'0' => Either::Left([addr]),
+            b'1' => Either::Left([addr | bit]),
+            b'X' => Either::Right([addr, addr ^ bit]),
+            b => panic!("unexpected mask value `{b}`"),
+        }
         .into_iter()
-        .flat_map(move |addr| {
-            // For every combination, we return either one or two
-            // addresses dependending on the mask value.
-            match b {
-                b'0' => Either::Left([addr]),
-                b'1' => Either::Left([addr | bit]),
-                b'X' => Either::Right([addr, addr ^ bit]),
-                b => panic!("unexpected mask value `{b}`"),
-            }
-            .into_iter()
-        });
+    });
     Box::new(addrs)
 }
 
