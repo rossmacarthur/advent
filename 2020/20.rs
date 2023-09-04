@@ -134,11 +134,11 @@ fn assemble(tiles: HashMap<i64, Tile>) -> HashSet<Vector2> {
     // tile ids and tries every orientation of the tile until it matches the
     // provided predicate. If it does then it places the tile at the point.
     macro_rules! place {
-        (($i:expr, $j:expr), $ids:expr, where $pred:expr) => {{
+        (($i:expr, $j:expr), $ids:expr, where |$tile:ident| $pred:expr) => {{
             let (id, tile) = $ids
                 .filter(|id| !placed.contains(*id))
                 .flat_map(|id| orientations(tiles[id]).into_iter().map(move |t| (*id, t)))
-                .find(|(_, t)| $pred(*t))
+                .find(|(_, $tile)| $pred)
                 .unwrap();
             grid[$i][$j] = tile;
             placed.insert(id);
@@ -151,7 +151,7 @@ fn assemble(tiles: HashMap<i64, Tile>) -> HashSet<Vector2> {
     // Find the first corner and place it in the top left.
     place! {
         (0, 0), tiles.keys(),
-        where |tile: Tile| is_border(tile.left()) && is_border(tile.top())
+        where |tile| is_border(tile.left()) && is_border(tile.top())
     };
 
     // Now that we have the corner we can populate the rest of the first row
@@ -161,7 +161,7 @@ fn assemble(tiles: HashMap<i64, Tile>) -> HashSet<Vector2> {
         let prev = grid[i][j - 1].right();
         place! {
             (i, j), edges[&prev].iter(),
-            where |tile: Tile| tile.left() == prev && is_border(tile.top())
+            where |tile| tile.left() == prev && is_border(tile.top())
         };
     }
 
@@ -172,7 +172,7 @@ fn assemble(tiles: HashMap<i64, Tile>) -> HashSet<Vector2> {
         let above = grid[i - 1][j].bottom();
         place! {
             (i, j), edges[&above].iter(),
-            where |tile: Tile| tile.top() == above && is_border(tile.left())
+            where |tile| tile.top() == above && is_border(tile.left())
         };
     }
 
@@ -183,7 +183,7 @@ fn assemble(tiles: HashMap<i64, Tile>) -> HashSet<Vector2> {
         let above = grid[i - 1][j].bottom();
         place! {
             (i, j), edges[&prev].iter(),
-            where |tile: Tile| tile.left() == prev && tile.top() == above
+            where |tile| tile.left() == prev && tile.top() == above
         };
     }
 

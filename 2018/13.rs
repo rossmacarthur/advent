@@ -131,13 +131,13 @@ fn main() {
 #[test]
 fn example1() {
     let input = parse_input(
-        r#"/->-\
+        r"/->-\
 |   |  /----\
 | /-+--+-\  |
 | | |  | v  |
 \-+-/  \-+--/
   \------/
-"#,
+",
     );
     assert_eq!(part1(input), vector![7, 3]);
 }
@@ -145,14 +145,14 @@ fn example1() {
 #[test]
 fn example2() {
     let input = parse_input(
-        r#"/>-<\
+        r"/>-<\
 |   |
 | /<+-\
 | | | v
 \>+</ |
   |   ^
   \<->/
-"#,
+",
     );
     assert_eq!(part2(input), vector![6, 4]);
 }

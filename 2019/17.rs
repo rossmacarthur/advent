@@ -169,7 +169,7 @@ fn routine(moves: &[Move]) -> (String, Vec<String>) {
     let mut functions = Vec::new();
     let routine = "ABC"
         .chars()
-        .zip(routine.into_iter())
+        .zip(routine)
         .flat_map(|(name, (f, positions))| {
             functions.push(f.iter().map(|m| m.to_ascii()).join(","));
             positions.into_iter().map(move |p| (name, p))
