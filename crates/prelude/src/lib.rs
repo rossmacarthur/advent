@@ -14,6 +14,7 @@ pub use vectrix::{vector, Matrix, Vector};
 
 pub type Vector2 = vectrix::Vector<i64, 2>;
 pub type Vector3 = vectrix::Vector<i64, 3>;
+pub type Vector4 = vectrix::Vector<i64, 4>;
 
 #[macro_export]
 macro_rules! vectors {
