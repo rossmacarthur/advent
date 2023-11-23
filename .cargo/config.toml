@@ -1,5 +1,5 @@
 [alias]
-advent = ["run", "--package", "advent-cli", "--quiet", "--"]
+advent = ["run", "--release", "--package", "advent-cli", "--quiet", "--"]
 
 [env]
 CARGO_WORKSPACE_DIR = { value = "", relative = true }
