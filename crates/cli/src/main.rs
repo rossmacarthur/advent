@@ -60,7 +60,7 @@ fn main() -> Result<()> {
     match command {
         Command::Bench => bench(year, day, &args),
         Command::New => new(year, day),
-        Command::Open => open(year, day),
+        Command::Open => open(year, day, &args),
         Command::Run => run(year, day, &args),
         Command::Test => test(year, day, &args),
     }
@@ -161,9 +161,10 @@ fn new(year: u32, day: u32) -> Result<()> {
     Ok(())
 }
 
-fn open(year: u32, day: u32) -> Result<()> {
+fn open(year: u32, day: u32, args: &[String]) -> Result<()> {
     let url = format!("https://adventofcode.com/{year}/day/{day}");
-    open::with(url, "firefox")?;
+    let browser = args.get(0).map(|s| s.as_str()).unwrap_or("firefox");
+    open::with(url, browser)?;
     Ok(())
 }
 
