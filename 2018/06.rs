@@ -77,10 +77,11 @@ fn part2(points: Vec<Vector2>, limit: i64) -> i64 {
 }
 
 fn main() {
-    let mut run = advent::with(default_input);
-    run.part(part1);
-    run.part(|i| part2(i, 10_000));
-    run.finish();
+    let solution = advent::new(default_input)
+        .part(part1)
+        .part(|i| part2(i, 10_000))
+        .build();
+    solution.cli()
 }
 
 #[test]
