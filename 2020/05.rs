@@ -39,10 +39,8 @@ fn part2(mut ids: Vec<i64>) -> i64 {
 }
 
 fn main() {
-    let mut run = advent::with(default_input);
-    run.part(part1);
-    run.part(part2);
-    run.finish();
+    let solution = advent::new(default_input).part(part1).part(part2).build();
+    solution.cli()
 }
 
 #[test]

@@ -48,10 +48,11 @@ fn part2(input: Vec<i64>, invalid: i64) -> i64 {
 }
 
 fn main() {
-    let mut run = advent::with(default_input);
-    run.part(|i| part1(i, 25));
-    run.part(|i| part2(i, 70639851));
-    run.finish();
+    let solution = advent::new(default_input)
+        .part(|i| part1(i, 25))
+        .part(|i| part2(i, 70639851))
+        .build();
+    solution.cli()
 }
 
 #[test]
