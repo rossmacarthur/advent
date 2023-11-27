@@ -71,10 +71,8 @@ Then use the following as your main function.
 
 ```rust
 fn main() {
-    let mut run = advent::with(parse_input);
-    run.part(part1);
-    run.part(part2);
-    run.finish();
+    let solution = advent::new(parse_input).part(part1).part(part2).build();
+    solution.cli()
 }
 ```
 
@@ -84,10 +82,11 @@ fn main() {
 - Each part function takes `I` as an argument and returns something implementing
   `Display`.
 
-Finally, `finish()` will instantiate a command line interface and run the
-program. Ordinary runs will run each part once and output the answers. Passing
-`--bench` to the program will perform a benchmark. That's all! You're free to
-structure your program however else you want. See
+Finally, `cli()` will instantiate a command line interface and run the program.
+Ordinary runs will run each part once and output the answers. Passing `--bench`
+to the program will perform a benchmark.
+
+That's all! You're free to structure your program however else you want. See
 [template.rs](./crates/cli/src/template.rs) for the template I use or any of the
 solutions in this crate for an example.
 

@@ -36,9 +36,10 @@ fn main() {
         ("factor/2147483647", &factor, &[2147483647]),
         ("factor/19201644899", &factor, &[19201644899]),
     ];
-    let mut run = advent::new();
+    let mut b = advent::new(|| ());
     for (name, program, input) in benches {
-        run.named(name, move || bench(program.to_vec(), input));
+        b.named(name, move |_| bench(program.to_vec(), input));
     }
-    run.bench().print();
+    let solution = b.build();
+    solution.cli()
 }
