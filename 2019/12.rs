@@ -98,10 +98,11 @@ fn part2(mut moons: Vec<Moon>) -> i64 {
 }
 
 fn main() {
-    let mut run = advent::with(default_input);
-    run.part(|i| part1(i, 1000));
-    run.part(part2);
-    run.finish();
+    let solution = advent::new(default_input)
+        .part(|i| part1(i, 1000))
+        .part(part2)
+        .build();
+    solution.cli()
 }
 
 #[test]

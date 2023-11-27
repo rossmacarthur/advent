@@ -224,10 +224,11 @@ fn part2(layer: u32, n: usize) -> u32 {
 }
 
 fn main() {
-    let mut run = advent::with(default_input);
-    run.part(part1);
-    run.part(|i| part2(i, 200));
-    run.finish();
+    let solution = advent::new(default_input)
+        .part(part1)
+        .part(|i| part2(i, 200))
+        .build();
+    solution.cli()
 }
 
 #[test]
