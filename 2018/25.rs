@@ -51,9 +51,8 @@ fn part1(points: Vec<Vector4>) -> usize {
 }
 
 fn main() {
-    let mut run = advent::with(default_input);
-    run.part(part1);
-    run.finish();
+    let solution = advent::new(default_input).part(part1).build();
+    solution.cli()
 }
 
 #[test]

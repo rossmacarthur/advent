@@ -87,10 +87,11 @@ fn part2(instrs: Vec<(u8, u8)>, workers: usize, dt: usize) -> usize {
 }
 
 fn main() {
-    let mut run = advent::with(default_input);
-    run.part(part1);
-    run.part(|i| part2(i, 5, 60));
-    run.finish();
+    let solution = advent::new(default_input)
+        .part(part1)
+        .part(|i| part2(i, 5, 60))
+        .build();
+    solution.cli()
 }
 
 #[test]
