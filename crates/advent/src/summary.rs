@@ -79,7 +79,7 @@ fn print_bench_summary(parts: &[Bench]) {
         println!(
             "{}{:>width$}",
             Paint::new(name).bold(),
-            Paint::fixed(245, human::Samples::new(stats.samples)),
+            Paint::fixed(&human::Samples::new(stats.samples), 245),
             width = 46 - name.chars().count(),
         );
         let mean = human::Time::new(stats.mean);
@@ -90,15 +90,15 @@ fn print_bench_summary(parts: &[Bench]) {
             "  Time ({} ± {}):       {:>9} ± {:>9}",
             Paint::green("mean").bold(),
             Paint::green("σ"),
-            Paint::green(mean).bold(),
-            Paint::green(std_dev),
+            Paint::green(&mean).bold(),
+            Paint::green(&std_dev),
         );
         println!(
             "  Range ({} … {}):     {:>9} … {:>9}",
             Paint::cyan("min"),
             Paint::magenta("max"),
-            Paint::cyan(min),
-            Paint::magenta(max),
+            Paint::cyan(&min),
+            Paint::magenta(&max),
         );
     }
 }
@@ -116,9 +116,9 @@ fn print_run_summary(parts: &[Run]) {
         let width = 46_usize.saturating_sub(name.chars().count() + 2);
         println!(
             "{}: {:>width$}\n{}",
-            Paint::cyan(name).bold(),
-            Paint::fixed(245, format!("({})", human::Time::new(*elapsed))),
-            Paint::new(result).bold(),
+            Paint::cyan(&name).bold(),
+            Paint::fixed(&format!("({})", human::Time::new(*elapsed)), 245),
+            Paint::new(&result).bold(),
             width = width,
         );
     }
