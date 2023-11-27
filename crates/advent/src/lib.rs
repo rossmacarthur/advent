@@ -130,19 +130,6 @@ where
     }
 }
 
-/// Deprecated.
-#[doc(hidden)]
-pub fn with<'a, F, I>(parse: F) -> Builder<'a, I>
-where
-    F: Fn() -> I + UnwindSafe + 'a,
-{
-    Builder {
-        parse: Some(Box::new(parse)),
-        parse_ok: true,
-        parts: Vec::new(),
-    }
-}
-
 impl<'a, I> Builder<'a, I>
 where
     I: Clone + UnwindSafe,
@@ -194,12 +181,6 @@ where
             parse_ok,
             parts,
         }
-    }
-
-    /// Deprecated.
-    #[doc(hidden)]
-    pub fn finish(mut self) {
-        self.build().cli()
     }
 }
 
