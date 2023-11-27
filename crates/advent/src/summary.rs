@@ -55,6 +55,7 @@ pub struct Stats {
 }
 
 impl Summary {
+    /// Pretty prints the summary to stdout.
     pub fn print(&self) {
         match self {
             Self::Bench(parts) => print_bench_summary(parts),
@@ -62,10 +63,10 @@ impl Summary {
         }
     }
 
+    /// Prints the summary as JSON to stdout.
     #[cfg(feature = "json")]
-    pub fn print_json(&self) {
-        let s = serde_json::to_string(self).unwrap();
-        println!("{}", s);
+    pub fn print_json(&self) -> serde_json::Result<()> {
+        serde_json::to_writer(std::io::BufWriter::new(std::io::stdout()), self)
     }
 }
 

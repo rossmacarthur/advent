@@ -1,4 +1,5 @@
-//! This crate contains a runner and benchmarker for Advent of Code solutions.
+//! This crate contains a runner and benchmarker for Advent of Code solutions
+//! with free Christmas trees 🎄.
 //!
 //! # Getting started
 //!
@@ -10,20 +11,14 @@
 //!
 //! Then use the following as your main function.
 //!
-//! ```ignore
-//! fn main() {
-//!     let mut run = advent::with(parse_input);
-//!     run.part(part1);
-//!     run.part(part2);
-//!     run.finish();
-//! }
 //! ```
-//!
-//! They can be enabled in your Cargo manifest like this:
-//!
-//! ```toml
-//! [dependencies]
-//! advent = { git = "https://github.com/rossmacarthur/advent", features = ["festive", "json"] }
+//! # fn parse_input() { }
+//! # fn part1(_: ()) -> String { todo!() }
+//! # fn part2(_: ()) -> String { todo!() }
+//! fn main() {
+//!     let solution = advent::new(parse_input).part(part1).part(part2).build();
+//!     solution.cli()
+//! }
 //! ```
 //!
 //! **Where**
@@ -33,10 +28,11 @@
 //! - Each part function takes `I` as an argument and returns something
 //!   implementing `Display`.
 //!
-//! Finally, `finish()` will instantiate a command line interface and run the
+//! Finally, `cli()` will instantiate a command line interface and run the
 //! program. Ordinary runs will run each part once and output the answers.
-//! Passing `--bench` to the program will perform a benchmark. That's all!
-//! You're free to structure your program however else you want.
+//! Passing `--bench` to the program will perform a benchmark.
+//!
+//! ✨ That's all! You're free to structure your program however else you want.
 //!
 //! # Features
 //!
@@ -47,7 +43,7 @@
 //! - **`json`** supports JSON output using `--output json`, useful for
 //!   collecting benchmark information
 //! - **`prelude`** re-exports my prelude crate that can be imported using
-//!   ```rust
+//!   ```
 //!   use advent::prelude::*;
 //!   ```
 //!
@@ -96,77 +92,130 @@ use crate::summary::{Bench, Run, Summary};
 type FnParse<'a, I> = Box<dyn Fn() -> I + 'a>;
 type FnPart<'a, I> = Box<dyn Fn(I) -> Box<dyn Display + 'a> + UnwindSafe + 'a>;
 
-/// A runner and benchmarker for an Advent of Code solution.
-pub struct Advent<'a, I> {
-    parse: FnParse<'a, I>,
+/// A builder for a [`Solution`].
+#[must_use]
+pub struct Builder<'a, I> {
+    parse: Option<FnParse<'a, I>>,
     parse_ok: bool,
     parts: Vec<(Option<String>, FnPart<'a, I>)>,
 }
 
-#[doc(hidden)]
-pub fn new<'a>() -> Advent<'a, ()> {
-    Advent {
-        parse: Box::new(|| ()),
-        parse_ok: false,
-        parts: Vec::new(),
-    }
+/// A runner and benchmarker for an Advent of Code solution.
+///
+/// Constructed using [`advent::new`][crate::new].
+#[must_use]
+pub struct Solution<'a, I> {
+    parse: FnParse<'a, I>,
+    parse_ok: bool,
+    parts: Vec<(String, FnPart<'a, I>)>,
 }
 
-/// Starts a new Advent of Code run or benchmark with the given input function.
+/// Returns a new builder for a new Advent of Code run or benchmark using the
+/// given parse function.
 ///
 /// # Examples
 ///
-/// ```ignore
-/// let run = advent::with(parse_input);
 /// ```
-pub fn with<'a, F, I>(parse: F) -> Advent<'a, I>
+/// # fn parse_input() { }
+/// let solution = advent::new(parse_input);
+/// ```
+pub fn new<'a, F, I>(parse: F) -> Builder<'a, I>
 where
     F: Fn() -> I + UnwindSafe + 'a,
 {
-    Advent {
-        parse: Box::new(parse),
+    Builder {
+        parse: Some(Box::new(parse)),
         parse_ok: true,
         parts: Vec::new(),
     }
 }
 
-impl<'a, I> Advent<'a, I>
+/// Deprecated.
+#[doc(hidden)]
+pub fn with<'a, F, I>(parse: F) -> Builder<'a, I>
+where
+    F: Fn() -> I + UnwindSafe + 'a,
+{
+    Builder {
+        parse: Some(Box::new(parse)),
+        parse_ok: true,
+        parts: Vec::new(),
+    }
+}
+
+impl<'a, I> Builder<'a, I>
 where
     I: Clone + UnwindSafe,
 {
     /// Adds a part to run or benchmark.
     ///
     /// The closure must take the parsed input as a parameter and return a
-    /// result that implements [`Display`]. The given function is simply stored.
-    /// Nothing will happen until [`finish()`][Advent::finish] is called.
-    pub fn part<F, R>(&mut self, f: F)
+    /// result that implements [`Display`].
+    pub fn part<F, R>(&mut self, f: F) -> &mut Self
     where
         R: Display + 'a,
         F: Fn(I) -> R + UnwindSafe + 'a,
     {
-        self.parts.push((None, Box::new(move |i| Box::new(f(i)))))
+        self.parts.push((None, Box::new(move |i| Box::new(f(i)))));
+        self
     }
 
+    /// Adds a named part to run or benchmark.
+    ///
+    /// The closure must take the parsed input as a parameter and return a
+    /// result that implements [`Display`].
     #[doc(hidden)]
-    pub fn named<F, R>(&mut self, name: &str, f: F)
+    pub fn named<F, R>(&mut self, name: &str, f: F) -> &mut Self
     where
         R: Display + 'a,
-        F: Fn() -> R + UnwindSafe + 'a,
+        F: Fn(I) -> R + UnwindSafe + 'a,
     {
         let name = Some(String::from(name));
-        self.parts.push((name, Box::new(move |_| Box::new(f()))))
+        self.parts.push((name, Box::new(move |i| Box::new(f(i)))));
+        self
     }
 
+    /// Consumes the builder and produces a solution which can either be run or
+    /// benchmarked.
+    pub fn build(&mut self) -> Solution<'a, I> {
+        let parse = self.parse.take().expect("expected input");
+        let parse_ok = self.parse_ok;
+        let parts = self
+            .parts
+            .drain(..)
+            .enumerate()
+            .map(|(i, (name, f))| {
+                let name = name.unwrap_or_else(|| format!("Part {}", i + 1));
+                (name, f)
+            })
+            .collect();
+        Solution {
+            parse,
+            parse_ok,
+            parts,
+        }
+    }
+
+    /// Deprecated.
+    #[doc(hidden)]
+    pub fn finish(mut self) {
+        self.build().cli()
+    }
+}
+
+impl<'a, I> Solution<'a, I>
+where
+    I: Clone + UnwindSafe,
+{
     /// Consumes this struct and runs the parts.
-    #[must_use]
     pub fn run(self) -> Summary {
+        let Self { parse, parts, .. } = self;
+
         let mut runs = Vec::new();
 
-        let input = (self.parse)();
-
         // Time each part
-        for (i, (name, f)) in self.parts.into_iter().enumerate() {
-            let name = name.unwrap_or_else(|| format!("Part {}", i + 1));
+        let input = (parse)();
+        for (name, f) in parts {
             let input = input.clone();
 
             let (result, elapsed) = {
@@ -194,11 +243,17 @@ where
     /// Consumes this struct and benchmarks the parts.
     #[must_use]
     pub fn bench(self) -> Summary {
+        let Self {
+            parse,
+            parse_ok,
+            parts,
+        } = self;
+
         let mut benches = Vec::new();
 
         // Benchmark the parsing
-        if self.parse_ok {
-            let stats = bench(&self.parse);
+        if parse_ok {
+            let stats = bench(&parse);
             benches.push(Bench {
                 name: "Parse".to_owned(),
                 stats,
@@ -206,9 +261,8 @@ where
         }
 
         // Benchmark each part
-        let input = (self.parse)();
-        for (i, (name, f)) in self.parts.into_iter().enumerate() {
-            let name = name.unwrap_or_else(|| format!("Part {}", i + 1));
+        let input = (parse)();
+        for (name, f) in parts {
             let stats = bench_with_input(input.clone(), &f);
             benches.push(Bench { name, stats });
         }
@@ -217,7 +271,7 @@ where
     }
 
     /// Parses the command line arguments and executes the run or benchmark.
-    pub fn finish(self) {
+    pub fn cli(self) {
         let Opt { bench, output } = argh::from_env();
 
         #[cfg(feature = "festive")]
@@ -239,7 +293,7 @@ where
 
         match output {
             #[cfg(feature = "json")]
-            Output::Json => summary.print_json(),
+            Output::Json => summary.print_json().expect("failed to print json"),
             _ => summary.print(),
         }
     }
@@ -286,7 +340,7 @@ struct Opt {
     /// whether to benchmark
     #[argh(switch)]
     bench: bool,
-    /// the output style
+    /// the output style (boring, festive, json)
     #[argh(option, default = "default_output()")]
     output: Output,
 }
