@@ -8,7 +8,7 @@ fn parse_input(input: &str) -> Vec<Vec<HashSet<char>>> {
 }
 
 fn default_input() -> Vec<Vec<HashSet<char>>> {
-    parse_input(include_str!("input/06.txt"))
+    parse_input(include_input!(2020 / 06))
 }
 
 fn part1(input: Vec<Vec<HashSet<char>>>) -> usize {

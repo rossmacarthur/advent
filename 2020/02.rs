@@ -13,7 +13,7 @@ fn parse_input(s: &str) -> Vec<Element<'_>> {
 }
 
 fn default_input() -> Vec<Element<'static>> {
-    parse_input(include_str!("input/02.txt"))
+    parse_input(include_input!(2020 / 02))
 }
 
 #[derive(Debug, Clone)]

@@ -21,7 +21,7 @@ fn parse_input(input: &str) -> Vec<i64> {
 }
 
 fn default_input() -> Vec<i64> {
-    parse_input(include_str!("input/05.txt"))
+    parse_input(include_input!(2020 / 05))
 }
 
 fn part1(ids: Vec<i64>) -> i64 {

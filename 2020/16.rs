@@ -33,7 +33,7 @@ fn parse_input(input: &str) -> (Vec<Rule<'_>>, Ticket, Vec<Ticket>) {
 }
 
 fn default_input() -> (Vec<Rule<'static>>, Ticket, Vec<Ticket>) {
-    parse_input(include_str!("input/16.txt"))
+    parse_input(include_input!(2020 / 16))
 }
 
 #[derive(Debug, Clone, PartialEq, Eq, Hash)]

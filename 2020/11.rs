@@ -13,7 +13,7 @@ fn parse_input(input: &str) -> Grid {
 }
 
 fn default_input() -> Grid {
-    parse_input(include_str!("input/11.txt"))
+    parse_input(include_input!(2020 / 11))
 }
 
 const DIRECTIONS: [Vector2; 8] = vectors!(

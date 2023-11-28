@@ -20,7 +20,7 @@ fn parse_input(input: &str) -> Vec<Vec<Token>> {
 }
 
 fn default_input() -> Vec<Vec<Token>> {
-    parse_input(include_str!("input/18.txt"))
+    parse_input(include_input!(2020 / 18))
 }
 
 #[derive(Debug, Clone)]

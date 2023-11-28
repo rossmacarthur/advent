@@ -27,7 +27,7 @@ fn parse_input(input: &str) -> HashMap<i64, Tile> {
 }
 
 fn default_input() -> HashMap<i64, Tile> {
-    parse_input(include_str!("input/20.txt"))
+    parse_input(include_input!(2020 / 20))
 }
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]

@@ -8,7 +8,7 @@ fn parse_input(input: &str) -> Vec<String> {
 }
 
 fn default_input() -> Vec<String> {
-    parse_input(include_str!("input/04.txt"))
+    parse_input(include_input!(2020 / 04))
 }
 
 fn part1(input: Vec<String>) -> usize {

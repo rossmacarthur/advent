@@ -40,7 +40,7 @@ fn parse_input(input: &str) -> (HashMap<u8, Rule>, Vec<&str>) {
 }
 
 fn default_input() -> (HashMap<u8, Rule>, Vec<&'static str>) {
-    parse_input(include_str!("input/19.txt"))
+    parse_input(include_input!(2020 / 19))
 }
 
 #[derive(Clone)]

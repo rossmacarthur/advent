@@ -4,7 +4,7 @@ type Vector<const N: usize> = vectrix::Vector<i64, N>;
 type State<const N: usize> = HashSet<Vector<N>>;
 
 fn default_input() -> HashSet<Vector<2>> {
-    parse_map_set(include_str!("input/17.txt"))
+    parse_map_set(include_input!(2020 / 17))
 }
 
 fn neighbours<const N: usize>(cube: Vector<N>) -> impl Iterator<Item = Vector<N>> {

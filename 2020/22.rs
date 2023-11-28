@@ -9,7 +9,7 @@ fn parse_player(s: &str) -> VecDeque<usize> {
 }
 
 fn default_input() -> [VecDeque<usize>; 2] {
-    include_str!("input/22.txt")
+    include_input!(2020 / 22)
         .split("\n\n")
         .map(parse_player)
         .next_array()

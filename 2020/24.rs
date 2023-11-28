@@ -21,7 +21,7 @@ fn parse_input(s: &str) -> Vec<Vec<Vector2>> {
 }
 
 fn default_input() -> Vec<Vec<Vector2>> {
-    parse_input(include_str!("input/24.txt"))
+    parse_input(include_input!(2020 / 24))
 }
 
 fn neighbours(center: Vector2) -> Vec<Vector2> {

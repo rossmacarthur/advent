@@ -22,7 +22,7 @@ fn parse_input(input: &str) -> Bags<'_> {
 }
 
 fn default_input() -> Bags<'static> {
-    parse_input(include_str!("input/07.txt"))
+    parse_input(include_input!(2020 / 07))
 }
 
 fn contains(bags: &Bags<'_>, bag: &str) -> bool {

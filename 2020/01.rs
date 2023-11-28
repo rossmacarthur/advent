@@ -3,7 +3,7 @@ use advent::prelude::*;
 const SUM: i64 = 2020;
 
 fn default_input() -> Vec<i64> {
-    include_str!("input/01.txt")
+    include_input!(2020 / 01)
         .lines()
         .map(str::parse)
         .map(Result::unwrap)

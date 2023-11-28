@@ -1,7 +1,7 @@
 use advent::prelude::*;
 
 fn default_input() -> HashSet<Vector2> {
-    parse_map_set(include_str!("input/03.txt"))
+    parse_map_set(include_input!(2020 / 03))
 }
 
 fn count_trees(map: &HashSet<Vector2>, slope: Vector2) -> usize {

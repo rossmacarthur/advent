@@ -14,7 +14,7 @@ fn parse_input(input: &str) -> (i64, Vec<(i64, i64)>) {
 }
 
 fn default_input() -> (i64, Vec<(i64, i64)>) {
-    parse_input(include_str!("input/13.txt"))
+    parse_input(include_input!(2020 / 13))
 }
 
 fn part1((ts, bus_ids): (i64, Vec<(i64, i64)>)) -> i64 {

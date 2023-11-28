@@ -14,7 +14,7 @@ fn parse_input(input: &str) -> Vec<Food<'_>> {
 }
 
 fn default_input() -> Vec<Food<'static>> {
-    parse_input(include_str!("input/21.txt"))
+    parse_input(include_input!(2020 / 21))
 }
 
 #[derive(Debug, Clone)]

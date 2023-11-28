@@ -18,7 +18,7 @@ fn parse_input(input: &str) -> Vec<Instr<'_>> {
 }
 
 fn default_input() -> Vec<Instr<'static>> {
-    parse_input(include_str!("input/14.txt"))
+    parse_input(include_input!(2020 / 14))
 }
 
 const DEFAULT_MASK: &[u8] = b"XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX";
