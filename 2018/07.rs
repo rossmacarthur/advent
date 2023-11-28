@@ -12,7 +12,7 @@ fn parse_input(input: &str) -> Vec<(u8, u8)> {
 }
 
 fn default_input() -> Vec<(u8, u8)> {
-    parse_input(include_str!("input/07.txt"))
+    parse_input(include_input!(2018 / 07))
 }
 
 fn solve(instrs: Vec<(u8, u8)>, workers: usize, dt: usize) -> (String, usize) {

@@ -22,7 +22,7 @@ fn parse_input(input: &str) -> Vec<Segment> {
 }
 
 fn default_input() -> Vec<Segment> {
-    parse_input(include_str!("input/20.txt"))
+    parse_input(include_input!(2018 / 20))
 }
 
 #[derive(Clone)]

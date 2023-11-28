@@ -15,7 +15,7 @@ fn parse_input(input: &str) -> Vec<Vector4> {
 }
 
 fn default_input() -> Vec<Vector4> {
-    parse_input(include_str!("input/25.txt"))
+    parse_input(include_input!(2018 / 25))
 }
 
 fn part1(points: Vec<Vector4>) -> usize {

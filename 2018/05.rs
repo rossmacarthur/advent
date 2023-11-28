@@ -1,5 +1,7 @@
+use advent::prelude::*;
+
 fn default_input() -> &'static str {
-    include_str!("input/05.txt").trim()
+    include_input!(2018 / 05).trim()
 }
 
 fn reacts(a: u8, b: u8) -> bool {

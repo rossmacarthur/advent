@@ -1,9 +1,11 @@
+use advent::prelude::*;
+
 mod device;
 
 use device::{compute, parse_program, Program};
 
 fn default_input() -> Program {
-    parse_program(include_str!("input/19.txt"))
+    parse_program(include_input!(2018 / 19))
 }
 
 fn sum_of_divisors(n: usize) -> usize {

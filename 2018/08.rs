@@ -1,3 +1,5 @@
+use advent::prelude::*;
+
 fn parse_input(input: &str) -> Vec<usize> {
     input
         .split_whitespace()
@@ -7,7 +9,7 @@ fn parse_input(input: &str) -> Vec<usize> {
 }
 
 fn default_input() -> Vec<usize> {
-    parse_input(include_str!("input/08.txt"))
+    parse_input(include_input!(2018 / 08))
 }
 
 fn parse(mut data: &[usize]) -> (&[usize], usize, usize) {

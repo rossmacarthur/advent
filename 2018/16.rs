@@ -27,7 +27,7 @@ fn parse_input(input: &str) -> (Vec<Sample>, Vec<[usize; 4]>) {
 }
 
 fn default_input() -> (Vec<Sample>, Vec<[usize; 4]>) {
-    parse_input(include_str!("input/16.txt"))
+    parse_input(include_input!(2018 / 16))
 }
 
 #[derive(Debug, Clone)]

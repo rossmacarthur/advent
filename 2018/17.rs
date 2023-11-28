@@ -35,7 +35,7 @@ fn parse_input(input: &str) -> HashMap<Vector2, Tile> {
 }
 
 fn default_input() -> HashMap<Vector2, Tile> {
-    parse_input(include_str!("input/17.txt"))
+    parse_input(include_input!(2018 / 17))
 }
 
 const LEFT: Vector2 = vector![-1, 0];

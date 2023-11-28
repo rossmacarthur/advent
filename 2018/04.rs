@@ -27,7 +27,7 @@ fn parse_input(input: &str) -> Vec<(DateTime<'_>, Event)> {
 }
 
 fn default_input() -> Vec<(DateTime<'static>, Event)> {
-    parse_input(include_str!("input/04.txt"))
+    parse_input(include_input!(2018 / 04))
 }
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord)]

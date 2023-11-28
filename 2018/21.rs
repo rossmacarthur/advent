@@ -4,7 +4,7 @@ use advent::prelude::*;
 use device::{compute, parse_program, Program};
 
 fn default_input() -> Program {
-    parse_program(include_str!("input/21.txt"))
+    parse_program(include_input!(2018 / 21))
 }
 
 // If we check the instructions we can see that the only place that the first

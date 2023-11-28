@@ -10,7 +10,7 @@ fn parse_input(input: &str) -> (usize, usize) {
 }
 
 fn default_input() -> (usize, usize) {
-    parse_input(include_str!("input/09.txt"))
+    parse_input(include_input!(2018 / 09))
 }
 
 fn solve(players: usize, marbles: usize) -> usize {

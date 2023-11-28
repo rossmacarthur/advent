@@ -7,7 +7,7 @@ fn parse_input(input: &str) -> HashMap<Vector2, char> {
 }
 
 fn default_input() -> HashMap<Vector2, char> {
-    parse_input(include_str!("input/13.txt"))
+    parse_input(include_input!(2018 / 13))
 }
 
 enum Track {

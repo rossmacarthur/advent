@@ -17,7 +17,7 @@ fn parse_input(input: &str) -> Vec<(Vector3, i64)> {
 }
 
 fn default_input() -> Vec<(Vector3, i64)> {
-    parse_input(include_str!("input/23.txt"))
+    parse_input(include_input!(2018 / 23))
 }
 
 fn part1(nanobots: Vec<(Vector3, i64)>) -> usize {

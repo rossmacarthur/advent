@@ -30,7 +30,7 @@ fn parse_input(input: &str) -> (BTreeSet<i32>, Vec<i32>) {
 }
 
 fn default_input() -> (BTreeSet<i32>, Vec<i32>) {
-    parse_input(include_str!("input/12.txt"))
+    parse_input(include_input!(2018 / 12))
 }
 
 fn next(pots: BTreeSet<i32>, rules: &[i32]) -> BTreeSet<i32> {

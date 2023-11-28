@@ -20,7 +20,7 @@ fn parse_input(input: &str) -> Vec<Claim> {
 }
 
 fn default_input() -> Vec<Claim> {
-    parse_input(include_str!("input/03.txt"))
+    parse_input(include_input!(2018 / 03))
 }
 
 #[derive(Debug, Copy, Clone)]

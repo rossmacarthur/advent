@@ -66,7 +66,7 @@ fn parse_input(input: &str) -> Vec<Group> {
 }
 
 fn default_input() -> Vec<Group> {
-    parse_input(include_str!("input/24.txt"))
+    parse_input(include_input!(2018 / 24))
 }
 
 #[derive(Debug, Clone)]

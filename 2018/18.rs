@@ -17,7 +17,7 @@ fn parse_input<const N: usize>(input: &str) -> [u128; N] {
 }
 
 fn default_input() -> [u128; 50] {
-    parse_input(include_str!("input/18.txt"))
+    parse_input(include_input!(2018 / 18))
 }
 
 const OPEN: u128 = 0b00;
