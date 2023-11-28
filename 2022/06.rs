@@ -1,7 +1,7 @@
 use advent::prelude::*;
 
 fn default_input() -> &'static str {
-    include_str!("input/06.txt")
+    include_input!(2022 / 06)
 }
 
 fn detect(signal: &str, n: usize) -> usize {

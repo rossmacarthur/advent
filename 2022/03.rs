@@ -8,7 +8,7 @@ fn parse_input(input: &str) -> Vec<Vec<i64>> {
 }
 
 fn default_input() -> Vec<Vec<i64>> {
-    parse_input(include_str!("input/03.txt"))
+    parse_input(include_input!(2022 / 03))
 }
 
 fn priority(item: u8) -> i64 {

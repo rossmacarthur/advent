@@ -43,7 +43,7 @@ fn parse_input(input: &str) -> Vec<Valve> {
 }
 
 fn default_input() -> Vec<Valve> {
-    parse_input(include_str!("input/16.txt"))
+    parse_input(include_input!(2022 / 16))
 }
 
 type Graph = HashMap<usize, HashMap<usize, i64>>;

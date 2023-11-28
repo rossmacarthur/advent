@@ -13,7 +13,7 @@ fn parse_input(input: &str) -> Vec<Vector2> {
 }
 
 fn default_input() -> Vec<Vector2> {
-    parse_input(include_str!("input/17.txt"))
+    parse_input(include_input!(2022 / 17))
 }
 
 const DOWN: Vector2 = vector![0, -1];

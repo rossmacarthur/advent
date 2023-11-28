@@ -19,7 +19,7 @@ fn parse_input(input: &str) -> Vec<(Vector2, Vector2, i64)> {
 }
 
 fn default_input() -> Vec<(Vector2, Vector2, i64)> {
-    parse_input(include_str!("input/15.txt"))
+    parse_input(include_input!(2022 / 15))
 }
 
 /// Returns true if the given point is in range of any sensor.

@@ -26,7 +26,7 @@ fn parse_input(input: &str) -> HashMap<&str, Action<'_>> {
 }
 
 fn default_input() -> HashMap<&'static str, Action<'static>> {
-    parse_input(include_str!("input/21.txt"))
+    parse_input(include_input!(2022 / 21))
 }
 
 #[derive(Debug, Clone, Copy)]

@@ -39,7 +39,7 @@ fn parse_input(input: &str) -> Vec<Monkey> {
 }
 
 fn default_input() -> Vec<Monkey> {
-    parse_input(include_str!("input/11.txt"))
+    parse_input(include_input!(2022 / 11))
 }
 
 #[derive(Debug, Clone)]

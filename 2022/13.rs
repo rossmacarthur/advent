@@ -8,7 +8,7 @@ fn parse_input(input: &str) -> Vec<Packet> {
 }
 
 fn default_input() -> Vec<Packet> {
-    parse_input(include_str!("input/13.txt"))
+    parse_input(include_input!(2022 / 13))
 }
 
 #[derive(Clone, PartialEq, Eq)]

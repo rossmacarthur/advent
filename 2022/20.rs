@@ -1,9 +1,11 @@
+use advent::prelude::*;
+
 fn parse_input(input: &str) -> Vec<i64> {
     input.lines().map(str::parse).map(Result::unwrap).collect()
 }
 
 fn default_input() -> Vec<i64> {
-    parse_input(include_str!("input/20.txt"))
+    parse_input(include_input!(2022 / 20))
 }
 
 fn mix(file: Vec<i64>, times: usize) -> i64 {

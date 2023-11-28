@@ -16,7 +16,7 @@ fn parse_input(input: &str) -> (HashMap<Vector2, u8>, Vector2, Vector2) {
 }
 
 fn default_input() -> (HashMap<Vector2, u8>, Vector2, Vector2) {
-    parse_input(include_str!("input/12.txt"))
+    parse_input(include_input!(2022 / 12))
 }
 
 fn shortest<I>(map: &HashMap<Vector2, u8>, start: I, end: Vector2) -> usize

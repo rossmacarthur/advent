@@ -24,7 +24,7 @@ fn parse_input(input: &str) -> Vec<Blueprint> {
 }
 
 fn default_input() -> Vec<Blueprint> {
-    parse_input(include_str!("input/19.txt"))
+    parse_input(include_input!(2022 / 19))
 }
 
 const ORE: Vector4 = vector![1, 0, 0, 0];

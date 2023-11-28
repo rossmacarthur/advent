@@ -1,9 +1,11 @@
+use advent::prelude::*;
+
 fn parse_input(input: &str) -> Vec<i64> {
     input.lines().map(from_snafu).collect()
 }
 
 fn default_input() -> Vec<i64> {
-    parse_input(include_str!("input/25.txt"))
+    parse_input(include_input!(2022 / 25))
 }
 
 fn from_snafu(s: &str) -> i64 {

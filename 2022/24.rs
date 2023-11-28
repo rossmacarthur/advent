@@ -58,7 +58,7 @@ fn parse_input(input: &str) -> (Vector2, Vector2, i64, HashSet<Vector3>) {
 }
 
 fn default_input() -> (Vector2, Vector2, i64, HashSet<Vector3>) {
-    parse_input(include_str!("input/24.txt"))
+    parse_input(include_input!(2022 / 24))
 }
 
 fn with_z(p: Vector2, z: i64) -> Vector3 {

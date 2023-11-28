@@ -15,7 +15,7 @@ fn parse_input(input: &str) -> Vec<[i64; 4]> {
 }
 
 fn default_input() -> Vec<[i64; 4]> {
-    parse_input(include_str!("input/04.txt"))
+    parse_input(include_input!(2022 / 04))
 }
 
 fn part1(pairs: Vec<[i64; 4]>) -> usize {

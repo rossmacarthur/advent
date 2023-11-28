@@ -28,7 +28,7 @@ fn parse_input(input: &str) -> (HashMap<Vector2, Tile>, Vec<Instr>) {
 }
 
 fn default_input() -> (HashMap<Vector2, Tile>, Vec<Instr>) {
-    parse_input(include_str!("input/22.txt"))
+    parse_input(include_input!(2022 / 22))
 }
 
 #[derive(Debug, Clone, Copy)]

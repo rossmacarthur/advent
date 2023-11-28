@@ -23,7 +23,7 @@ fn parse_input(input: &str) -> HashSet<Vector2> {
 }
 
 fn default_input() -> HashSet<Vector2> {
-    parse_input(include_str!("input/14.txt"))
+    parse_input(include_input!(2022 / 14))
 }
 
 fn solve(mut cave: HashSet<Vector2>, part2: bool) -> usize {

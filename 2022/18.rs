@@ -13,7 +13,7 @@ fn parse_input(input: &str) -> HashSet<Vector3> {
 }
 
 fn default_input() -> HashSet<Vector3> {
-    parse_input(include_str!("input/18.txt"))
+    parse_input(include_input!(2022 / 18))
 }
 
 const DIRECTIONS: &[Vector3] = &vectors!(

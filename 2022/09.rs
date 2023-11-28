@@ -19,7 +19,7 @@ fn parse_input(input: &str) -> Vec<(Vector2, i64)> {
 }
 
 fn default_input() -> Vec<(Vector2, i64)> {
-    parse_input(include_str!("input/09.txt"))
+    parse_input(include_input!(2022 / 09))
 }
 
 fn solve<const N: usize>(cmds: Vec<(Vector2, i64)>) -> usize {

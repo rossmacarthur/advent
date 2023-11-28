@@ -5,7 +5,7 @@ fn parse_input(input: &str) -> HashSet<Vector2> {
 }
 
 fn default_input() -> HashSet<Vector2> {
-    parse_input(include_str!("input/23.txt"))
+    parse_input(include_input!(2022 / 23))
 }
 
 const N: Vector2 = vector![0, -1];

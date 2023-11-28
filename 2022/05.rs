@@ -37,7 +37,7 @@ fn parse_input(input: &str) -> (Vec<VecDeque<u8>>, Vec<Move>) {
 }
 
 fn default_input() -> (Vec<VecDeque<u8>>, Vec<Move>) {
-    parse_input(include_str!("input/05.txt"))
+    parse_input(include_input!(2022 / 05))
 }
 
 #[derive(Debug, Clone)]
