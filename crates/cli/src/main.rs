@@ -131,7 +131,10 @@ fn new(year: u32, day: u32) -> Result<()> {
     if bin.exists() {
         println!("• {bin_display} already exists");
     } else {
-        fs::write(&bin, TEMPLATE.replace("{day}", &format!("{day:02}")))?;
+        let rendered = TEMPLATE
+            .replace("{ year }", &format!("{year:04}"))
+            .replace("{ day }", &format!("{day:02}"));
+        fs::write(&bin, rendered)?;
         println!("• {bin_display} was created");
     }
 
