@@ -10,7 +10,7 @@ fn parse_input(input: &str) -> HashMap<Vector2, Tile> {
 }
 
 fn default_input() -> HashMap<Vector2, Tile> {
-    parse_input(include_str!("input/25.txt"))
+    parse_input(include_input!(2021 / 25))
 }
 
 #[derive(Debug, Clone, Copy)]

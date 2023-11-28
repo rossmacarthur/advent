@@ -10,7 +10,7 @@ fn parse_input(input: &str) -> (Vec<bool>, Image) {
 }
 
 fn default_input() -> (Vec<bool>, Image) {
-    parse_input(include_str!("input/20.txt"))
+    parse_input(include_input!(2021 / 20))
 }
 
 fn step(alg: &[bool], image: Image, is_odd: bool) -> Image {

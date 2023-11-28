@@ -18,7 +18,7 @@ fn parse_input(input: &str) -> Vec<(Vector2, Vector2)> {
 }
 
 fn default_input() -> Vec<(Vector2, Vector2)> {
-    parse_input(include_str!("input/05.txt"))
+    parse_input(include_input!(2021 / 05))
 }
 
 fn solve(input: impl Iterator<Item = (Vector2, Vector2)>) -> usize {

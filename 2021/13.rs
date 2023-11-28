@@ -26,7 +26,7 @@ fn parse_input(input: &str) -> (HashSet<Vector2>, Vec<Fold>) {
 }
 
 fn default_input() -> (HashSet<Vector2>, Vec<Fold>) {
-    parse_input(include_str!("input/13.txt"))
+    parse_input(include_input!(2021 / 13))
 }
 
 #[derive(Debug, Clone, Copy)]

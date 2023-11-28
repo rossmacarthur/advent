@@ -19,7 +19,7 @@ fn parse_input(input: &str) -> (&str, Rules) {
 }
 
 fn default_input() -> (&'static str, Rules) {
-    parse_input(include_str!("input/14.txt"))
+    parse_input(include_input!(2021 / 14))
 }
 
 fn solve(template: &str, rules: Rules, steps: usize) -> usize {

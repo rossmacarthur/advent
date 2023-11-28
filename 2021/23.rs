@@ -31,7 +31,7 @@ fn parse_input(input: &str) -> Map<2> {
 }
 
 fn default_input() -> Map<2> {
-    parse_input(include_str!("input/23.txt"))
+    parse_input(include_input!(2021 / 23))
 }
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash, PartialOrd, Ord)]

@@ -1,3 +1,5 @@
+use advent::prelude::*;
+
 fn parse_input(input: &str) -> Vec<(Command, i64)> {
     input
         .lines()
@@ -17,7 +19,7 @@ fn parse_input(input: &str) -> Vec<(Command, i64)> {
 }
 
 fn default_input() -> Vec<(Command, i64)> {
-    parse_input(include_str!("input/02.txt"))
+    parse_input(include_input!(2021 / 02))
 }
 
 #[derive(Debug, Clone, Copy)]

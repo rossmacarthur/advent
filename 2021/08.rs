@@ -1,5 +1,7 @@
 use std::ops::BitOr;
 
+use advent::prelude::*;
+
 fn parse_input(input: &str) -> Vec<(Vec<u32>, Vec<u32>)> {
     input
         .lines()
@@ -14,7 +16,7 @@ fn parse_input(input: &str) -> Vec<(Vec<u32>, Vec<u32>)> {
 }
 
 fn default_input() -> Vec<(Vec<u32>, Vec<u32>)> {
-    parse_input(include_str!("input/08.txt"))
+    parse_input(include_input!(2021 / 08))
 }
 
 fn bitmask(s: &str) -> u32 {

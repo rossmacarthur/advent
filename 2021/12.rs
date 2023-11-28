@@ -16,7 +16,7 @@ fn parse_input(input: &str) -> Graph<'_> {
 }
 
 fn default_input() -> Graph<'static> {
-    parse_input(include_str!("input/12.txt"))
+    parse_input(include_input!(2021 / 12))
 }
 
 fn solve(graph: &Graph<'_>, is_dup_allowed: bool) -> usize {

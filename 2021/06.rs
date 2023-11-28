@@ -1,3 +1,5 @@
+use advent::prelude::*;
+
 fn parse_input(input: &str) -> Vec<usize> {
     input
         .trim()
@@ -8,7 +10,7 @@ fn parse_input(input: &str) -> Vec<usize> {
 }
 
 fn default_input() -> Vec<usize> {
-    parse_input(include_str!("input/06.txt"))
+    parse_input(include_input!(2021 / 06))
 }
 
 fn solve(fish: Vec<usize>, days: usize) -> usize {

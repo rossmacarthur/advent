@@ -1,3 +1,5 @@
+use advent::prelude::*;
+
 fn parse_input(input: &str) -> Vec<i64> {
     input
         .trim()
@@ -8,7 +10,7 @@ fn parse_input(input: &str) -> Vec<i64> {
 }
 
 fn default_input() -> Vec<i64> {
-    parse_input(include_str!("input/07.txt"))
+    parse_input(include_input!(2021 / 07))
 }
 
 fn solve<F>(crabs: Vec<i64>, cost: F) -> i64

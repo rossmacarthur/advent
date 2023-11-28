@@ -19,7 +19,7 @@ fn parse_input(input: &str) -> VecDeque<Vec<Vector3>> {
 }
 
 fn default_input() -> VecDeque<Vec<Vector3>> {
-    parse_input(include_str!("input/19.txt"))
+    parse_input(include_input!(2021 / 19))
 }
 
 fn roll(bs: Vec<Vector3>) -> Vec<Vector3> {

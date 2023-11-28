@@ -18,7 +18,7 @@ fn parse_input(input: &str) -> Vec<(bool, Cuboid)> {
 }
 
 fn default_input() -> Vec<(bool, Cuboid)> {
-    parse_input(include_str!("input/22.txt"))
+    parse_input(include_input!(2021 / 22))
 }
 
 fn volume(c: Cuboid) -> i64 {

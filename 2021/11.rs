@@ -8,7 +8,7 @@ fn parse_input(input: &str) -> HashMap<Vector2, i64> {
 }
 
 fn default_input() -> HashMap<Vector2, i64> {
-    parse_input(include_str!("input/11.txt"))
+    parse_input(include_input!(2021 / 11))
 }
 
 const CARDINALS: [Vector2; 8] = vectors!(

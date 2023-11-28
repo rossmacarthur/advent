@@ -27,7 +27,7 @@ fn parse_input(input: &str) -> (Vec<i64>, Vec<Board>) {
 }
 
 fn default_input() -> (Vec<i64>, Vec<Board>) {
-    parse_input(include_str!("input/04.txt"))
+    parse_input(include_input!(2021 / 04))
 }
 
 fn update(board: Board, d: i64) -> Board {

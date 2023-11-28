@@ -39,7 +39,7 @@ add z y"
 }
 
 fn default_input() -> Vec<[i64; 3]> {
-    parse_program(include_str!("input/24.txt"))
+    parse_program(include_input!(2021 / 24))
 }
 
 fn solve(instrs: Vec<[i64; 3]>) -> (i64, i64) {
