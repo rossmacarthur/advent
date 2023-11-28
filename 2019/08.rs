@@ -1,3 +1,5 @@
+use advent::prelude::*;
+
 fn parse_input(input: &str, width: usize, height: usize) -> Image {
     let data = input
         .trim()
@@ -13,7 +15,7 @@ fn parse_input(input: &str, width: usize, height: usize) -> Image {
 }
 
 fn default_input() -> Image {
-    parse_input(include_str!("input/08.txt"), 25, 6)
+    parse_input(include_input!(2019 / 08), 25, 6)
 }
 
 #[derive(Clone)]

@@ -11,7 +11,7 @@ fn parse_input(input: &str) -> Orbits<'_> {
 }
 
 fn default_input() -> Orbits<'static> {
-    parse_input(include_str!("input/06.txt"))
+    parse_input(include_input!(2019 / 06))
 }
 
 fn path<'a>(orbits: &'a Orbits<'_>, to: &'a str) -> Vec<&'a str> {

@@ -4,7 +4,7 @@ use advent::prelude::*;
 use intcode::{parse_program, State};
 
 fn default_input() -> Vec<i64> {
-    parse_program(include_str!("input/07.txt"))
+    parse_program(include_input!(2019 / 07))
 }
 
 #[derive(Debug)]

@@ -65,7 +65,7 @@ fn parse_input(input: &str) -> HashMap<Vector2, Tile> {
 }
 
 fn default_input() -> HashMap<Vector2, Tile> {
-    parse_input(include_str!("input/20.txt"))
+    parse_input(include_input!(2019 / 20))
 }
 
 const CARDINALS: [Vector2; 4] = vectors!([0, 1], [1, 0], [0, -1], [-1, 0]);

@@ -1,3 +1,5 @@
+use advent::prelude::*;
+
 fn parse_input(input: &str) -> Vec<Method> {
     input
         .lines()
@@ -23,7 +25,7 @@ fn parse_input(input: &str) -> Vec<Method> {
 }
 
 fn default_input() -> Vec<Method> {
-    parse_input(include_str!("input/22.txt"))
+    parse_input(include_input!(2019 / 22))
 }
 
 /// Represents a shuffle function by storing the constants (a, b) in the

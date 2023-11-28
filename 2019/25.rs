@@ -4,7 +4,7 @@ use advent::prelude::*;
 use intcode::{parse_program, Computer};
 
 fn default_input() -> Vec<i64> {
-    parse_program(include_str!("input/25.txt"))
+    parse_program(include_input!(2019 / 25))
 }
 
 /// A direction we can take in the game.

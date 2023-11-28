@@ -21,7 +21,7 @@ fn parse_input(input: &str) -> HashMap<&str, Formula<'_>> {
 }
 
 fn default_input() -> HashMap<&'static str, Formula<'static>> {
-    parse_input(include_str!("input/14.txt"))
+    parse_input(include_input!(2019 / 14))
 }
 
 #[derive(Clone)]

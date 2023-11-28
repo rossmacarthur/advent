@@ -1,5 +1,7 @@
+use advent::prelude::*;
+
 fn default_input() -> Vec<u64> {
-    include_str!("input/01.txt")
+    include_input!(2019 / 01)
         .lines()
         .map(str::parse)
         .map(Result::unwrap)

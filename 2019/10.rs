@@ -3,7 +3,7 @@ use std::f64::consts;
 use advent::prelude::*;
 
 fn default_input() -> HashSet<Vector2> {
-    parse_map_set(include_str!("input/10.txt"))
+    parse_map_set(include_input!(2019 / 10))
 }
 
 fn reduced(v: Vector2) -> Vector2 {

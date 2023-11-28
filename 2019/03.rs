@@ -26,7 +26,7 @@ fn parse_input(input: &str) -> [Path; 2] {
 }
 
 fn default_input() -> [Path; 2] {
-    parse_input(include_str!("input/03.txt"))
+    parse_input(include_input!(2019 / 03))
 }
 
 fn distances(path: &[(Vector2, i64)]) -> HashMap<Vector2, i64> {

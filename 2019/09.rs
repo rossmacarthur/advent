@@ -1,9 +1,10 @@
 mod intcode;
 
+use advent::prelude::*;
 use intcode::{parse_program, Computer};
 
 fn default_input() -> Vec<i64> {
-    parse_program(include_str!("input/09.txt"))
+    parse_program(include_input!(2019 / 09))
 }
 
 fn part1(input: Vec<i64>) -> i64 {

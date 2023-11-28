@@ -17,7 +17,7 @@ fn parse_input(input: &str) -> u32 {
 }
 
 fn default_input() -> u32 {
-    parse_input(include_str!("input/24.txt"))
+    parse_input(include_input!(2019 / 24))
 }
 
 #[derive(Debug, Clone, Copy)]
