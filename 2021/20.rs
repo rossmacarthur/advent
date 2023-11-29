@@ -14,7 +14,7 @@ fn default_input() -> (Vec<bool>, Image) {
 }
 
 fn step(alg: &[bool], image: Image, is_odd: bool) -> Image {
-    let [min_x, max_x, min_y, max_y] = image.iter().filter_map(|(p, v)| v.then(|| *p)).fold(
+    let [min_x, max_x, min_y, max_y] = image.iter().filter(|&(_, v)| *v).map(|(&p, _)| p).fold(
         [i64::MAX, i64::MIN, i64::MAX, i64::MIN],
         |acc, p| {
             let [min_x, max_x, min_y, max_y] = acc;

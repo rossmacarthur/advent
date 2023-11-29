@@ -3,7 +3,7 @@ name: build
 on: [push, pull_request]
 
 env:
-  RUSTFLAGS: --warn elided-lifetimes-in-paths --deny warnings
+  RUSTFLAGS: --deny warnings
 
 jobs:
   build:
@@ -19,7 +19,7 @@ jobs:
       run: cargo fmt -- --check
 
     - name: Clippy
-      run: cargo clippy --workspace --all-targets -- -A clippy::many_single_char_names
+      run: cargo clippy --workspace --all-targets
 
     - name: Test
       run: cargo test --workspace --all-targets --release

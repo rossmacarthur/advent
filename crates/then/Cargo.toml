@@ -10,3 +10,6 @@ license = "MIT OR Apache-2.0"
 keywords = ["bool", "then"]
 categories = ["rust-patterns"]
 include = ["src/**/*", "LICENSE-*", "README.md"]
+
+[lints]
+workspace = true
