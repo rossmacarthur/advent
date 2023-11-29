@@ -33,6 +33,7 @@ dependencies = [
  "open",
  "serde",
  "toml",
+ "yansi",
 ]
 
 [[package]]

@@ -1,11 +1,15 @@
 use std::env;
+use std::fmt::Display;
 use std::fs;
+use std::io;
+use std::io::IsTerminal;
 use std::path::PathBuf;
 use std::process;
 
 use anyhow::{Context, Result};
 use argh::FromArgs;
 use serde::{Deserialize, Serialize};
+use yansi::Paint;
 
 /// 🎄 Festive Advent of Code solution management
 #[derive(Debug, FromArgs)]
@@ -104,26 +108,7 @@ fn new(year: u32, day: u32) -> Result<()> {
 
     let workspace_dir = PathBuf::from(env!("CARGO_WORKSPACE_DIR"));
     let manifest_path = workspace_dir.join("Cargo.toml");
-
-    // Calculate bin and input file paths.
     let bin = workspace_dir.join(format!("{year:04}/{day:02}.rs"));
-    let input = workspace_dir.join(format!("{year:04}/input/{day:02}.txt"));
-    // Create directory if not exists
-    fs::create_dir_all(input.parent().unwrap())?;
-
-    // Download input
-    let input_display = input
-        .strip_prefix(&workspace_dir)
-        .unwrap_or(&input)
-        .display();
-    if input.exists() {
-        println!("• {input_display} already exists");
-    } else {
-        let url = format!("https://adventofcode.com/{year}/day/{day}/input");
-        let text = download(&url)?;
-        fs::write(&input, text)?;
-        println!("• {input_display} was downloaded");
-    }
 
     // Add {year}/{day}.rs file
     const TEMPLATE: &str = include_str!("template.rs");
@@ -171,7 +156,45 @@ fn open(year: u32, day: u32, args: &[String]) -> Result<()> {
     Ok(())
 }
 
+fn print(header: &str, message: impl Display) {
+    if io::stdout().is_terminal() {
+        println!("{:>12} {}", Paint::new(&header).bold().green(), message);
+    } else {
+        println!("{:>12} {}", header, message);
+    }
+}
+
+fn check_input(year: u32, day: u32) -> Result<()> {
+    // Calculate input file path
+    let workspace_dir = PathBuf::from(env!("CARGO_WORKSPACE_DIR"));
+    let input = workspace_dir.join(format!("input/{year:04}/{day:02}.txt"));
+
+    // Create directory if not exists
+    fs::create_dir_all(input.parent().unwrap())?;
+
+    let input_display = input
+        .strip_prefix(&workspace_dir)
+        .unwrap_or(&input)
+        .display();
+
+    if !input.exists() {
+        print(
+            "Downloading",
+            format!("puzzle input (year: {year}, day: {day:02})"),
+        );
+        let url = format!("https://adventofcode.com/{year}/day/{day}/input");
+        let text = download(&url)?;
+        fs::write(&input, text)?;
+    }
+
+    print("Verified", format!("puzzle input `{input_display}`"));
+
+    Ok(())
+}
+
 fn bench(year: u32, day: u32, args: &[String]) -> Result<()> {
+    check_input(year, day)?;
+
     let bin_name = format!("{year:04}{day:02}");
 
     let (cargo_args, bin_args) = match args.iter().position(|a| a == "--") {
@@ -190,6 +213,8 @@ fn bench(year: u32, day: u32, args: &[String]) -> Result<()> {
 }
 
 fn run(year: u32, day: u32, args: &[String]) -> Result<()> {
+    check_input(year, day)?;
+
     let bin_name = format!("{year:04}{day:02}");
 
     let status = process::Command::new(env!("CARGO"))
@@ -201,6 +226,8 @@ fn run(year: u32, day: u32, args: &[String]) -> Result<()> {
 }
 
 fn test(year: u32, day: u32, args: &[String]) -> Result<()> {
+    check_input(year, day)?;
+
     let bin_name = format!("{year:04}{day:02}");
 
     let status = process::Command::new(env!("CARGO"))

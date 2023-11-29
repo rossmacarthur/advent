@@ -19,7 +19,13 @@ pub type Vector4 = vectrix::Vector<i64, 4>;
 #[macro_export]
 macro_rules! include_input {
     ($year:literal / $day:literal) => {{
-        include_str!(concat!("input/", stringify!($day), ".txt"))
+        include_str!(concat!(
+            "../input/",
+            stringify!($year),
+            "/",
+            stringify!($day),
+            ".txt"
+        ))
     }};
 }
 

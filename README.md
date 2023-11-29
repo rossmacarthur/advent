@@ -9,6 +9,15 @@ and benchmarker with free Christmas trees 🎄.
 
 ## Getting started
 
+The `cargo advent` tool will automatically fetch the input for the puzzle when
+it is required. This requires the `ADVENT_SESSION` environment variable to be
+set. You can find this under the cookie name "session" in your logged in Advent
+of Code browser session.
+
+```sh
+export ADVENT_SESSION="533..."
+```
+
 To run a specific solution just use the provided `cargo advent` alias and pass
 in the year and day. For example, the following will run the solution for 2020
 day 18.
@@ -43,9 +52,7 @@ All of the above will be built using `--release`.
 ### New solutions
 
 Use the following to add a [template](./crates/cli/src/template.rs) for a new
-solution. To fetch the input the `ADVENT_SESSION` environment variable needs to
-be set which can be extracted from a logged in Advent of Code browser session
-under the cookie name "session".
+solution.
 
 ```
 cargo advent -y 2022 -d 1 new
@@ -56,6 +63,8 @@ Open the browser for the given problem
 ```
 cargo advent -y 2020 -d 7 open
 ```
+
+The input will be downloaded the first time the solution is run.
 
 ## Using the runner/benchmarker
 
