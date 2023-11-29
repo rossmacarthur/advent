@@ -1,6 +1,13 @@
 [workspace]
 members = ["crates/*"]
 
+[workspace.lints.rust]
+elided-lifetimes-in-paths = "warn"
+
+[workspace.lints.clippy]
+many_single_char_names = "allow"
+unwrap_or_default = "allow"
+
 [workspace.dependencies]
 ahash = "0.8.6"
 anyhow = "1.0.75"
@@ -32,6 +39,9 @@ advent = { path = "crates/advent", features = ["festive", "prelude"] }
 
 [features]
 json = ["advent/json"]
+
+[lints]
+workspace = true
 
 [[bin]]
 name = "201801"

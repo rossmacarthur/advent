@@ -195,7 +195,7 @@ fn part1(input: Vec<i64>) -> i64 {
             }
         }
 
-        let visited = visited.entry(room.name).or_insert_with(HashSet::new);
+        let visited = visited.entry(room.name).or_default();
         match room.directions.iter().find(|d| !visited.contains(d)) {
             Some(&d) => {
                 c.enter(d);

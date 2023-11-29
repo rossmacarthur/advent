@@ -141,12 +141,14 @@ fn shortest(map: &HashMap<Vector2, Tile>) -> usize {
 
     let all_keys = map
         .values()
-        .filter_map(|t| t.is_key().then(|| t.value()))
+        .filter(|t| t.is_key())
+        .map(|t| t.value())
         .fold(0, BitOr::bitor);
 
     let sources = map
         .values()
-        .filter_map(|t| t.is_entrance().then(|| t.value()))
+        .filter(|t| t.is_entrance())
+        .map(|t| t.value())
         .fold(0, BitOr::bitor);
 
     let mut visited = HashSet::new();

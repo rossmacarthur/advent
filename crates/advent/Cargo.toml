@@ -16,3 +16,6 @@ prelude = { path = "../prelude", optional = true }
 festive = ["dep:ascii-art"]
 json = ["dep:serde", "dep:serde_json"]
 prelude = ["dep:prelude"]
+
+[lints]
+workspace = true
