@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"constant":["INDENT"],"enum":["FlagInfoKind","Optionality"],"fn":["write_description"],"struct":["CommandInfo","CommandInfoWithArgs","ErrorCodeInfo","FlagInfo","PositionalInfo","SubCommandInfo"]};

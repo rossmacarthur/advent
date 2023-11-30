@@ -1,0 +1,52 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="This crate contains a runner and benchmarker for Advent of Code solutions with free Christmas trees 🎄."><title>advent - Rust</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../static.files/SourceSerif4-Bold-a2c9cd1067f8b328.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../static.files/rustdoc-fa3bb1812debf86c.css"><meta name="rustdoc-vars" data-root-path="../" data-static-root-path="../static.files/" data-current-crate="advent" data-themes="" data-resource-suffix="" data-rustdoc-version="1.74.0 (79e9716c9 2023-11-13)" data-channel="1.74.0" data-search-js="search-8be46b629f5f14a8.js" data-settings-js="settings-74424d7eec62a23e.js" ><script src="../static.files/storage-fec3eaa3851e447d.js"></script><script defer src="../crates.js"></script><script defer src="../static.files/main-c5bd66d33317d69f.js"></script><noscript><link rel="stylesheet" href="../static.files/noscript-5d8b3c7633ad77ba.css"></noscript><link rel="alternate icon" type="image/png" href="../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc mod crate"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="logo-container" href="../advent/index.html"><img class="rust-logo" src="../static.files/rust-logo-151179464ae7ed46.svg" alt="logo"></a></nav><nav class="sidebar"><a class="logo-container" href="../advent/index.html"><img class="rust-logo" src="../static.files/rust-logo-151179464ae7ed46.svg" alt="logo"></a><h2 class="location"><a href="#">Crate advent</a></h2><div class="sidebar-elems"><ul class="block"><li class="version">Version 0.1.0</li><li><a id="all-types" href="all.html">All Items</a></li></ul><section><ul class="block"><li><a href="#modules">Modules</a></li><li><a href="#structs">Structs</a></li><li><a href="#functions">Functions</a></li></ul></section></div></nav><main><div class="width-limiter"><nav class="sub"><form class="search-form"><span></span><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><a href="../help.html">?</a></div><div id="settings-menu" tabindex="-1"><a href="../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="main-heading"><h1>Crate <a class="mod" href="#">advent</a><button id="copy-path" title="Copy item path to clipboard"><img src="../static.files/clipboard-7571035ce49a181d.svg" width="19" height="18" alt="Copy item path"></button></h1><span class="out-of-band"><a class="src" href="../src/advent/lib.rs.html#1-375">source</a> · <button id="toggle-all-docs" title="collapse all docs">[<span>&#x2212;</span>]</button></span></div><details class="toggle top-doc" open><summary class="hideme"><span>Expand description</span></summary><div class="docblock"><p>This crate contains a runner and benchmarker for Advent of Code solutions
+with free Christmas trees 🎄.</p>
+<h2 id="getting-started"><a href="#getting-started">Getting started</a></h2>
+<p>Add this crate to your Cargo manifest for your solution.</p>
+<div class="example-wrap"><pre class="language-toml"><code>advent = { git = &quot;https://github.com/rossmacarthur/advent&quot; }
+</code></pre></div>
+<p>Then use the following as your main function.</p>
+
+<div class="example-wrap"><pre class="rust rust-example-rendered"><code><span class="kw">fn </span>main() {
+    <span class="kw">let </span>solution = advent::new(parse_input).part(part1).part(part2).build();
+    solution.cli()
+}</code></pre></div>
+<p><strong>Where</strong></p>
+<ul>
+<li><code>parse_input</code> is a function that returns any type <code>I</code> implementing
+<code>Clone</code>.</li>
+<li>Each part function takes <code>I</code> as an argument and returns something
+implementing <code>Display</code>.</li>
+</ul>
+<p>Finally, <code>cli()</code> will instantiate a command line interface and run the
+program. Ordinary runs will run each part once and output the answers.
+Passing <code>--bench</code> to the program will perform a benchmark.</p>
+<p>✨ That’s all! You’re free to structure your program however else you want.</p>
+<h2 id="features"><a href="#features">Features</a></h2>
+<p>There are also some optional features which pull in some other crates.</p>
+<ul>
+<li><strong><code>festive</code></strong> enables some festive ascii art and changes the default
+output to <code>--output festive</code></li>
+<li><strong><code>json</code></strong> supports JSON output using <code>--output json</code>, useful for
+collecting benchmark information</li>
+<li><strong><code>prelude</code></strong> re-exports my prelude crate that can be imported using
+<div class="example-wrap"><pre class="rust rust-example-rendered"><code><span class="kw">use </span>advent::prelude::<span class="kw-2">*</span>;</code></pre></div>
+</li>
+</ul>
+<p>They can be enabled in your Cargo manifest like this:</p>
+<div class="example-wrap"><pre class="language-toml"><code>[dependencies]
+advent = { git = &quot;https://github.com/rossmacarthur/advent&quot;, features = [&quot;festive&quot;, &quot;json&quot;] }
+</code></pre></div><h2 id="cli"><a href="#cli">CLI</a></h2>
+<p>The command line interface looks like this.</p>
+<div class="example-wrap"><pre class="language-text"><code>Usage: example [--bench] [--output &lt;output&gt;]
+
+Run the program.
+
+Options:
+  --bench           whether to benchmark
+  --output          the output style
+  --help            display usage information
+</code></pre></div>
+<p>The output style can be <code>boring</code>, <code>festive</code>, or <code>json</code>. To use json this
+crate requires the <code>json</code> feature to be set.</p>
+</div></details><h2 id="modules" class="small-section-header"><a href="#modules">Modules</a></h2><ul class="item-table"><li><div class="item-name"><a class="mod" href="summary/index.html" title="mod advent::summary">summary</a></div></li></ul><h2 id="structs" class="small-section-header"><a href="#structs">Structs</a></h2><ul class="item-table"><li><div class="item-name"><a class="struct" href="struct.Builder.html" title="struct advent::Builder">Builder</a></div><div class="desc docblock-short">A builder for a <a href="struct.Solution.html" title="struct advent::Solution"><code>Solution</code></a>.</div></li><li><div class="item-name"><a class="struct" href="struct.Solution.html" title="struct advent::Solution">Solution</a></div><div class="desc docblock-short">A runner and benchmarker for an Advent of Code solution.</div></li></ul><h2 id="functions" class="small-section-header"><a href="#functions">Functions</a></h2><ul class="item-table"><li><div class="item-name"><a class="fn" href="fn.new.html" title="fn advent::new">new</a></div><div class="desc docblock-short">Returns a new builder for a new Advent of Code run or benchmark using the
+given parse function.</div></li></ul></section></div></main></body></html>

@@ -1,0 +1,1 @@
+window.ALL_CRATES = ["advent","argh","argh_derive","argh_shared","proc_macro2","quote","serde","serde_derive","syn","unicode_ident","yansi"];

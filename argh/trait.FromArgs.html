@@ -1,0 +1,254 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Types which can be constructed from a set of commandline arguments."><title>FromArgs in argh - Rust</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../static.files/SourceSerif4-Bold-a2c9cd1067f8b328.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../static.files/rustdoc-fa3bb1812debf86c.css"><meta name="rustdoc-vars" data-root-path="../" data-static-root-path="../static.files/" data-current-crate="argh" data-themes="" data-resource-suffix="" data-rustdoc-version="1.74.0 (79e9716c9 2023-11-13)" data-channel="1.74.0" data-search-js="search-8be46b629f5f14a8.js" data-settings-js="settings-74424d7eec62a23e.js" ><script src="../static.files/storage-fec3eaa3851e447d.js"></script><script defer src="sidebar-items.js"></script><script defer src="../static.files/main-c5bd66d33317d69f.js"></script><noscript><link rel="stylesheet" href="../static.files/noscript-5d8b3c7633ad77ba.css"></noscript><link rel="alternate icon" type="image/png" href="../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc trait"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="logo-container" href="../argh/index.html"><img class="rust-logo" src="../static.files/rust-logo-151179464ae7ed46.svg" alt="logo"></a></nav><nav class="sidebar"><a class="logo-container" href="../argh/index.html"><img class="rust-logo" src="../static.files/rust-logo-151179464ae7ed46.svg" alt="logo"></a><h2 class="location"><a href="#">FromArgs</a></h2><div class="sidebar-elems"><section><h3><a href="#required-methods">Required Methods</a></h3><ul class="block"><li><a href="#tymethod.from_args">from_args</a></li></ul><h3><a href="#provided-methods">Provided Methods</a></h3><ul class="block"><li><a href="#method.redact_arg_values">redact_arg_values</a></li></ul><h3><a href="#implementors">Implementors</a></h3></section><h2><a href="index.html">In argh</a></h2></div></nav><main><div class="width-limiter"><nav class="sub"><form class="search-form"><span></span><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><a href="../help.html">?</a></div><div id="settings-menu" tabindex="-1"><a href="../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="main-heading"><h1>Trait <a href="index.html">argh</a>::<wbr><a class="trait" href="#">FromArgs</a><button id="copy-path" title="Copy item path to clipboard"><img src="../static.files/clipboard-7571035ce49a181d.svg" width="19" height="18" alt="Copy item path"></button></h1><span class="out-of-band"><a class="src" href="../src/argh/lib.rs.html#346-603">source</a> · <button id="toggle-all-docs" title="collapse all docs">[<span>&#x2212;</span>]</button></span></div><pre class="rust item-decl"><code>pub trait FromArgs: <a class="trait" href="https://doc.rust-lang.org/1.74.0/core/marker/trait.Sized.html" title="trait core::marker::Sized">Sized</a> {
+    // Required method
+    fn <a href="#tymethod.from_args" class="fn">from_args</a>(
+        command_name: &amp;[&amp;<a class="primitive" href="https://doc.rust-lang.org/1.74.0/std/primitive.str.html">str</a>],
+        args: &amp;[&amp;<a class="primitive" href="https://doc.rust-lang.org/1.74.0/std/primitive.str.html">str</a>]
+    ) -&gt; <a class="enum" href="https://doc.rust-lang.org/1.74.0/core/result/enum.Result.html" title="enum core::result::Result">Result</a>&lt;Self, <a class="struct" href="struct.EarlyExit.html" title="struct argh::EarlyExit">EarlyExit</a>&gt;;
+
+    // Provided method
+    fn <a href="#method.redact_arg_values" class="fn">redact_arg_values</a>(
+        _command_name: &amp;[&amp;<a class="primitive" href="https://doc.rust-lang.org/1.74.0/std/primitive.str.html">str</a>],
+        _args: &amp;[&amp;<a class="primitive" href="https://doc.rust-lang.org/1.74.0/std/primitive.str.html">str</a>]
+    ) -&gt; <a class="enum" href="https://doc.rust-lang.org/1.74.0/core/result/enum.Result.html" title="enum core::result::Result">Result</a>&lt;<a class="struct" href="https://doc.rust-lang.org/1.74.0/alloc/vec/struct.Vec.html" title="struct alloc::vec::Vec">Vec</a>&lt;<a class="struct" href="https://doc.rust-lang.org/1.74.0/alloc/string/struct.String.html" title="struct alloc::string::String">String</a>&gt;, <a class="struct" href="struct.EarlyExit.html" title="struct argh::EarlyExit">EarlyExit</a>&gt; { ... }
+}</code></pre><details class="toggle top-doc" open><summary class="hideme"><span>Expand description</span></summary><div class="docblock"><p>Types which can be constructed from a set of commandline arguments.</p>
+</div></details><h2 id="required-methods" class="small-section-header">Required Methods<a href="#required-methods" class="anchor">§</a></h2><div class="methods"><details class="toggle method-toggle" open><summary><section id="tymethod.from_args" class="method"><a class="src rightside" href="../src/argh/lib.rs.html#467">source</a><h4 class="code-header">fn <a href="#tymethod.from_args" class="fn">from_args</a>(command_name: &amp;[&amp;<a class="primitive" href="https://doc.rust-lang.org/1.74.0/std/primitive.str.html">str</a>], args: &amp;[&amp;<a class="primitive" href="https://doc.rust-lang.org/1.74.0/std/primitive.str.html">str</a>]) -&gt; <a class="enum" href="https://doc.rust-lang.org/1.74.0/core/result/enum.Result.html" title="enum core::result::Result">Result</a>&lt;Self, <a class="struct" href="struct.EarlyExit.html" title="struct argh::EarlyExit">EarlyExit</a>&gt;</h4></section></summary><div class="docblock"><p>Construct the type from an input set of arguments.</p>
+<p>The first argument <code>command_name</code> is the identifier for the current command. In most cases,
+users should only pass in a single item for the command name, which typically comes from
+the first item from <code>std::env::args()</code>. Implementations however should append the
+subcommand name in when recursively calling <a href="trait.FromArgs.html#tymethod.from_args" title="associated function argh::FromArgs::from_args">FromArgs::from_args</a> for subcommands. This
+allows <code>argh</code> to generate correct subcommand help strings.</p>
+<p>The second argument <code>args</code> is the rest of the command line arguments.</p>
+<h5 id="examples"><a href="#examples">Examples</a></h5>
+<div class="example-wrap"><pre class="rust rust-example-rendered"><code>
+<span class="doccomment">/// Command to manage a classroom.
+</span><span class="attr">#[derive(Debug, PartialEq, FromArgs)]
+</span><span class="kw">struct </span>ClassroomCmd {
+    <span class="attr">#[argh(subcommand)]
+    </span>subcommands: Subcommands,
+}
+
+<span class="attr">#[derive(Debug, PartialEq, FromArgs)]
+#[argh(subcommand)]
+</span><span class="kw">enum </span>Subcommands {
+    List(ListCmd),
+    Add(AddCmd),
+}
+
+<span class="doccomment">/// list all the classes.
+</span><span class="attr">#[derive(Debug, PartialEq, FromArgs)]
+#[argh(subcommand, name = <span class="string">&quot;list&quot;</span>)]
+</span><span class="kw">struct </span>ListCmd {
+    <span class="doccomment">/// list classes for only this teacher.
+    </span><span class="attr">#[argh(option)]
+    </span>teacher_name: <span class="prelude-ty">Option</span>&lt;String&gt;,
+}
+
+<span class="doccomment">/// add students to a class.
+</span><span class="attr">#[derive(Debug, PartialEq, FromArgs)]
+#[argh(subcommand, name = <span class="string">&quot;add&quot;</span>)]
+</span><span class="kw">struct </span>AddCmd {
+    <span class="doccomment">/// the name of the class&#39;s teacher.
+    </span><span class="attr">#[argh(option)]
+    </span>teacher_name: String,
+
+    <span class="doccomment">/// the name of the class.
+    </span><span class="attr">#[argh(positional)]
+    </span>class_name: String,
+}
+
+<span class="kw">let </span>args = ClassroomCmd::from_args(
+    <span class="kw-2">&amp;</span>[<span class="string">&quot;classroom&quot;</span>],
+    <span class="kw-2">&amp;</span>[<span class="string">&quot;list&quot;</span>, <span class="string">&quot;--teacher-name&quot;</span>, <span class="string">&quot;Smith&quot;</span>],
+).unwrap();
+<span class="macro">assert_eq!</span>(
+   args,
+    ClassroomCmd {
+        subcommands: Subcommands::List(ListCmd {
+            teacher_name: <span class="prelude-val">Some</span>(<span class="string">&quot;Smith&quot;</span>.to_string()),
+        })
+    },
+);
+
+<span class="comment">// Help returns an error, but internally returns an `Ok` status.
+</span><span class="kw">let </span>early_exit = ClassroomCmd::from_args(
+    <span class="kw-2">&amp;</span>[<span class="string">&quot;classroom&quot;</span>],
+    <span class="kw-2">&amp;</span>[<span class="string">&quot;help&quot;</span>],
+).unwrap_err();
+<span class="macro">assert_eq!</span>(
+    early_exit,
+    argh::EarlyExit {
+       output: <span class="string">r#&quot;Usage: classroom &lt;command&gt; [&lt;args&gt;]
+
+Command to manage a classroom.
+
+Options:
+  --help            display usage information
+
+Commands:
+  list              list all the classes.
+  add               add students to a class.
+&quot;#</span>.to_string(),
+       status: <span class="prelude-val">Ok</span>(()),
+    },
+);
+
+<span class="comment">// Help works with subcommands.
+</span><span class="kw">let </span>early_exit = ClassroomCmd::from_args(
+    <span class="kw-2">&amp;</span>[<span class="string">&quot;classroom&quot;</span>],
+    <span class="kw-2">&amp;</span>[<span class="string">&quot;list&quot;</span>, <span class="string">&quot;help&quot;</span>],
+).unwrap_err();
+<span class="macro">assert_eq!</span>(
+    early_exit,
+    argh::EarlyExit {
+       output: <span class="string">r#&quot;Usage: classroom list [--teacher-name &lt;teacher-name&gt;]
+
+list all the classes.
+
+Options:
+  --teacher-name    list classes for only this teacher.
+  --help            display usage information
+&quot;#</span>.to_string(),
+       status: <span class="prelude-val">Ok</span>(()),
+    },
+);
+
+<span class="comment">// Incorrect arguments will error out.
+</span><span class="kw">let </span>err = ClassroomCmd::from_args(
+    <span class="kw-2">&amp;</span>[<span class="string">&quot;classroom&quot;</span>],
+    <span class="kw-2">&amp;</span>[<span class="string">&quot;lisp&quot;</span>],
+).unwrap_err();
+<span class="macro">assert_eq!</span>(
+   err,
+   argh::EarlyExit {
+       output: <span class="string">&quot;Unrecognized argument: lisp\n&quot;</span>.to_string(),
+       status: <span class="prelude-val">Err</span>(()),
+    },
+);</code></pre></div>
+</div></details></div><h2 id="provided-methods" class="small-section-header">Provided Methods<a href="#provided-methods" class="anchor">§</a></h2><div class="methods"><details class="toggle method-toggle" open><summary><section id="method.redact_arg_values" class="method"><a class="src rightside" href="../src/argh/lib.rs.html#600-602">source</a><h4 class="code-header">fn <a href="#method.redact_arg_values" class="fn">redact_arg_values</a>(
+    _command_name: &amp;[&amp;<a class="primitive" href="https://doc.rust-lang.org/1.74.0/std/primitive.str.html">str</a>],
+    _args: &amp;[&amp;<a class="primitive" href="https://doc.rust-lang.org/1.74.0/std/primitive.str.html">str</a>]
+) -&gt; <a class="enum" href="https://doc.rust-lang.org/1.74.0/core/result/enum.Result.html" title="enum core::result::Result">Result</a>&lt;<a class="struct" href="https://doc.rust-lang.org/1.74.0/alloc/vec/struct.Vec.html" title="struct alloc::vec::Vec">Vec</a>&lt;<a class="struct" href="https://doc.rust-lang.org/1.74.0/alloc/string/struct.String.html" title="struct alloc::string::String">String</a>&gt;, <a class="struct" href="struct.EarlyExit.html" title="struct argh::EarlyExit">EarlyExit</a>&gt;</h4></section></summary><div class="docblock"><p>Get a String with just the argument names, e.g., options, flags, subcommands, etc, but
+without the values of the options and arguments. This can be useful as a means to capture
+anonymous usage statistics without revealing the content entered by the end user.</p>
+<p>The first argument <code>command_name</code> is the identifier for the current command. In most cases,
+users should only pass in a single item for the command name, which typically comes from
+the first item from <code>std::env::args()</code>. Implementations however should append the
+subcommand name in when recursively calling <a href="trait.FromArgs.html#tymethod.from_args" title="associated function argh::FromArgs::from_args">FromArgs::from_args</a> for subcommands. This
+allows <code>argh</code> to generate correct subcommand help strings.</p>
+<p>The second argument <code>args</code> is the rest of the command line arguments.</p>
+<h5 id="examples-1"><a href="#examples-1">Examples</a></h5>
+<div class="example-wrap"><pre class="rust rust-example-rendered"><code>
+<span class="doccomment">/// Command to manage a classroom.
+</span><span class="attr">#[derive(FromArgs)]
+</span><span class="kw">struct </span>ClassroomCmd {
+    <span class="attr">#[argh(subcommand)]
+    </span>subcommands: Subcommands,
+}
+
+<span class="attr">#[derive(FromArgs)]
+#[argh(subcommand)]
+</span><span class="kw">enum </span>Subcommands {
+    List(ListCmd),
+    Add(AddCmd),
+}
+
+<span class="doccomment">/// list all the classes.
+</span><span class="attr">#[derive(FromArgs)]
+#[argh(subcommand, name = <span class="string">&quot;list&quot;</span>)]
+</span><span class="kw">struct </span>ListCmd {
+    <span class="doccomment">/// list classes for only this teacher.
+    </span><span class="attr">#[argh(option)]
+    </span>teacher_name: <span class="prelude-ty">Option</span>&lt;String&gt;,
+}
+
+<span class="doccomment">/// add students to a class.
+</span><span class="attr">#[derive(FromArgs)]
+#[argh(subcommand, name = <span class="string">&quot;add&quot;</span>)]
+</span><span class="kw">struct </span>AddCmd {
+    <span class="doccomment">/// the name of the class&#39;s teacher.
+    </span><span class="attr">#[argh(option)]
+    </span>teacher_name: String,
+
+    <span class="doccomment">/// has the class started yet?
+    </span><span class="attr">#[argh(switch)]
+    </span>started: bool,
+
+    <span class="doccomment">/// the name of the class.
+    </span><span class="attr">#[argh(positional)]
+    </span>class_name: String,
+
+    <span class="doccomment">/// the student names.
+    </span><span class="attr">#[argh(positional)]
+    </span>students: Vec&lt;String&gt;,
+}
+
+<span class="kw">let </span>args = ClassroomCmd::redact_arg_values(
+    <span class="kw-2">&amp;</span>[<span class="string">&quot;classroom&quot;</span>],
+    <span class="kw-2">&amp;</span>[<span class="string">&quot;list&quot;</span>],
+).unwrap();
+<span class="macro">assert_eq!</span>(
+    args,
+    <span class="kw-2">&amp;</span>[
+        <span class="string">&quot;classroom&quot;</span>,
+        <span class="string">&quot;list&quot;</span>,
+    ],
+);
+
+<span class="kw">let </span>args = ClassroomCmd::redact_arg_values(
+    <span class="kw-2">&amp;</span>[<span class="string">&quot;classroom&quot;</span>],
+    <span class="kw-2">&amp;</span>[<span class="string">&quot;list&quot;</span>, <span class="string">&quot;--teacher-name&quot;</span>, <span class="string">&quot;Smith&quot;</span>],
+).unwrap();
+<span class="macro">assert_eq!</span>(
+   args,
+   <span class="kw-2">&amp;</span>[
+        <span class="string">&quot;classroom&quot;</span>,
+        <span class="string">&quot;list&quot;</span>,
+        <span class="string">&quot;--teacher-name&quot;</span>,
+    ],
+);
+
+<span class="kw">let </span>args = ClassroomCmd::redact_arg_values(
+    <span class="kw-2">&amp;</span>[<span class="string">&quot;classroom&quot;</span>],
+    <span class="kw-2">&amp;</span>[<span class="string">&quot;add&quot;</span>, <span class="string">&quot;--teacher-name&quot;</span>, <span class="string">&quot;Smith&quot;</span>, <span class="string">&quot;--started&quot;</span>, <span class="string">&quot;Math&quot;</span>, <span class="string">&quot;Abe&quot;</span>, <span class="string">&quot;Sung&quot;</span>],
+).unwrap();
+<span class="macro">assert_eq!</span>(
+    args,
+    <span class="kw-2">&amp;</span>[
+        <span class="string">&quot;classroom&quot;</span>,
+        <span class="string">&quot;add&quot;</span>,
+        <span class="string">&quot;--teacher-name&quot;</span>,
+        <span class="string">&quot;--started&quot;</span>,
+        <span class="string">&quot;class_name&quot;</span>,
+        <span class="string">&quot;students&quot;</span>,
+        <span class="string">&quot;students&quot;</span>,
+    ],
+);
+
+<span class="comment">// `ClassroomCmd::redact_arg_values` will error out if passed invalid arguments.
+</span><span class="macro">assert_eq!</span>(
+    ClassroomCmd::redact_arg_values(<span class="kw-2">&amp;</span>[<span class="string">&quot;classroom&quot;</span>], <span class="kw-2">&amp;</span>[<span class="string">&quot;add&quot;</span>, <span class="string">&quot;--teacher-name&quot;</span>]),
+    <span class="prelude-val">Err</span>(argh::EarlyExit {
+        output: <span class="string">&quot;No value provided for option &#39;--teacher-name&#39;.\n&quot;</span>.into(),
+        status: <span class="prelude-val">Err</span>(()),
+    }),
+);
+
+<span class="comment">// `ClassroomCmd::redact_arg_values` will generate help messages.
+</span><span class="macro">assert_eq!</span>(
+    ClassroomCmd::redact_arg_values(<span class="kw-2">&amp;</span>[<span class="string">&quot;classroom&quot;</span>], <span class="kw-2">&amp;</span>[<span class="string">&quot;help&quot;</span>]),
+    <span class="prelude-val">Err</span>(argh::EarlyExit {
+        output: <span class="string">r#&quot;Usage: classroom &lt;command&gt; [&lt;args&gt;]
+
+Command to manage a classroom.
+
+Options:
+  --help            display usage information
+
+Commands:
+  list              list all the classes.
+  add               add students to a class.
+&quot;#</span>.to_string(),
+        status: <span class="prelude-val">Ok</span>(()),
+    }),
+);</code></pre></div>
+</div></details></div><h2 id="implementors" class="small-section-header">Implementors<a href="#implementors" class="anchor">§</a></h2><div id="implementors-list"></div><script src="../implementors/argh/trait.FromArgs.js" async></script></section></div></main></body></html>
