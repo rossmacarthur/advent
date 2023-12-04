@@ -9,18 +9,20 @@ and benchmarker with free Christmas trees 🎄.
 
 ## Getting started
 
-The `cargo advent` tool will automatically fetch the input for the puzzle when
-it is required. This requires the `ADVENT_SESSION` environment variable to be
-set. You can find this under the cookie name "session" in your logged in Advent
-of Code browser session.
+The following commands use a Cargo alias `cargo advent` defined in
+`.cargo/config.toml` to run the solutions. This tool will automatically fetch
+the input for the puzzle and cache it locally when the solution is run for the
+first time. This requires the `ADVENT_SESSION` environment variable to be set.
+You can find this under the cookie name "session" in your logged in Advent of
+Code browser session. This tool follows the automation guidelines on the
+[/r/adventofcode wiki](https://www.reddit.com/r/adventofcode/wiki/faqs/automation).
 
 ```sh
 export ADVENT_SESSION="533..."
 ```
 
-To run a specific solution just use the provided `cargo advent` alias and pass
-in the year and day. For example, the following will run the solution for 2020
-day 18.
+Solutions can be run using the `run` command. Just pass in the year and day. For
+example, the following will run the solution for 2020 day 18.
 
 ```
 cargo advent -y 2020 -d 18 run
@@ -63,8 +65,6 @@ Open the browser for the given problem
 ```
 cargo advent -y 2020 -d 7 open
 ```
-
-The input will be downloaded the first time the solution is run.
 
 ## Using the runner/benchmarker
 
