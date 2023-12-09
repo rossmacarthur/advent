@@ -136,7 +136,7 @@ fn part1(valves: Vec<Valve>) -> i64 {
 
 fn part2(valves: Vec<Valve>) -> i64 {
     let best = solve(valves, 26);
-    iproduct!(&best, &best)
+    cartesian_product!(&best, &best)
         .filter_map(|((o1, r1), (o2, r2))| (o1 & o2 == 0).then(|| r1 + r2))
         .max()
         .unwrap()

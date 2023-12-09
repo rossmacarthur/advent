@@ -64,7 +64,7 @@ fn count(iter: impl Iterator<Item = u128>) -> (usize, usize) {
 
 fn next<const N: usize>(grid: &[u128; N]) -> [u128; N] {
     let mut next = *grid;
-    for (x, y) in iproduct!(0..(N as i64), 0..(N as i64)) {
+    for (x, y) in cartesian_product!(0..(N as i64), 0..(N as i64)) {
         let adjacents = CARDINALS
             .iter()
             .filter_map(|[dx, dy]| get(grid, x + dx, y + dy));
@@ -81,7 +81,8 @@ fn next<const N: usize>(grid: &[u128; N]) -> [u128; N] {
 }
 
 fn resource_value<const N: usize>(grid: &[u128; N]) -> usize {
-    let all = iproduct!(0..(N as i64), 0..(N as i64)).map(|(x, y)| get(grid, x, y).unwrap());
+    let all =
+        cartesian_product!(0..(N as i64), 0..(N as i64)).map(|(x, y)| get(grid, x, y).unwrap());
     let (wooded, lumberyards) = count(all);
     wooded * lumberyards
 }

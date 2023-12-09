@@ -178,7 +178,7 @@ fn assemble(tiles: HashMap<i64, Tile>) -> HashSet<Vector2> {
 
     // Now that we have the first row and column we can populate the rest of the
     // rows purely based on the tile to the left and to the top.
-    for (i, j) in iproduct!(1..d, 1..d) {
+    for (i, j) in cartesian_product!(1..d, 1..d) {
         let prev = grid[i][j - 1].right();
         let above = grid[i - 1][j].bottom();
         place! {
@@ -188,11 +188,11 @@ fn assemble(tiles: HashMap<i64, Tile>) -> HashSet<Vector2> {
     }
 
     // Remove the borders and convert the tiles to a single image.
-    iproduct!(0..d, 1..9)
+    cartesian_product!(0..d, 1..9)
         .enumerate()
         .flat_map(|(y, (r, i))| {
             let grid = &grid;
-            iproduct!(0..d, 1..9)
+            cartesian_product!(0..d, 1..9)
                 .enumerate()
                 .filter_map(move |(x, (c, j))| match grid[r][c][i][j] {
                     Pixel::Black => None,
@@ -216,7 +216,7 @@ fn roughness(img: &HashSet<Vector2>, monster: &HashSet<Vector2>) -> Option<usize
     let mut rem = img.clone();
     let max_x = rem.iter().map(|v| v.x).max().unwrap();
     let max_y = rem.iter().map(|v| v.y).max().unwrap();
-    for (x, y) in iproduct!(0..=max_x, 0..=max_y) {
+    for (x, y) in cartesian_product!(0..=max_x, 0..=max_y) {
         let d = vector![x, y];
         let monster: HashSet<_> = monster.iter().map(|p| p + d).collect();
         if monster.iter().all(|p| rem.contains(p)) {

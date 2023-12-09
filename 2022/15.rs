@@ -114,7 +114,7 @@ fn part2(data: Vec<(Vector2, Vector2, i64)>, max: i64) -> i64 {
     let (up, down) = lines(&data);
 
     let bounds = 0..=max;
-    for (&c1, &c2) in iproduct!(&up, &down) {
+    for (&c1, &c2) in cartesian_product!(&up, &down) {
         // Find the point that these two lines intersect
         let [x, y] = intersects((1, c1), (-1, c2));
 

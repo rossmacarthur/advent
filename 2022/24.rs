@@ -33,7 +33,7 @@ fn parse_input(input: &str) -> (Vector2, Vector2, i64, HashSet<Vector3>) {
         .unwrap();
 
     // All points on the map
-    let base: HashSet<_> = iproduct!(0..=max_x, 0..=max_y, 0..cycle)
+    let base: HashSet<_> = cartesian_product!(0..=max_x, 0..=max_y, 0..cycle)
         .map(|(x, y, z)| vector![x, y, z])
         .collect();
 
