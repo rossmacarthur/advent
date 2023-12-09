@@ -6,8 +6,11 @@ pub use std::mem;
 
 pub use ahash::{HashMap, HashMapExt as _, HashSet, HashSetExt as _};
 pub use either::Either;
-pub use itermore::{IterArrayChunks as _, IterArrayCombinations as _, IterArrayWindows as _};
-pub use itertools::{iproduct, Itertools as _};
+pub use itermore::{
+    IterArrayChunks as _, IterArrayCombinations as _, IterArrayWindows as _, IterSorted as _,
+};
+pub use itertools::iproduct;
+pub use itertools_shim::ItertoolsShim;
 pub use regex_macro::regex;
 pub use then::Some as _;
 pub use vectrix::{vector, Matrix, Vector};
