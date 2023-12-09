@@ -42,7 +42,7 @@ fn part2(cubes: HashSet<Vector3>) -> usize {
     let max_z = cubes.iter().map(|v| v.z).max().unwrap() + 10;
 
     // Start the floodfill at the 8 corners of the bounding shape
-    let mut q: VecDeque<_> = iproduct!([min_x, max_x], [min_y, max_y], [min_z, max_z])
+    let mut q: VecDeque<_> = cartesian_product!([min_x, max_x], [min_y, max_y], [min_z, max_z])
         .map(Vector3::from)
         .collect();
 

@@ -216,23 +216,12 @@ dependencies = [
 ]
 
 [[package]]
-name = "iterchunks"
-version = "0.3.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "ceb61464343bc874be283540bf6bb148d6e5b61023bc5acbb9f969b56c806780"
-dependencies = [
- "arrays",
-]
-
-[[package]]
 name = "itermore"
-version = "0.5.0"
+version = "0.6.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "0331e230609e456fccf9d3b3d4f273a1b3f6b601ed37e943dc197fe5d24bb4da"
+checksum = "7e59d52c01f0facb5dd95b889ba6ae459576781907cfd251361d8882c4305509"
 dependencies = [
  "arrays",
- "iterchunks",
- "iterwindows",
 ]
 
 [[package]]
@@ -249,15 +238,6 @@ name = "itertools-shim"
 version = "0.0.0"
 dependencies = [
  "itertools",
-]
-
-[[package]]
-name = "iterwindows"
-version = "0.3.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "3cbf3a88c019a9667dbea976f47cf797ffc8d765c53d893e60f27576be6333b0"
-dependencies = [
- "arrays",
 ]
 
 [[package]]

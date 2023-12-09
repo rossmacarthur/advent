@@ -2,7 +2,7 @@ use std::fmt::Write;
 
 use itertools::{
     ExactlyOneError, Intersperse, Itertools, MinMaxResult, MultiProduct, Permutations, Positions,
-    Powerset, Product,
+    Powerset,
 };
 
 pub trait ItertoolsShim: Iterator {
@@ -73,16 +73,6 @@ pub trait ItertoolsShim: Iterator {
         Self::Item: Clone,
     {
         Itertools::intersperse(self, element)
-    }
-
-    fn cartesian_product<J>(self, other: J) -> Product<Self, J::IntoIter>
-    where
-        Self: Sized,
-        Self::Item: Clone,
-        J: IntoIterator,
-        J::IntoIter: Clone,
-    {
-        Itertools::cartesian_product(self, other)
     }
 
     fn minmax(self) -> MinMaxResult<Self::Item>
