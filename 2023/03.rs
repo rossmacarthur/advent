@@ -31,8 +31,8 @@ const DIRECTIONS: [Vector2; 8] = vectors!(
 );
 
 fn solve(engine: &HashMap<Vector2, Tile>) -> HashMap<(Vector2, char), Vec<i64>> {
-    let (min_x, max_x) = engine.keys().map(|v| v.x).minmax().into_option().unwrap();
-    let (min_y, max_y) = engine.keys().map(|v| v.y).minmax().into_option().unwrap();
+    let (min_x, max_x) = engine.keys().map(|v| v.x).min_max().unwrap();
+    let (min_y, max_y) = engine.keys().map(|v| v.y).min_max().unwrap();
 
     let mut symbols = HashMap::new();
 

@@ -1,8 +1,7 @@
 use std::fmt::Write;
 
 use itertools::{
-    ExactlyOneError, Intersperse, Itertools, MinMaxResult, MultiProduct, Permutations, Positions,
-    Powerset,
+    ExactlyOneError, Intersperse, Itertools, MultiProduct, Permutations, Positions, Powerset,
 };
 
 pub trait ItertoolsShim: Iterator {
@@ -73,14 +72,6 @@ pub trait ItertoolsShim: Iterator {
         Self::Item: Clone,
     {
         Itertools::intersperse(self, element)
-    }
-
-    fn minmax(self) -> MinMaxResult<Self::Item>
-    where
-        Self: Sized,
-        Self::Item: PartialOrd,
-    {
-        Itertools::minmax(self)
     }
 }
 
