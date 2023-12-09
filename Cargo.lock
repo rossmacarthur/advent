@@ -245,6 +245,13 @@ dependencies = [
 ]
 
 [[package]]
+name = "itertools-shim"
+version = "0.0.0"
+dependencies = [
+ "itertools",
+]
+
+[[package]]
 name = "iterwindows"
 version = "0.3.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -351,6 +358,7 @@ dependencies = [
  "either",
  "itermore",
  "itertools",
+ "itertools-shim",
  "regex-macro",
  "then",
  "vectrix",
