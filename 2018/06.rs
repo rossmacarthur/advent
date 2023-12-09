@@ -19,8 +19,8 @@ fn default_input() -> Vec<Vector2> {
 }
 
 fn part1(points: Vec<Vector2>) -> usize {
-    let (min_x, max_x) = points.iter().map(|p| p.x).minmax().into_option().unwrap();
-    let (min_y, max_y) = points.iter().map(|p| p.y).minmax().into_option().unwrap();
+    let (min_x, max_x) = points.iter().map(|p| p.x).min_max().unwrap();
+    let (min_y, max_y) = points.iter().map(|p| p.y).min_max().unwrap();
 
     let mut infinites = HashSet::new();
     let mut counts = HashMap::new();
@@ -60,8 +60,8 @@ fn part1(points: Vec<Vector2>) -> usize {
 }
 
 fn part2(points: Vec<Vector2>, limit: i64) -> i64 {
-    let (min_x, max_x) = points.iter().map(|p| p.x).minmax().into_option().unwrap();
-    let (min_y, max_y) = points.iter().map(|p| p.y).minmax().into_option().unwrap();
+    let (min_x, max_x) = points.iter().map(|p| p.x).min_max().unwrap();
+    let (min_y, max_y) = points.iter().map(|p| p.y).min_max().unwrap();
 
     let mut count = 0;
     for x in min_x..=max_x {
