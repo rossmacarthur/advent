@@ -23,7 +23,7 @@ struct Opt {
     #[argh(option, short = 'd')]
     day: u32,
 
-    /// the subcommand: bench, new, open, run, or test
+    /// the subcommand: bench, new, open, or a Cargo subcommand
     #[argh(positional)]
     command: Command,
 
@@ -36,19 +36,17 @@ enum Command {
     Bench,
     New,
     Open,
-    Run,
-    Test,
+    Cargo(String),
 }
 
 impl argh::FromArgValue for Command {
     fn from_arg_value(value: &str) -> Result<Self, String> {
         match value {
-            "bench" => Ok(Self::Bench),
             "new" => Ok(Self::New),
             "open" => Ok(Self::Open),
-            "run" => Ok(Self::Run),
-            "test" => Ok(Self::Test),
-            _ => Err("expected one of: bench, new, open, run, test".into()),
+            "bench" => Ok(Self::Bench),
+            "check" | "build" | "test" | "run" | "clippy" => Ok(Self::Cargo(value.into())),
+            _ => Err("expected one of: bench, new, open, or a Cargo subcommand".into()),
         }
     }
 }
@@ -65,8 +63,7 @@ fn main() -> Result<()> {
         Command::Bench => bench(year, day, &args),
         Command::New => new(year, day),
         Command::Open => open(year, day, &args),
-        Command::Run => run(year, day, &args),
-        Command::Test => test(year, day, &args),
+        Command::Cargo(cmd) => cargo(cmd, year, day, &args),
     }
 }
 
@@ -212,26 +209,13 @@ fn bench(year: u32, day: u32, args: &[String]) -> Result<()> {
     process::exit(status.code().unwrap())
 }
 
-fn run(year: u32, day: u32, args: &[String]) -> Result<()> {
+fn cargo(cmd: String, year: u32, day: u32, args: &[String]) -> Result<()> {
     check_input(year, day)?;
 
     let bin_name = format!("{year:04}{day:02}");
 
     let status = process::Command::new(env!("CARGO"))
-        .args(["run", "--release", "--bin", &bin_name])
-        .args(args)
-        .status()?;
-
-    process::exit(status.code().unwrap())
-}
-
-fn test(year: u32, day: u32, args: &[String]) -> Result<()> {
-    check_input(year, day)?;
-
-    let bin_name = format!("{year:04}{day:02}");
-
-    let status = process::Command::new(env!("CARGO"))
-        .args(["test", "--release", "--bin", &bin_name])
+        .args([&cmd, "--release", "--bin", &bin_name])
         .args(args)
         .status()?;
 
