@@ -11,8 +11,7 @@ fn parse_input(input: &str) -> Vec<Blueprint> {
                 .split_whitespace()
                 .filter(|s| s.chars().all(|c| c.is_ascii_digit()))
                 .map(|s| s.parse().unwrap())
-                .next_array()
-                .unwrap();
+                .collect_array();
             [
                 (ORE, vector![ore_x, 0, 0, 0]),
                 (CLAY, vector![clay_x, 0, 0, 0]),

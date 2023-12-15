@@ -6,12 +6,11 @@ use device::{compute, Op};
 fn parse_nums(s: &str) -> [usize; 4] {
     s.split_whitespace()
         .map(|s| s.trim_end_matches(',').parse().unwrap())
-        .next_array()
-        .unwrap()
+        .collect_array()
 }
 
 fn parse_sample(s: &str) -> Sample {
-    let [before, instr, after] = s.lines().next_array().unwrap();
+    let [before, instr, after] = s.lines().collect_array();
     Sample {
         before: parse_nums(before.trim_start_matches("Before: [").trim_end_matches(']')),
         instr: parse_nums(instr),
@@ -20,7 +19,7 @@ fn parse_sample(s: &str) -> Sample {
 }
 
 fn parse_input(input: &str) -> (Vec<Sample>, Vec<[usize; 4]>) {
-    let [samples, prog] = input.split("\n\n\n\n").next_array().unwrap();
+    let [samples, prog] = input.split("\n\n\n\n").collect_array();
     let samples = samples.split("\n\n").map(parse_sample).collect();
     let prog = prog.lines().map(parse_nums).collect();
     (samples, prog)

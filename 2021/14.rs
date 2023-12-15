@@ -9,7 +9,7 @@ fn parse_input(input: &str) -> (&str, Rules) {
         .lines()
         .map(|line| {
             let (left, right) = line.split_once(" -> ").unwrap();
-            let pair = left.chars().next_array().unwrap();
+            let pair = left.chars().collect_array();
             let insert = right.chars().next().unwrap();
             (pair, insert)
         })

@@ -1,7 +1,7 @@
 use advent::prelude::*;
 
 fn parse_input(input: &str) -> (BTreeSet<i32>, Vec<i32>) {
-    let [initial, rules] = input.split("\n\n").next_array().unwrap();
+    let [initial, rules] = input.split("\n\n").collect_array();
 
     // Create a set containing the numbers of the pots with a plant.
     let pots: BTreeSet<i32> = initial

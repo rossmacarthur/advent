@@ -8,8 +8,7 @@ fn parse_input(input: &str) -> Vec<[i64; 4]> {
                 .flat_map(|s| s.split('-'))
                 .map(str::parse)
                 .map(Result::unwrap)
-                .next_array()
-                .unwrap()
+                .collect_array()
         })
         .collect()
 }

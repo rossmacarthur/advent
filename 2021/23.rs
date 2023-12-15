@@ -24,8 +24,7 @@ fn parse_input(input: &str) -> Map<2> {
         })
         .map(Some)
         .arrays()
-        .next_array()
-        .unwrap();
+        .collect_array();
 
     Map { hallway, rooms }
 }
@@ -213,8 +212,7 @@ fn part2(map: Map<2>) -> usize {
         .into_iter()
         .enumerate()
         .map(|(i, room)| [room[0], Some(fill[i][0]), Some(fill[i][1]), room[1]])
-        .next_array()
-        .unwrap();
+        .collect_array();
     solve(Map { hallway, rooms })
 }
 

@@ -23,8 +23,7 @@ fn parse_input(input: &str) -> (Vec<i64>, Vec<Vec<RangeMap>>) {
                         .split_whitespace()
                         .map(str::parse)
                         .map(Result::unwrap)
-                        .next_array()
-                        .unwrap();
+                        .collect_array();
                     RangeMap {
                         src: Range(src, src + d),
                         dst: Range(dst, dst + d),

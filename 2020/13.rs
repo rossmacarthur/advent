@@ -1,7 +1,7 @@
 use advent::prelude::*;
 
 fn parse_input(input: &str) -> (i64, Vec<(i64, i64)>) {
-    let [ts, bus_ids] = input.lines().next_array().unwrap();
+    let [ts, bus_ids] = input.lines().collect_array();
     let bus_ids = bus_ids
         .split(',')
         .enumerate()

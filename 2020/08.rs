@@ -3,7 +3,7 @@ use advent::prelude::*;
 fn parse_input(s: &str) -> Vec<(Op, i64)> {
     s.lines()
         .map(|line| {
-            let [op, arg] = line.split_whitespace().next_array().unwrap();
+            let [op, arg] = line.split_whitespace().collect_array();
             let op = match op {
                 "nop" => Op::Nop,
                 "acc" => Op::Acc,

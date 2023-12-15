@@ -10,8 +10,7 @@ fn parse_hand(h: &str) -> Hand {
             'T' => 10,
             _ => c.to_digit(10).unwrap() as u8,
         })
-        .next_array()
-        .unwrap()
+        .collect_array()
 }
 
 fn parse_input(input: &str) -> Vec<(Hand, i64)> {

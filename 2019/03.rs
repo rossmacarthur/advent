@@ -21,8 +21,7 @@ fn parse_input(input: &str) -> [Path; 2] {
                 })
                 .collect()
         })
-        .next_array()
-        .unwrap()
+        .collect_array()
 }
 
 fn default_input() -> [Path; 2] {

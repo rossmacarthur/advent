@@ -5,8 +5,7 @@ fn parse_point(input: &str) -> Vector2 {
         .split(", ")
         .map(str::parse)
         .map(Result::unwrap)
-        .next_array()
-        .unwrap()
+        .collect_array()
         .into()
 }
 

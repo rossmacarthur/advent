@@ -3,7 +3,7 @@ use advent::prelude::*;
 type Image = HashMap<Vector2, bool>;
 
 fn parse_input(input: &str) -> (Vec<bool>, Image) {
-    let [alg, image] = input.split("\n\n").next_array().unwrap();
+    let [alg, image] = input.split("\n\n").collect_array();
     let alg = alg.chars().map(|c| c == '#').collect();
     let image = parse_map(image, |c| c == '#');
     (alg, image)
