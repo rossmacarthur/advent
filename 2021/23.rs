@@ -23,7 +23,7 @@ fn parse_input(input: &str) -> Map<2> {
             _ => None,
         })
         .map(Some)
-        .array_chunked()
+        .arrays()
         .next_array()
         .unwrap();
 

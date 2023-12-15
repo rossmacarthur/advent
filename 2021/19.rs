@@ -11,6 +11,7 @@ fn parse_input(input: &str) -> VecDeque<Vec<Vector3>> {
                         .map(str::parse)
                         .map(Result::unwrap)
                         .next_array::<3>()
+                        .ok()
                 })
                 .map(Vector3::from)
                 .collect()

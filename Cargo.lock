@@ -97,9 +97,9 @@ dependencies = [
 
 [[package]]
 name = "arrays"
-version = "0.1.1"
+version = "0.2.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "2dbdbb2877d26e0647c6b8125802b2ecf2dc2a28d864dde41e6f9b9a54da08fe"
+checksum = "3c9810d892911da7c1cc723e12a5c47645ae4f82daf5e6d73cc73f1cc6fcf1e1"
 
 [[package]]
 name = "ascii-art"
@@ -217,9 +217,9 @@ dependencies = [
 
 [[package]]
 name = "itermore"
-version = "0.6.0"
+version = "0.7.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "7e59d52c01f0facb5dd95b889ba6ae459576781907cfd251361d8882c4305509"
+checksum = "fed0daf803a3818d3693fe1fdd82d8ac0f41d0ea3f05709d5e144c4eb2b85ba5"
 dependencies = [
  "arrays",
 ]
