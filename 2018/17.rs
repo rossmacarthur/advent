@@ -7,12 +7,11 @@ fn parse_range(input: &str) -> [i64; 2] {
         .split("..")
         .map(str::parse)
         .map(Result::unwrap)
-        .next_array()
-        .unwrap()
+        .collect_array()
 }
 
 fn parse_vein(input: &str) -> impl Iterator<Item = Vector2> {
-    let [left, right] = input.split(", ").next_array().unwrap();
+    let [left, right] = input.split(", ").collect_array();
     if let Some(s) = left.strip_prefix("x=") {
         let x = s.parse().unwrap();
         let [y1, y2] = parse_range(right);

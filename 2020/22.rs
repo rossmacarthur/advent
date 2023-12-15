@@ -12,8 +12,7 @@ fn default_input() -> [VecDeque<usize>; 2] {
     include_input!(2020 / 22)
         .split("\n\n")
         .map(parse_player)
-        .next_array()
-        .unwrap()
+        .collect_array()
 }
 
 #[derive(Debug, Clone, Copy)]

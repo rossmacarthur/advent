@@ -4,7 +4,7 @@ fn parse_input(input: &str) -> Vec<Food<'_>> {
     input
         .lines()
         .map(|line| {
-            let [left, right] = line.split(" (contains ").next_array().unwrap();
+            let [left, right] = line.split(" (contains ").collect_array();
             Food {
                 ingredients: left.split_whitespace().collect(),
                 allergens: right.trim_end_matches(')').split(", ").collect(),

@@ -15,7 +15,7 @@ fn parse_tickets(input: &str) -> impl Iterator<Item = Ticket> + '_ {
 }
 
 fn parse_input(input: &str) -> (Vec<Rule<'_>>, Ticket, Vec<Ticket>) {
-    let [rules, your, nearby] = input.split("\n\n").next_array().unwrap();
+    let [rules, your, nearby] = input.split("\n\n").collect_array();
     let rules =
         regex!(r"(?P<name>.+): (?P<lmin>\d+)\-(?P<lmax>\d+) or (?P<rmin>\d+)\-(?P<rmax>\d+)")
             .captures_iter(rules)

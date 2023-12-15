@@ -55,7 +55,7 @@ fn parse_op(input: &str) -> Op {
 fn parse_instr(input: &str) -> Instr {
     let mut it = input.split_whitespace();
     let op = it.next().map(parse_op).unwrap();
-    let args = it.map(str::parse).map(Result::unwrap).next_array().unwrap();
+    let args = it.map(str::parse).map(Result::unwrap).collect_array();
     (op, args)
 }
 

@@ -8,10 +8,7 @@ fn parse_input(input: &str) -> Vec<(bool, Cuboid)> {
         .map(|line| {
             let re = regex!(r"(on|off) x=(-?\d+)..(-?\d+),y=(-?\d+)..(-?\d+),z=(-?\d+)..(-?\d+)");
             let caps = re.captures(line).unwrap();
-            let cuboid = (2..8)
-                .map(|i| caps[i].parse().unwrap())
-                .next_array()
-                .unwrap();
+            let cuboid = (2..8).map(|i| caps[i].parse().unwrap()).collect_array();
             (&caps[1] == "on", cuboid)
         })
         .collect()

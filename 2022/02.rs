@@ -11,8 +11,7 @@ fn parse_input(input: &str) -> Vec<[u32; 2]> {
                     "C" | "Z" => 2,
                     _ => unreachable!(),
                 })
-                .next_array()
-                .unwrap()
+                .collect_array()
         })
         .collect()
 }

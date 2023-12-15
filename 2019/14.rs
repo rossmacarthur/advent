@@ -4,7 +4,7 @@ type Pair<'a> = (i64, &'a str);
 type Formulae<'a> = HashMap<&'a str, Formula<'a>>;
 
 fn parse_pair(s: &str) -> Pair<'_> {
-    let [c, chem] = s.split_whitespace().next_array().unwrap();
+    let [c, chem] = s.split_whitespace().collect_array();
     (c.parse().unwrap(), chem)
 }
 
@@ -12,7 +12,7 @@ fn parse_input(input: &str) -> HashMap<&str, Formula<'_>> {
     input
         .lines()
         .map(|line| {
-            let [lhs, rhs] = line.split(" => ").next_array().unwrap();
+            let [lhs, rhs] = line.split(" => ").collect_array();
             let input = lhs.split(", ").map(parse_pair).collect();
             let (result, chem) = parse_pair(rhs);
             (chem, Formula { input, result })

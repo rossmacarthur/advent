@@ -7,7 +7,7 @@ fn parse_line(line: &str) -> impl Iterator<Item = i64> + '_ {
 }
 
 fn parse_input(input: &str) -> Vec<(i64, i64)> {
-    let [times, distances] = input.lines().next_array().unwrap();
+    let [times, distances] = input.lines().collect_array();
     parse_line(times).zip(parse_line(distances)).collect()
 }
 

@@ -17,7 +17,7 @@ fn parse_input(input: &str) -> (Vec<Direction>, HashMap<Node, [Node; 2]>) {
         .map(|line| {
             let re = regex!(r"(?P<from>\w{3}) = \((?P<left>\w{3}), (?P<right>\w{3})\)");
             let caps = re.captures(line).unwrap();
-            let parse_node = |s: &str| s.bytes().next_array().unwrap();
+            let parse_node = |s: &str| s.bytes().collect_array();
             let from = parse_node(&caps["from"]);
             let left = parse_node(&caps["left"]);
             let right = parse_node(&caps["right"]);
