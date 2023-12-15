@@ -112,7 +112,7 @@ fn part1((seeds, maps): (Vec<i64>, Vec<Vec<RangeMap>>)) -> i64 {
 fn part2((seeds, maps): (Vec<i64>, Vec<Vec<RangeMap>>)) -> i64 {
     let seeds = seeds
         .into_iter()
-        .array_chunked()
+        .arrays()
         .map(|[s, ds]| Range(s, s + ds))
         .collect();
     solve(seeds, maps)

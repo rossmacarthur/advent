@@ -72,7 +72,7 @@ impl Ord for Packet {
 fn part1(packets: Vec<Packet>) -> usize {
     packets
         .into_iter()
-        .array_chunked()
+        .arrays()
         .enumerate()
         .filter_map(|(i, [left, right])| (left < right).some(i + 1))
         .sum()
