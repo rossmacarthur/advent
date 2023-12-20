@@ -51,6 +51,7 @@ pub fn gcd(mut x: i64, mut y: i64) -> i64 {
 }
 
 /// Returns the least common multiple of two numbers.
+#[track_caller]
 pub fn lcm(x: i64, y: i64) -> i64 {
     x * y / gcd(x, y)
 }
