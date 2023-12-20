@@ -3,6 +3,7 @@ members = ["crates/*"]
 
 [workspace.lints.rust]
 elided-lifetimes-in-paths = "warn"
+unsafe-op-in-unsafe-fn = "warn"
 
 [workspace.lints.clippy]
 many_single_char_names = "allow"
@@ -622,3 +623,7 @@ path = "2023/18.rs"
 [[bin]]
 name = "202319"
 path = "2023/19.rs"
+
+[[bin]]
+name = "202320"
+path = "2023/20.rs"
