@@ -10,6 +10,7 @@ argh = { workspace = true }
 curl = { workspace = true }
 open = { workspace = true }
 serde = { workspace = true }
+time = { workspace = true }
 toml = { workspace = true }
 yansi = { workspace = true }
 
