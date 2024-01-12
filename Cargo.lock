@@ -355,6 +355,7 @@ dependencies = [
  "itermore",
  "itertools",
  "itertools-shim",
+ "rand",
  "regex-macro",
  "then",
  "vectrix",
