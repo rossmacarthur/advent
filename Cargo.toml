@@ -2,8 +2,11 @@
 members = ["crates/*"]
 
 [workspace.lints.rust]
-elided-lifetimes-in-paths = "warn"
-unsafe-op-in-unsafe-fn = "warn"
+elided_lifetimes_in_paths = "warn"
+let_underscore_drop = "warn"
+macro_use_extern_crate = "warn"
+meta_variable_misuse = "warn"
+unsafe_op_in_unsafe_fn = "warn"
 
 [workspace.lints.clippy]
 many_single_char_names = "allow"
@@ -636,3 +639,7 @@ path = "2023/22.rs"
 [[bin]]
 name = "202323"
 path = "2023/23.rs"
+
+[[bin]]
+name = "202324"
+path = "2023/24.rs"
