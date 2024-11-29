@@ -159,7 +159,7 @@ fn new(year: u32, day: u32) -> Result<()> {
 
 fn open(year: u32, day: u32, args: &[String]) -> Result<()> {
     let url = format!("https://adventofcode.com/{year}/day/{day}");
-    let browser = args.get(0).map(|s| s.as_str()).unwrap_or("firefox");
+    let browser = args.first().map(|s| s.as_str()).unwrap_or("firefox");
     open::with(url, browser)?;
     Ok(())
 }

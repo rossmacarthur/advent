@@ -18,7 +18,7 @@ enum Op {
 ///      "rn=1" -> ("rn", Op::Equals(1))
 fn split_op(step: &str) -> (&str, Op) {
     let s = step.as_bytes();
-    let p = step.find(|c| matches!(c, '-' | '=')).unwrap();
+    let p = step.find(['-', '=']).unwrap();
     let label = &step[..p];
     let op = match &s[p] {
         b'-' => Op::Dash,

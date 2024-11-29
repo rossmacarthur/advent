@@ -38,7 +38,7 @@ fn solve(instrs: Vec<(u8, u8)>, workers: usize, dt: usize) -> (String, usize) {
     let mut steps: BinaryHeap<_> = after
         .keys()
         .copied()
-        .filter(|step| before.get(step).is_none())
+        .filter(|step| !before.contains_key(step))
         .map(Reverse)
         .collect();
 

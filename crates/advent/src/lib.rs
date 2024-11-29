@@ -184,7 +184,7 @@ where
     }
 }
 
-impl<'a, I> Solution<'a, I>
+impl<I> Solution<'_, I>
 where
     I: Clone + UnwindSafe,
 {

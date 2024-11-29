@@ -28,7 +28,7 @@ fn predict(nums: &[i64]) -> i64 {
         .map(|[a, b]| b - a)
         .collect();
 
-    return nums.last().unwrap() + predict(&diffs);
+    nums.last().unwrap() + predict(&diffs)
 }
 
 fn solve(dataset: Vec<Vec<i64>>) -> i64 {
