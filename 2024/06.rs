@@ -1,4 +1,4 @@
-use std::collections::hash_map::Entry;
+use std::collections::{hash_map::Entry, VecDeque};
 
 use advent::prelude::*;
 
@@ -51,38 +51,64 @@ fn walk(map: &Map) -> HashSet<Vector2> {
     visited
 }
 
-fn loops(map: &Map, obstacle: Vector2) -> bool {
-    let Map { map, start } = map;
-    let (mut p, mut d) = *start;
-
-    let mut visited = HashSet::new();
-    loop {
-        if !visited.insert((p, d)) {
-            return true;
-        }
-        let next = p + d;
-        if next == obstacle {
-            d = vector![-d.y, d.x];
-            continue;
-        }
-        match map.get(&next) {
-            None => break,
-            Some(Tile::Empty | Tile::Start) => p += d,
-            Some(Tile::Obstacle) => d = vector![-d.y, d.x],
-        }
-    }
-    false
-}
-
 fn part1(map: Map) -> usize {
     walk(&map).len()
 }
 
 fn part2(map: Map) -> usize {
-    walk(&map)
-        .into_iter()
-        .filter(|&obstacle| obstacle != map.start.0 && loops(&map, obstacle))
-        .count()
+    let Map { map: base_map, start: (start_p, start_d) } = map;
+    let mut count = 0;
+    let mut seen_obstacles = HashSet::new();
+    let mut q = VecDeque::new();
+    
+    q.push_back((start_p, start_d));
+
+    while let Some((p, d)) = q.pop_front() {
+        let next = p + d;
+
+        match base_map.get(&next) {
+            None => continue,
+            Some(Tile::Empty | Tile::Start) => {
+                // If this is an empty space we could use as an obstacle
+                if next != start_p && !seen_obstacles.contains(&next) {
+                    seen_obstacles.insert(next);
+                    
+                    // Start a fresh traversal with just this obstacle
+                    let mut visited = HashSet::new();
+                    let mut test_q = VecDeque::new();
+                    test_q.push_back((p, vector![-d.y, d.x]));  // Turn at the obstacle
+                    
+                    while let Some((test_p, test_d)) = test_q.pop_front() {
+                        if !visited.insert((test_p, test_d)) {
+                            count += 1;
+                            break;
+                        }
+                        let test_next = test_p + test_d;
+                        if test_next == next {
+                            // Hit our obstacle, turn
+                            test_q.push_back((test_p, vector![-test_d.y, test_d.x]));
+                        } else {
+                            match base_map.get(&test_next) {
+                                None => break,
+                                Some(Tile::Empty | Tile::Start) => {
+                                    test_q.push_back((test_next, test_d));
+                                }
+                                Some(Tile::Obstacle) => {
+                                    test_q.push_back((test_p, vector![-test_d.y, test_d.x]));
+                                }
+                            }
+                        }
+                    }
+                }
+                // Continue main traversal
+                q.push_back((next, d));
+            }
+            Some(Tile::Obstacle) => {
+                q.push_back((p, vector![-d.y, d.x]));
+            }
+        }
+    }
+    count
 }
 
 fn main() {
