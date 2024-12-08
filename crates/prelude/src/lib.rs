@@ -9,7 +9,8 @@ pub use either::Either;
 pub use itermore::{
     cartesian_product, IterArrayChunks as _, IterArrayCombinations as _, IterArrayWindows as _,
     IterCartesianProduct as _, IterCircularArrayWindows as _, IterCollectArray as _,
-    IterMinMax as _, IterNextChunk as _, IterSorted as _,
+    IterCombinations as _, IterCombinationsWithReps as _, IterMinMax as _, IterNextChunk as _,
+    IterSorted as _,
 };
 pub use itertools_shim::ItertoolsShim;
 pub use regex_macro::regex;
