@@ -2,6 +2,7 @@ use std::fmt::Write;
 
 use itertools::{
     ExactlyOneError, Intersperse, Itertools, MultiProduct, Permutations, Positions, Powerset,
+    TakeWhileInclusive,
 };
 
 pub trait ItertoolsShim: Iterator {
@@ -72,6 +73,14 @@ pub trait ItertoolsShim: Iterator {
         Self::Item: Clone,
     {
         Itertools::intersperse(self, element)
+    }
+
+    fn take_while_inclusive<P>(self, predicate: P) -> TakeWhileInclusive<Self, P>
+    where
+        Self: Sized,
+        P: FnMut(&Self::Item) -> bool,
+    {
+        Itertools::take_while_inclusive(self, predicate)
     }
 }
 
