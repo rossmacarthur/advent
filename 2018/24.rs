@@ -7,7 +7,7 @@ fn parse_attack_type(s: &str) -> AttackType {
         "cold" => AttackType::Cold,
         "fire" => AttackType::Fire,
         "radiation" => AttackType::Radiation,
-        _ => panic!("unknown damage type `{}`", s),
+        _ => panic!("unknown damage type `{s}`"),
     }
 }
 
@@ -30,7 +30,7 @@ fn parse_group(id: Id, s: &str) -> Group {
             let m = match kind {
                 "immune" => 0,
                 "weak" => 2,
-                _ => panic!("unknown modifier `{}`", kind),
+                _ => panic!("unknown modifier `{kind}`"),
             };
             for attack_type in list.split(", ") {
                 damages[parse_attack_type(attack_type) as usize] = m;

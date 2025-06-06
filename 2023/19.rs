@@ -27,7 +27,7 @@ fn parse_input(input: &str) -> (HashMap<&str, Vec<Rule<'_>>>, Vec<Part>) {
                         } else if let Some((field, val)) = cond.split_once('>') {
                             Rule::GreaterThan(workflow, parse_dim(field), val.parse().unwrap())
                         } else {
-                            panic!("invalid condition `{}'", cond)
+                            panic!("invalid condition `{cond}'")
                         }
                     }
                 })

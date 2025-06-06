@@ -43,7 +43,7 @@ fn distances(path: &[(Vector2, i64)]) -> HashMap<Vector2, i64> {
 }
 
 fn keys(distances: &HashMap<Vector2, i64>) -> HashSet<Vector2> {
-    distances.iter().map(|(k, _)| *k).collect()
+    distances.keys().copied().collect()
 }
 
 fn part1([p1, p2]: [Path; 2]) -> i64 {

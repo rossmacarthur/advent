@@ -5,7 +5,7 @@ fn default_input() -> &'static str {
 }
 
 fn reacts(a: u8, b: u8) -> bool {
-    a.to_ascii_lowercase() == b.to_ascii_lowercase() && a != b
+    a.eq_ignore_ascii_case(&b) && a != b
 }
 
 fn react(polymer: impl Iterator<Item = u8>) -> usize {

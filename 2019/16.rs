@@ -30,7 +30,7 @@ fn fft(mut signal: Vec<i64>) -> Vec<i64> {
             .map(|i| {
                 PATTERN
                     .iter()
-                    .flat_map(|p| iter::repeat(p).take(i))
+                    .flat_map(|p| iter::repeat_n(p, i))
                     .cycle()
                     .skip(1)
                     .zip(&signal)

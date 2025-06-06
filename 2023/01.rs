@@ -8,11 +8,11 @@ fn part1(calibration: &str) -> i64 {
     calibration
         .lines()
         .map(|line| {
-            let digits = line
+            let mut digits = line
                 .bytes()
                 .filter(u8::is_ascii_digit)
                 .map(|b| (b - b'0') as i64);
-            digits.clone().next().unwrap() * 10 + digits.last().unwrap()
+            digits.clone().next().unwrap() * 10 + digits.next_back().unwrap()
         })
         .sum()
 }
@@ -24,7 +24,7 @@ fn part2(calibration: &str) -> i64 {
     calibration
         .lines()
         .map(|line| {
-            let digits = line.bytes().enumerate().filter_map(|(i, b)| {
+            let mut digits = line.bytes().enumerate().filter_map(|(i, b)| {
                 if b.is_ascii_digit() {
                     return Some((b - b'0') as i64);
                 }
@@ -35,7 +35,7 @@ fn part2(calibration: &str) -> i64 {
                     .map(|(j, _)| (j + 1) as i64)
                     .next()
             });
-            digits.clone().next().unwrap() * 10 + digits.last().unwrap()
+            digits.clone().next().unwrap() * 10 + digits.next_back().unwrap()
         })
         .sum()
 }

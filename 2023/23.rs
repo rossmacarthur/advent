@@ -18,7 +18,7 @@ fn parse_input(input: &str) -> (HashMap<Vector2, Tile>, Vector2, Vector2) {
         '>' => Tile::Slope(RIGHT),
         'v' => Tile::Slope(DOWN),
         '<' => Tile::Slope(LEFT),
-        _ => panic!("unexpected character `{}`", c),
+        _ => panic!("unexpected character `{c}`"),
     });
     let (start, end) = get_start_and_end(&map);
     (map, start, end)

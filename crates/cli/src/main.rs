@@ -241,7 +241,7 @@ fn print(header: &str, message: impl Display) {
     if io::stdout().is_terminal() {
         println!("{:>12} {}", Paint::new(&header).bold().green(), message);
     } else {
-        println!("{:>12} {}", header, message);
+        println!("{header:>12} {message}");
     }
 }
 
@@ -249,6 +249,6 @@ fn warning(header: &str, message: impl Display) {
     if io::stdout().is_terminal() {
         println!("{:>12} {}", Paint::new(&header).bold().yellow(), message);
     } else {
-        println!("{:>12} {}", header, message);
+        println!("{header:>12} {message}");
     }
 }

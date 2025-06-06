@@ -12,7 +12,7 @@ fn parse_input(input: &str) -> Machine<'_> {
                 "broadcaster" => (input, Module::Broadcaster),
                 i if i.starts_with('%') => (&i[1..], Module::FlipFlop),
                 i if i.starts_with('&') => (&i[1..], Module::Conjunction),
-                _ => panic!("invalid input `{}`", input),
+                _ => panic!("invalid input `{input}`"),
             };
             (name, (kind, outputs.split(", ").collect()))
         })

@@ -122,7 +122,7 @@ fn split(node: &mut Node) -> Result<(), ()> {
         Node::Num(n) => {
             if *n >= 10 {
                 let left = Box::new(Node::Num(*n / 2));
-                let right = Box::new(Node::Num((*n + 1) / 2));
+                let right = Box::new(Node::Num(n.div_ceil(2)));
                 *node = Node::Pair(left, right);
                 return Err(());
             }

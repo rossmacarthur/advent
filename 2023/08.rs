@@ -8,7 +8,7 @@ fn parse_input(input: &str) -> (Vec<Direction>, HashMap<Node, [Node; 2]>) {
         .map(|c| match c {
             'L' => Direction::Left,
             'R' => Direction::Right,
-            c => panic!("unexpected direction `{}`", c),
+            c => panic!("unexpected direction `{c}`"),
         })
         .collect();
 

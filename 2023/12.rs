@@ -11,7 +11,7 @@ fn parse_input(input: &str) -> Vec<(Vec<Spring>, Vec<usize>)> {
                     '?' => Spring::Unknown,
                     '.' => Spring::Operational,
                     '#' => Spring::Damaged,
-                    _ => panic!("unexpected character `{}`", c),
+                    _ => panic!("unexpected character `{c}`"),
                 })
                 .collect();
             let groups = groups
