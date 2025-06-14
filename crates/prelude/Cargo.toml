@@ -9,6 +9,7 @@ ahash = { workspace = true }
 either = { workspace = true }
 itermore = { workspace = true }
 itertools = { workspace = true }
+regex = { workspace = true }
 regex-macro = { workspace = true }
 vectrix = { workspace = true }
 

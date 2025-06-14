@@ -75,7 +75,7 @@ fn snowflakes(rng: &mut ThreadRng, w: usize, h: usize) -> Image {
     let mut i = 0;
     while i < w * h {
         img[i / w][i % w] = Pixel::with_color('·', Color::White);
-        i += rng.gen_range(3..6);
+        i += rng.random_range(3..6);
     }
     Image(img)
 }
@@ -99,7 +99,7 @@ fn tree(rng: &mut ThreadRng, mut w: usize) -> Image {
     }
 
     // Add some baubles
-    let off = rng.gen_range(0..3);
+    let off = rng.random_range(0..3);
     for (i, row) in img.iter_mut().skip(2).enumerate() {
         let (left, mid) = row.split_at_mut(w / 3);
         let (mid, right) = mid.split_at_mut(w / 3);
@@ -142,7 +142,7 @@ fn paste(mut bg: Image, fg: Image, (x, y): (usize, usize)) -> Image {
 }
 
 pub fn fun() -> Image {
-    let mut rng = rand::thread_rng();
+    let mut rng = rand::rng();
     let width = 46;
     let height = 19;
 
@@ -151,12 +151,12 @@ pub fn fun() -> Image {
 
     // Generate the first medium sized tree
     let mut x = 0;
-    let w = rng.gen_range(11..=17);
+    let w = rng.random_range(11..=17);
     img = paste(img, tree(&mut rng, w), (x, 0));
     x += w;
 
     // Generate a slightly bigger tree
-    let w = rng.gen_range(13..=21);
+    let w = rng.random_range(13..=21);
     img = paste(img, tree(&mut rng, w), (x, 0));
     x += w;
 
