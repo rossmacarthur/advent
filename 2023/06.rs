@@ -3,7 +3,8 @@ use advent::prelude::*;
 fn parse_line(line: &str) -> impl Iterator<Item = i64> + '_ {
     let (_, nums) = line.split_once(':').unwrap();
     let n = nums.replace(char::is_whitespace, "").parse().unwrap();
-    iter::once(n).chain(nums.split_whitespace().map(str::parse).map(Result::unwrap))
+    let nums = nums.split_whitespace().map(str::parse).map(Result::unwrap);
+    iter::chain([n], nums)
 }
 
 fn parse_input(input: &str) -> Vec<(i64, i64)> {

@@ -30,20 +30,22 @@ enum Instr {
 /// Returns an iterator over the cycle and the X value for that cycle.
 fn signal(instrs: Vec<Instr>) -> impl Iterator<Item = (i64, i64)> {
     // An iterator over the change in x value (dx)
-    let it = [0]
+    let it = instrs.into_iter().flat_map(|instr| {
+        match instr {
+            Instr::Noop => Either::Left([0]),
+            Instr::Addx(n) => Either::Right([0, n]),
+        }
         .into_iter()
-        .chain(instrs.into_iter().flat_map(|instr| match instr {
-            Instr::Noop => Either::Left([0].into_iter()),
-            Instr::Addx(n) => Either::Right([0, n].into_iter()),
-        }));
+    });
 
     // Accumulates the change in x value and enumerates it to get the cycle
-    it.scan(1, |x, dx| {
-        *x += dx;
-        Some(*x)
-    })
-    .enumerate()
-    .map(|(i, x)| (i as i64, x))
+    iter::chain([0], it)
+        .scan(1, |x, dx| {
+            *x += dx;
+            Some(*x)
+        })
+        .enumerate()
+        .map(|(i, x)| (i as i64, x))
 }
 
 fn part1(instrs: Vec<Instr>) -> i64 {

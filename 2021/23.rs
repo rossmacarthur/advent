@@ -7,8 +7,10 @@ use advent::prelude::*;
 fn parse_input(input: &str) -> Map<2> {
     let iter = (0..).map_while(|c| {
         let mut lines = input.lines().map(|line| line.chars());
-        let col = iter::once(lines.next()?.nth(c)?)
-            .chain(lines.filter_map(move |mut chars| chars.nth(c)));
+        let col = iter::chain(
+            [lines.next()?.nth(c)?],
+            lines.filter_map(move |mut chars| chars.nth(c)),
+        );
         Some(col)
     });
 
