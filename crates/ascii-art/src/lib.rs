@@ -81,7 +81,7 @@ fn snowflakes(rng: &mut ThreadRng, w: usize, h: usize) -> Image {
 }
 
 fn tree(rng: &mut ThreadRng, mut w: usize) -> Image {
-    if w % 2 == 0 {
+    if w.is_multiple_of(2) {
         w -= 1;
     }
 

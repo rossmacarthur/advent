@@ -25,7 +25,7 @@ fn score(deck: VecDeque<usize>) -> usize {
     deck.into_iter()
         .rev()
         .enumerate()
-        .map(|(i, card)| (card * (i + 1)))
+        .map(|(i, card)| card * (i + 1))
         .sum()
 }
 

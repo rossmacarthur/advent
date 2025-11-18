@@ -102,7 +102,7 @@ fn solve(mut map: HashMap<Vector2, Tile>, moves: Vec<Vector2>) -> i64 {
         }
 
         // Sort it by distance from the robot and then move all the boxes.
-        visited.sort_unstable_by_key(|p| ((p - robot).l1_norm()));
+        visited.sort_unstable_by_key(|p| (p - robot).l1_norm());
         for &p in visited.iter().rev() {
             map.insert(p + m, map[&p]);
             map.insert(p, Tile::Empty);

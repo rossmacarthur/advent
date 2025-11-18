@@ -80,7 +80,7 @@ where
                     Op::Mul(n) => old * n,
                     Op::Square => old * old,
                 });
-                let to = if new % div == 0 { mt } else { mf };
+                let to = if new.is_multiple_of(div) { mt } else { mf };
                 monkeys[to].items.push_back(new);
                 inspects[m] += 1;
             }

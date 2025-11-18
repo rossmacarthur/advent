@@ -56,7 +56,7 @@ fn check(total: u64, nums: &[u64], part2: bool) -> ControlFlow<()> {
     // Could `total` have been made by multiplying by `last`?
     // This is only possible if `total` is divisible by `last`.
     // If so, recurse with the new total.
-    if total % last == 0 {
+    if total.is_multiple_of(last) {
         check(total / last, rest, part2)?;
     }
 

@@ -30,20 +30,15 @@ fn default_input() -> HashMap<i64, Tile> {
     parse_input(include_input!(2020 / 20))
 }
 
-#[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Hash, Default)]
 enum Pixel {
+    #[default]
     Black,
     White,
 }
 
 #[derive(Debug, Clone, Copy, Default, PartialEq, Eq, Hash)]
 struct Tile([[Pixel; 10]; 10]);
-
-impl Default for Pixel {
-    fn default() -> Self {
-        Self::Black
-    }
-}
 
 impl Deref for Tile {
     type Target = [[Pixel; 10]; 10];

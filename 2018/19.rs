@@ -12,7 +12,7 @@ fn sum_of_divisors(n: usize) -> usize {
     let mut sum = 0;
     let mut i = 1;
     while i * i <= n {
-        if n % i == 0 {
+        if n.is_multiple_of(i) {
             sum += i;
             let j = n / i;
             if j != i {
