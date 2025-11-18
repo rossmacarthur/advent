@@ -104,10 +104,11 @@ const fn current_mask(bit: i32) -> u32 {
     let mut i = 0;
     while i < OFFSETS.len() {
         let off = OFFSETS[i];
-        if (off != -1 || bit % 5 != 0) && (off != 1 || bit % 5 != 4) {
-            if let b @ 0..=24 = bit + off {
-                mask |= 1 << b;
-            }
+        if (off != -1 || bit % 5 != 0)
+            && (off != 1 || bit % 5 != 4)
+            && let b @ 0..=24 = bit + off
+        {
+            mask |= 1 << b;
         }
         i += 1;
     }

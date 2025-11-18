@@ -3,7 +3,6 @@ members = ["crates/*"]
 
 [workspace.lints.rust]
 elided-lifetimes-in-paths = "warn"
-unsafe-op-in-unsafe-fn = "warn"
 
 [workspace.lints.clippy]
 many_single_char_names = "allow"
@@ -32,7 +31,7 @@ yansi = "1.0.1"
 [package]
 name = "advent-bins"
 version = "0.0.0"
-edition = "2021"
+edition = "2024"
 publish = false
 
 [dependencies]

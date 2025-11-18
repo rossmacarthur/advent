@@ -10,7 +10,7 @@ fn parse_range(input: &str) -> [i64; 2] {
         .collect_array()
 }
 
-fn parse_vein(input: &str) -> impl Iterator<Item = Vector2> {
+fn parse_vein(input: &str) -> impl Iterator<Item = Vector2> + use<> {
     let [left, right] = input.split(", ").collect_array();
     if let Some(s) = left.strip_prefix("x=") {
         let x = s.parse().unwrap();

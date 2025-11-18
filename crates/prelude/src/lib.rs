@@ -1,5 +1,5 @@
 pub use std::cmp;
-pub use std::cmp::{max, min, Ordering, Reverse};
+pub use std::cmp::{Ordering, Reverse, max, min};
 pub use std::collections::{BTreeMap, BTreeSet, BinaryHeap, VecDeque};
 pub use std::iter;
 pub use std::mem;
@@ -7,15 +7,15 @@ pub use std::mem;
 pub use ahash::{HashMap, HashMapExt as _, HashSet, HashSetExt as _};
 pub use either::Either;
 pub use itermore::{
-    cartesian_product, IterArrayChunks as _, IterArrayCombinations as _, IterArrayWindows as _,
+    IterArrayChunks as _, IterArrayCombinations as _, IterArrayWindows as _,
     IterCartesianProduct as _, IterCircularArrayWindows as _, IterCollectArray as _,
     IterCombinations as _, IterCombinationsWithReps as _, IterMinMax as _, IterNextChunk as _,
-    IterSorted as _,
+    IterSorted as _, cartesian_product,
 };
 pub use itertools_shim::ItertoolsShim;
 pub use regex_macro::regex;
 pub use then::Some as _;
-pub use vectrix::{vector, Matrix, Vector};
+pub use vectrix::{Matrix, Vector, vector};
 
 pub type Vector2 = vectrix::Vector<i64, 2>;
 pub type Vector3 = vectrix::Vector<i64, 3>;

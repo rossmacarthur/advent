@@ -1,7 +1,7 @@
 mod device;
 
 use advent::prelude::*;
-use device::{compute, Op};
+use device::{Op, compute};
 
 fn parse_nums(s: &str) -> [usize; 4] {
     s.split_whitespace()

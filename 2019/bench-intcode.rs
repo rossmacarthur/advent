@@ -4,7 +4,7 @@
 
 mod intcode;
 
-use crate::intcode::{parse_program, Computer, State};
+use crate::intcode::{Computer, State, parse_program};
 
 #[inline(never)]
 fn bench(program: Vec<i64>, input: &[i64]) -> i64 {

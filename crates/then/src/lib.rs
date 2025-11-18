@@ -65,11 +65,7 @@ pub trait Some {
 impl Some for bool {
     #[inline]
     fn some<T>(self, t: T) -> Option<T> {
-        if self {
-            Some(t)
-        } else {
-            None
-        }
+        if self { Some(t) } else { None }
     }
 
     #[inline]
@@ -77,10 +73,6 @@ impl Some for bool {
     where
         F: FnOnce() -> T,
     {
-        if self {
-            Some(f())
-        } else {
-            None
-        }
+        if self { Some(f()) } else { None }
     }
 }

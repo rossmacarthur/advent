@@ -82,14 +82,15 @@ fn simulate(jets: Vec<Vector2>, rocks: i64) -> i64 {
         // and my input
         let key = (t, j, row);
 
-        if r > 2022 && h_cycle == 0 {
-            if let Some((r0, h0)) = states.get(&key) {
-                let dr = r - r0;
-                let dh = h - h0;
-                let count = (rocks - r) / dr;
-                r += count * dr;
-                h_cycle += count * dh;
-            }
+        if r > 2022
+            && h_cycle == 0
+            && let Some((r0, h0)) = states.get(&key)
+        {
+            let dr = r - r0;
+            let dh = h - h0;
+            let count = (rocks - r) / dr;
+            r += count * dr;
+            h_cycle += count * dh;
         }
         states.insert(key, (r, h));
 

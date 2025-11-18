@@ -1,7 +1,7 @@
 mod intcode;
 
 use advent::prelude::*;
-use intcode::{parse_program, Computer};
+use intcode::{Computer, parse_program};
 
 fn default_input() -> Vec<i64> {
     parse_program(include_input!(2019 / 13))

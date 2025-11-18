@@ -55,7 +55,7 @@ fn part1((mut pots, rules): (BTreeSet<i32>, Vec<i32>)) -> i32 {
 }
 
 fn part2((mut pots, rules): (BTreeSet<i32>, Vec<i32>)) -> i64 {
-    let mut gen = 0;
+    let mut gens = 0;
     let mut sum = 0;
     let mut diff = 0;
     loop {
@@ -67,9 +67,9 @@ fn part2((mut pots, rules): (BTreeSet<i32>, Vec<i32>)) -> i64 {
         }
         sum = s;
         diff = d;
-        gen += 1;
+        gens += 1;
     }
-    (50_000_000_000 - gen) * diff + sum
+    (50_000_000_000 - gens) * diff + sum
 }
 
 fn main() {

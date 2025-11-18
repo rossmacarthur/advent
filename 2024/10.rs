@@ -24,13 +24,13 @@ fn part1(map: HashMap<Vector2, u32>) -> usize {
         }
         for d in CARDINALS {
             let next = p + d;
-            if let Some(&next_h) = map.get(&next) {
-                if next_h == height + 1 {
-                    if next_h == 9 {
-                        trailheads.insert((start, next));
-                    } else {
-                        q.push((start, next, height + 1));
-                    }
+            if let Some(&next_h) = map.get(&next)
+                && next_h == height + 1
+            {
+                if next_h == 9 {
+                    trailheads.insert((start, next));
+                } else {
+                    q.push((start, next, height + 1));
                 }
             }
         }
@@ -50,13 +50,13 @@ fn part2(map: HashMap<Vector2, u32>) -> i64 {
     while let Some((p, h)) = q.pop() {
         for d in CARDINALS {
             let np = p + d;
-            if let Some(&nh) = map.get(&np) {
-                if nh == h + 1 {
-                    if nh == 9 {
-                        rating += 1;
-                    } else {
-                        q.push((np, h + 1));
-                    }
+            if let Some(&nh) = map.get(&np)
+                && nh == h + 1
+            {
+                if nh == 9 {
+                    rating += 1;
+                } else {
+                    q.push((np, h + 1));
                 }
             }
         }

@@ -35,10 +35,10 @@ where
         let curr = map[&p];
         for d in vectors!([0, -1], [-1, 0], [0, 1], [1, 0]) {
             let next = p + d;
-            if let Some(&elev) = map.get(&next) {
-                if elev.saturating_sub(curr) <= 1 {
-                    q.push_back((next, steps + 1));
-                }
+            if let Some(&elev) = map.get(&next)
+                && elev.saturating_sub(curr) <= 1
+            {
+                q.push_back((next, steps + 1));
             }
         }
     }

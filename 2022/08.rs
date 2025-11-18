@@ -12,7 +12,7 @@ const CARDINALS: [Vector2; 4] = vectors!([0, -1], [0, 1], [-1, 0], [1, 0]);
 
 fn part1(map: HashMap<Vector2, u8>) -> usize {
     map.iter()
-        .filter(|(&center, &height)| {
+        .filter(|&(&center, &height)| {
             CARDINALS.iter().any(|d| {
                 iter::successors(Some(center + d), |p| Some(p + d))
                     .map_while(|p| map.get(&p).copied())
