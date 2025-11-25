@@ -46,6 +46,10 @@ json = ["advent/json"]
 workspace = true
 
 [[bin]]
+name = "201701"
+path = "2017/01.rs"
+
+[[bin]]
 name = "201801"
 path = "2018/01.rs"
 
