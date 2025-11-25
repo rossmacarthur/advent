@@ -96,7 +96,6 @@ type FnPart<'a, I> = Box<dyn Fn(I) -> Box<dyn Display + 'a> + UnwindSafe + 'a>;
 #[must_use]
 pub struct Builder<'a, I> {
     parse: Option<FnParse<'a, I>>,
-    parse_ok: bool,
     parts: Vec<(Option<String>, FnPart<'a, I>)>,
 }
 
@@ -106,7 +105,6 @@ pub struct Builder<'a, I> {
 #[must_use]
 pub struct Solution<'a, I> {
     parse: FnParse<'a, I>,
-    parse_ok: bool,
     parts: Vec<(String, FnPart<'a, I>)>,
 }
 
@@ -125,7 +123,6 @@ where
 {
     Builder {
         parse: Some(Box::new(parse)),
-        parse_ok: true,
         parts: Vec::new(),
     }
 }
@@ -166,7 +163,6 @@ where
     /// benchmarked.
     pub fn build(&mut self) -> Solution<'a, I> {
         let parse = self.parse.take().expect("expected input");
-        let parse_ok = self.parse_ok;
         let parts = self
             .parts
             .drain(..)
@@ -176,11 +172,7 @@ where
                 (name, f)
             })
             .collect();
-        Solution {
-            parse,
-            parse_ok,
-            parts,
-        }
+        Solution { parse, parts }
     }
 }
 
@@ -224,22 +216,16 @@ where
     /// Consumes this struct and benchmarks the parts.
     #[must_use]
     pub fn bench(self) -> Summary {
-        let Self {
-            parse,
-            parse_ok,
-            parts,
-        } = self;
+        let Self { parse, parts } = self;
 
         let mut benches = Vec::new();
 
         // Benchmark the parsing
-        if parse_ok {
-            let stats = bench(&parse);
-            benches.push(Bench {
-                name: "Parse".to_owned(),
-                stats,
-            });
-        }
+        let stats = bench(&parse);
+        benches.push(Bench {
+            name: "Parse".to_owned(),
+            stats,
+        });
 
         // Benchmark each part
         let input = (parse)();
