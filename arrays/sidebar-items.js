@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"fn":["from_iter","from_iter_unchecked"],"struct":["IntoIter"]};

@@ -1,0 +1,38 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Returns an iterator over the cartesian product of the element sets of multiple iterators (up to 12)."><title>cartesian_product in itermore - Rust</title><script>if(window.location.protocol!=="file:")document.head.insertAdjacentHTML("beforeend","SourceSerif4-Regular-6b053e98.ttf.woff2,FiraSans-Italic-81dc35de.woff2,FiraSans-Regular-0fe48ade.woff2,FiraSans-MediumItalic-ccf7e434.woff2,FiraSans-Medium-e1aa3f0a.woff2,SourceCodePro-Regular-8badfe75.ttf.woff2,SourceCodePro-Semibold-aa29a496.ttf.woff2".split(",").map(f=>`<link rel="preload" as="font" type="font/woff2"href="../static.files/${f}">`).join(""))</script><link rel="stylesheet" href="../static.files/normalize-9960930a.css"><link rel="stylesheet" href="../static.files/rustdoc-ca0dd0c4.css"><meta name="rustdoc-vars" data-root-path="../" data-static-root-path="../static.files/" data-current-crate="itermore" data-themes="" data-resource-suffix="" data-rustdoc-version="1.93.0-nightly (0df64c578 2025-11-17)" data-channel="nightly" data-search-js="search-680b2199.js" data-stringdex-js="stringdex-a3946164.js" data-settings-js="settings-c38705f0.js" ><script src="../static.files/storage-e2aeef58.js"></script><script defer src="sidebar-items.js"></script><script defer src="../static.files/main-a410ff4d.js"></script><noscript><link rel="stylesheet" href="../static.files/noscript-263c88ec.css"></noscript><link rel="alternate icon" type="image/png" href="../static.files/favicon-32x32-eab170b8.png"><link rel="icon" type="image/svg+xml" href="../static.files/favicon-044be391.svg"></head><body class="rustdoc macro"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><rustdoc-topbar><h2><a href="#">cartesian_product</a></h2></rustdoc-topbar><nav class="sidebar"><div class="sidebar-crate"><h2><a href="../itermore/index.html">itermore</a><span class="version">0.8.0</span></h2></div><div class="sidebar-elems"><section id="rustdoc-toc"><h2 class="location"><a href="#">cartesian_<wbr>product</a></h2><h3><a href="#">Sections</a></h3><ul class="block top-toc"><li><a href="#examples" title="Examples">Examples</a></li></ul></section><div id="rustdoc-modnav"><h2 class="in-crate"><a href="index.html">In crate itermore</a></h2></div></div></nav><div class="sidebar-resizer" title="Drag to resize sidebar"></div><main><div class="width-limiter"><section id="main-content" class="content"><div class="main-heading"><div class="rustdoc-breadcrumbs"><a href="index.html">itermore</a></div><h1>Macro <span class="macro">cartesian_<wbr>product</span>&nbsp;<button id="copy-path" title="Copy item path to clipboard">Copy item path</button></h1><rustdoc-toolbar></rustdoc-toolbar><span class="sub-heading"><a class="src" href="../src/itermore/adaptors/cartesian_product.rs.html#145-161">Source</a> </span></div><pre class="rust item-decl"><code>macro_rules! cartesian_product {
+    ($I:expr $(,)?) =&gt; { ... };
+    ($I:expr, $J:expr $(,)?) =&gt; { ... };
+    ($I:expr, $J:expr, $($K:expr),+ $(,)?) =&gt; { ... };
+}</code></pre><details class="toggle top-doc" open><summary class="hideme"><span>Expand description</span></summary><div class="docblock"><p>Returns an iterator over the cartesian product of the element sets of
+multiple iterators (up to 12).</p>
+<p>This is essentially the equivalent of calling <a href="trait.IterCartesianProduct.html#method.cartesian_product" title="method itermore::IterCartesianProduct::cartesian_product"><code>cartesian_product</code></a> multiple
+times and “flattening” each item e.g. <code>((A, B), C)</code> to <code>(A, B, C)</code>.</p>
+<h2 id="examples"><a class="doc-anchor" href="#examples">§</a>Examples</h2>
+<div class="example-wrap"><pre class="rust rust-example-rendered"><code><span class="kw">use </span>itermore::{cartesian_product, IterCartesianProduct};
+
+<span class="comment">// With macro
+</span><span class="kw">let </span>i = <span class="macro">cartesian_product!</span>(<span class="number">0</span>..<span class="number">3</span>, <span class="string">"αβ"</span>.chars(), [-<span class="number">1</span>, <span class="number">0</span>, <span class="number">1</span>]);
+
+<span class="comment">// Without macro
+</span><span class="kw">let </span>j = (<span class="number">0</span>..<span class="number">3</span>)
+    .cartesian_product(<span class="string">"αβ"</span>.chars())
+    .cartesian_product([-<span class="number">1</span>, <span class="number">0</span>, <span class="number">1</span>])
+    .map(|((a, b), c)| (a, b, c));
+
+<span class="macro">assert_eq!</span>(Vec::from_iter(i), Vec::from_iter(j));</code></pre></div>
+<p>Iterate over the 3D coordinates of a 10 x 10 x 10 cube.</p>
+
+<div class="example-wrap"><pre class="rust rust-example-rendered"><code><span class="kw">use </span>itermore::cartesian_product;
+
+<span class="comment">// With macro
+</span><span class="kw">for </span>(i, j, k) <span class="kw">in </span><span class="macro">cartesian_product!</span>(<span class="number">0</span>..<span class="number">10</span>, <span class="number">0</span>..<span class="number">10</span>, <span class="number">0</span>..<span class="number">10</span>) {
+    <span class="comment">// ...
+</span>}
+
+<span class="comment">// Without macro
+</span><span class="kw">for </span>i <span class="kw">in </span><span class="number">0</span>..<span class="number">10 </span>{
+    <span class="kw">for </span>j <span class="kw">in </span><span class="number">0</span>..<span class="number">10 </span>{
+        <span class="kw">for </span>k <span class="kw">in </span><span class="number">0</span>..<span class="number">10 </span>{
+            <span class="comment">// ...
+        </span>}
+    }
+}</code></pre></div></div></details></section></div></main></body></html>

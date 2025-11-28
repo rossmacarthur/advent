@@ -1,0 +1,36 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="This crate provides a slice-like `Stride&#60;T, S&#62;` type where elements are spaced a constant `S` elements in memory."><title>stride - Rust</title><script>if(window.location.protocol!=="file:")document.head.insertAdjacentHTML("beforeend","SourceSerif4-Regular-6b053e98.ttf.woff2,FiraSans-Italic-81dc35de.woff2,FiraSans-Regular-0fe48ade.woff2,FiraSans-MediumItalic-ccf7e434.woff2,FiraSans-Medium-e1aa3f0a.woff2,SourceCodePro-Regular-8badfe75.ttf.woff2,SourceCodePro-Semibold-aa29a496.ttf.woff2".split(",").map(f=>`<link rel="preload" as="font" type="font/woff2"href="../static.files/${f}">`).join(""))</script><link rel="stylesheet" href="../static.files/normalize-9960930a.css"><link rel="stylesheet" href="../static.files/rustdoc-ca0dd0c4.css"><meta name="rustdoc-vars" data-root-path="../" data-static-root-path="../static.files/" data-current-crate="stride" data-themes="" data-resource-suffix="" data-rustdoc-version="1.93.0-nightly (0df64c578 2025-11-17)" data-channel="nightly" data-search-js="search-680b2199.js" data-stringdex-js="stringdex-a3946164.js" data-settings-js="settings-c38705f0.js" ><script src="../static.files/storage-e2aeef58.js"></script><script defer src="../crates.js"></script><script defer src="../static.files/main-a410ff4d.js"></script><noscript><link rel="stylesheet" href="../static.files/noscript-263c88ec.css"></noscript><link rel="alternate icon" type="image/png" href="../static.files/favicon-32x32-eab170b8.png"><link rel="icon" type="image/svg+xml" href="../static.files/favicon-044be391.svg"></head><body class="rustdoc mod crate"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><rustdoc-topbar><h2><a href="#">Crate stride</a></h2></rustdoc-topbar><nav class="sidebar"><div class="sidebar-crate"><h2><a href="../stride/index.html">stride</a><span class="version">0.4.0</span></h2></div><div class="sidebar-elems"><ul class="block"><li><a id="all-types" href="all.html">All Items</a></li></ul><section id="rustdoc-toc"><h3><a href="#structs">Crate Items</a></h3><ul class="block"><li><a href="#structs" title="Structs">Structs</a></li><li><a href="#traits" title="Traits">Traits</a></li></ul></section><div id="rustdoc-modnav"></div></div></nav><div class="sidebar-resizer" title="Drag to resize sidebar"></div><main><div class="width-limiter"><section id="main-content" class="content"><div class="main-heading"><h1>Crate <span>stride</span>&nbsp;<button id="copy-path" title="Copy item path to clipboard">Copy item path</button></h1><rustdoc-toolbar></rustdoc-toolbar><span class="sub-heading"><a class="src" href="../src/stride/lib.rs.html#1-355">Source</a> </span></div><details class="toggle top-doc" open><summary class="hideme"><span>Expand description</span></summary><div class="docblock"><p>This crate provides a slice-like <a href="struct.Stride.html" title="struct stride::Stride"><code>Stride&lt;T, S&gt;</code></a> type where elements are
+spaced a constant <code>S</code> elements in memory.</p>
+<p>For example, given an underlying slice <code>&amp;[1, 2, 3, 4, 5, 6]</code>, the elements
+<code>&amp;[1, 3, 5]</code> are a strided slice with a stride of 2. This crate makes use of
+const generics to provide the stride value <code>S</code> at compile time so that there
+is no runtime memory overhead to strided slices; <code>Stride</code> takes up the same
+amount of space as a slice.</p>
+<p>Many slice-like operations are implemented for <code>Stride</code> including iteration
+and indexing. Method names are similar to those of the slice type.</p>
+<p>Where you want a strided slice use:</p>
+<ul>
+<li><a href="struct.Stride.html#method.new" title="associated function stride::Stride::new"><code>::new()</code></a> to construct a <a href="struct.Stride.html" title="struct stride::Stride"><code>&amp;Stride&lt;T, S&gt;</code></a> that
+wraps a <a href="https://doc.rust-lang.org/nightly/core/primitive.slice.html" title="primitive slice"><code>&amp;[T]</code></a>.</li>
+<li><a href="struct.Stride.html#method.new_mut" title="associated function stride::Stride::new_mut"><code>::new_mut()</code></a> to construct a
+<a href="struct.Stride.html" title="struct stride::Stride"><code>&amp;mut Stride&lt;T, S&gt;</code></a> that wraps a <a href="https://doc.rust-lang.org/nightly/core/primitive.slice.html" title="primitive slice"><code>&amp;mut [T]</code></a>.</li>
+</ul>
+
+<div class="example-wrap"><pre class="rust rust-example-rendered"><code><span class="kw">use </span>stride::Stride;
+
+<span class="comment">// The underlying data.
+</span><span class="kw">let </span>data = <span class="kw-2">&amp;mut </span>[<span class="number">1</span>, <span class="number">2</span>, <span class="number">7</span>, <span class="number">4</span>, <span class="number">5</span>, <span class="number">6</span>];
+
+<span class="comment">// Create a strided slice with a stride of `2` referring to
+// elements `1`, `7`, and `5`.
+</span><span class="kw">let </span>stride = Stride::&lt;<span class="kw">_</span>, <span class="number">2</span>&gt;::new_mut(data);
+
+<span class="macro">assert_eq!</span>(stride.len(), <span class="number">3</span>);
+
+<span class="comment">// We can use indexing to view values ..
+</span><span class="macro">assert_eq!</span>(stride[<span class="number">0</span>], <span class="number">1</span>);
+<span class="macro">assert_eq!</span>(stride[<span class="number">1</span>..<span class="number">3</span>], <span class="kw-2">&amp;</span>[<span class="number">7</span>, <span class="number">5</span>]);
+
+<span class="comment">// .. or modify them.
+</span>stride[<span class="number">1</span>] = <span class="number">3</span>;
+<span class="macro">assert_eq!</span>(stride, <span class="kw-2">&amp;</span>[<span class="number">1</span>, <span class="number">3</span>, <span class="number">5</span>]);
+<span class="macro">assert_eq!</span>(data, <span class="kw-2">&amp;</span>[<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>, <span class="number">5</span>, <span class="number">6</span>]);</code></pre></div></div></details><h2 id="structs" class="section-header">Structs<a href="#structs" class="anchor">§</a></h2><dl class="item-table"><dt><a class="struct" href="struct.Iter.html" title="struct stride::Iter">Iter</a></dt><dd>Immutable stride iterator.</dd><dt><a class="struct" href="struct.IterMut.html" title="struct stride::IterMut">IterMut</a></dt><dd>Mutable stride iterator.</dd><dt><a class="struct" href="struct.Stride.html" title="struct stride::Stride">Stride</a></dt><dd>A constant strided slice.</dd></dl><h2 id="traits" class="section-header">Traits<a href="#traits" class="anchor">§</a></h2><dl class="item-table"><dt><a class="trait" href="trait.StrideIndex.html" title="trait stride::StrideIndex">Stride<wbr>Index</a></dt><dd>A helper trait used for indexing operations.</dd></dl></section></div></main></body></html>

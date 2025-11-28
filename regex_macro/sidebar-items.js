@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"macro":["lazy_regex","regex"],"type":["LazyRegex"]};

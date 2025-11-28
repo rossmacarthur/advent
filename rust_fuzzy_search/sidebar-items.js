@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"fn":["fuzzy_compare","fuzzy_search","fuzzy_search_best_n","fuzzy_search_sorted","fuzzy_search_threshold"]};

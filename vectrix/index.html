@@ -1,0 +1,202 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="This crate provides a stack-allocated, constant-size `Matrix&#60;T, M, N&#62;` type implemented using const generics."><title>vectrix - Rust</title><script>if(window.location.protocol!=="file:")document.head.insertAdjacentHTML("beforeend","SourceSerif4-Regular-6b053e98.ttf.woff2,FiraSans-Italic-81dc35de.woff2,FiraSans-Regular-0fe48ade.woff2,FiraSans-MediumItalic-ccf7e434.woff2,FiraSans-Medium-e1aa3f0a.woff2,SourceCodePro-Regular-8badfe75.ttf.woff2,SourceCodePro-Semibold-aa29a496.ttf.woff2".split(",").map(f=>`<link rel="preload" as="font" type="font/woff2"href="../static.files/${f}">`).join(""))</script><link rel="stylesheet" href="../static.files/normalize-9960930a.css"><link rel="stylesheet" href="../static.files/rustdoc-ca0dd0c4.css"><meta name="rustdoc-vars" data-root-path="../" data-static-root-path="../static.files/" data-current-crate="vectrix" data-themes="" data-resource-suffix="" data-rustdoc-version="1.93.0-nightly (0df64c578 2025-11-17)" data-channel="nightly" data-search-js="search-680b2199.js" data-stringdex-js="stringdex-a3946164.js" data-settings-js="settings-c38705f0.js" ><script src="../static.files/storage-e2aeef58.js"></script><script defer src="../crates.js"></script><script defer src="../static.files/main-a410ff4d.js"></script><noscript><link rel="stylesheet" href="../static.files/noscript-263c88ec.css"></noscript><link rel="alternate icon" type="image/png" href="../static.files/favicon-32x32-eab170b8.png"><link rel="icon" type="image/svg+xml" href="../static.files/favicon-044be391.svg"></head><body class="rustdoc mod crate"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><rustdoc-topbar><h2><a href="#">Crate vectrix</a></h2></rustdoc-topbar><nav class="sidebar"><div class="sidebar-crate"><h2><a href="../vectrix/index.html">vectrix</a><span class="version">0.4.0</span></h2></div><div class="sidebar-elems"><ul class="block"><li><a id="all-types" href="all.html">All Items</a></li></ul><section id="rustdoc-toc"><h3><a href="#">Sections</a></h3><ul class="block top-toc"><li><a href="#-getting-started" title="🚀 Getting started">🚀 Getting started</a></li><li><a href="#-usage" title="🤸 Usage">🤸 Usage</a><ul><li><a href="#types" title="Types">Types</a></li><li><a href="#macros" title="Macros">Macros</a></li><li><a href="#constructors" title="Constructors">Constructors</a></li><li><a href="#accessing-elements" title="Accessing elements">Accessing elements</a></li><li><a href="#accessing-a-row-or-column" title="Accessing a row or column">Accessing a row or column</a></li><li><a href="#iteration" title="Iteration">Iteration</a></li><li><a href="#debug" title="Debug">Debug</a></li><li><a href="#display" title="Display">Display</a></li><li><a href="#operations" title="Operations">Operations</a></li></ul></li></ul><h3><a href="#macros-1">Crate Items</a></h3><ul class="block"><li><a href="#macros-1" title="Macros">Macros</a></li><li><a href="#structs" title="Structs">Structs</a></li><li><a href="#traits" title="Traits">Traits</a></li><li><a href="#types-1" title="Type Aliases">Type Aliases</a></li></ul></section><div id="rustdoc-modnav"></div></div></nav><div class="sidebar-resizer" title="Drag to resize sidebar"></div><main><div class="width-limiter"><section id="main-content" class="content"><div class="main-heading"><h1>Crate <span>vectrix</span>&nbsp;<button id="copy-path" title="Copy item path to clipboard">Copy item path</button></h1><rustdoc-toolbar></rustdoc-toolbar><span class="sub-heading"><a class="src" href="../src/vectrix/lib.rs.html#1-582">Source</a> </span></div><details class="toggle top-doc" open><summary class="hideme"><span>Expand description</span></summary><div class="docblock"><p>This crate provides a stack-allocated, constant-size <a href="struct.Matrix.html" title="struct vectrix::Matrix"><code>Matrix&lt;T, M, N&gt;</code></a>
+type implemented using const generics.</p>
+<h2 id="-getting-started"><a class="doc-anchor" href="#-getting-started">§</a>🚀 Getting started</h2>
+<p>Add this crate to your Cargo manifest.</p>
+<div class="example-wrap"><pre class="language-sh"><code>cargo add vectrix</code></pre></div>
+<p><code>no_std</code> is also supported by disabling the default std feature.</p>
+<div class="example-wrap"><pre class="language-sh"><code>cargo add vectrix --no-default-features --features=macro</code></pre></div><h2 id="-usage"><a class="doc-anchor" href="#-usage">§</a>🤸 Usage</h2><h3 id="types"><a class="doc-anchor" href="#types">§</a>Types</h3>
+<p>The base <a href="struct.Matrix.html" title="struct vectrix::Matrix"><code>Matrix&lt;T, M, N&gt;</code></a> type represents a matrix with <code>M</code> rows and <code>N</code>
+columns. This type is a backed by an array of arrays. The data is stored in
+column-major order. Some convenient aliases are provided for common
+matrices, like vectors.</p>
+<ul>
+<li><a href="struct.Matrix.html" title="struct vectrix::Matrix"><code>Matrix&lt;T, M, N&gt;</code></a> → a generic matrix type with <code>M</code> rows and <code>N</code> columns.</li>
+<li><a href="type.Vector.html" title="type vectrix::Vector"><code>Vector&lt;T, M&gt;</code></a> → a column vector with <code>M</code> rows.</li>
+<li><a href="type.RowVector.html" title="type vectrix::RowVector"><code>RowVector&lt;T, N&gt;</code></a> → a row vector with <code>N</code> columns.</li>
+</ul>
+<h3 id="macros"><a class="doc-anchor" href="#macros">§</a>Macros</h3>
+<p>Macros are provided for easy construction of the provided types. These
+macros will also work in <code>const</code> contexts.</p>
+<ul>
+<li>
+<p>The <a href="macro.matrix.html" title="macro vectrix::matrix"><code>matrix!</code></a> macro can be used to construct a new <a href="struct.Matrix.html" title="struct vectrix::Matrix"><code>Matrix</code></a> of any
+size.</p>
+
+<div class="example-wrap"><pre class="rust rust-example-rendered"><code><span class="kw">let </span>m = <span class="macro">matrix!</span>[
+    <span class="number">1</span>, <span class="number">3</span>, <span class="number">5</span>;
+    <span class="number">2</span>, <span class="number">4</span>, <span class="number">6</span>;
+];</code></pre></div>
+<p>In the above example <code>matrix</code> is a <code>Matrix&lt;_, 2, 3&gt;</code> type, having 2 rows and
+3 columns.</p>
+</li>
+<li>
+<p>The <a href="macro.vector.html" title="macro vectrix::vector"><code>vector!</code></a> and <a href="macro.row_vector.html" title="macro vectrix::row_vector"><code>row_vector!</code></a> macros can be used to to construct
+column and row vectors respectively.</p>
+
+<div class="example-wrap"><pre class="rust rust-example-rendered"><code><span class="kw">let </span>v = <span class="macro">vector!</span>[<span class="number">1</span>, <span class="number">3</span>, <span class="number">3</span>, <span class="number">7</span>];
+<span class="comment">//  ^ type `Vector&lt;_, 4&gt;`
+</span><span class="macro">assert_eq!</span>(v, <span class="macro">matrix!</span>[<span class="number">1</span>; <span class="number">3</span>; <span class="number">3</span>; <span class="number">7</span>]);
+
+<span class="kw">let </span>v = <span class="macro">row_vector!</span>[<span class="number">1</span>, <span class="number">3</span>, <span class="number">3</span>, <span class="number">7</span>];
+<span class="comment">//  ^^^^^^ type `RowVector&lt;_, 4&gt;`
+</span><span class="macro">assert_eq!</span>(v, <span class="macro">matrix!</span>[<span class="number">1</span>, <span class="number">3</span>, <span class="number">3</span>, <span class="number">7</span>]);</code></pre></div></li>
+</ul>
+<h3 id="constructors"><a class="doc-anchor" href="#constructors">§</a>Constructors</h3>
+<p>Commonly used constructors are listed below.</p>
+<ul>
+<li><a href="struct.Matrix.html#method.zero" title="associated function vectrix::Matrix::zero"><code>::zero()</code></a> → constructs a new matrix filled with
+<a href="trait.Zero.html#tymethod.zero" title="associated function vectrix::Zero::zero"><code>T::zero()</code></a>.</li>
+<li><a href="struct.Matrix.html#method.identity" title="associated function vectrix::Matrix::identity"><code>::identity()</code></a> → constructs a new identity matrix.</li>
+<li><a href="struct.Matrix.html#method.repeat" title="associated function vectrix::Matrix::repeat"><code>::repeat(..)</code></a> → constructs a new matrix filled with
+the provided value.</li>
+<li><a href="struct.Matrix.html#method.repeat_with" title="associated function vectrix::Matrix::repeat_with"><code>::repeat_with(..)</code></a> → constructs a new matrix
+filled with values computed by the provided closure.</li>
+<li><a href="https://doc.rust-lang.org/nightly/core/iter/traits/collect/trait.FromIterator.html#tymethod.from_iter" title="associated function core::iter::traits::collect::FromIterator::from_iter"><code>::from_iter(..)</code></a> → constructs a
+new matrix from an iterator.</li>
+<li><a href="struct.Matrix.html#method.new" title="associated function vectrix::Matrix::new"><code>::new(..)</code></a> → constructs a new vector using the
+provided components.</li>
+</ul>
+<h3 id="accessing-elements"><a class="doc-anchor" href="#accessing-elements">§</a>Accessing elements</h3>
+<p>Three types of element access are available.</p>
+<ul>
+<li>
+<p><code>usize</code> indexing selects the nth element in the matrix as viewed in
+column-major order.</p>
+
+<div class="example-wrap"><pre class="rust rust-example-rendered"><code><span class="kw">let </span>m = <span class="macro">matrix!</span>[
+    <span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>;
+    <span class="number">4</span>, <span class="number">5</span>, <span class="number">6</span>;
+];
+<span class="macro">assert_eq!</span>(m[<span class="number">1</span>], <span class="number">4</span>);</code></pre></div></li>
+<li>
+<p><code>(usize, usize)</code> indexing selects the element at a particular row and
+column position.</p>
+
+<div class="example-wrap"><pre class="rust rust-example-rendered"><code><span class="kw">let </span>m = <span class="macro">matrix!</span>[
+    <span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>;
+    <span class="number">4</span>, <span class="number">5</span>, <span class="number">6</span>;
+];
+<span class="macro">assert_eq!</span>(m[(<span class="number">1</span>, <span class="number">0</span>)], <span class="number">4</span>);</code></pre></div></li>
+<li>
+<p>Component accessors are available for small vectors using traditional
+names.</p>
+
+<div class="example-wrap"><pre class="rust rust-example-rendered"><code><span class="kw">let </span><span class="kw-2">mut </span>v = <span class="macro">vector!</span>[<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>, <span class="number">0</span>, <span class="number">0</span>];
+v.y = <span class="number">3</span>;
+v.w = <span class="number">7</span>;
+<span class="macro">assert_eq!</span>(v.x, <span class="number">1</span>);
+<span class="macro">assert_eq!</span>(v.y, <span class="number">3</span>);
+<span class="macro">assert_eq!</span>(v.z, <span class="number">3</span>);
+<span class="macro">assert_eq!</span>(v.w, <span class="number">7</span>);
+<span class="macro">assert_eq!</span>(v.a, <span class="number">0</span>);
+<span class="macro">assert_eq!</span>(v.b, <span class="number">0</span>);</code></pre></div></li>
+</ul>
+<h3 id="accessing-a-row-or-column"><a class="doc-anchor" href="#accessing-a-row-or-column">§</a>Accessing a row or column</h3>
+<p>You can get a reference to particular row or column using the
+<a href="struct.Matrix.html#method.row" title="method vectrix::Matrix::row"><code>.row()</code></a> or <a href="struct.Matrix.html#method.column" title="method vectrix::Matrix::column"><code>.column()</code></a> methods. You
+can get a mutable reference using the <code>_mut</code> variants.</p>
+
+<div class="example-wrap"><pre class="rust rust-example-rendered"><code><span class="kw">let </span><span class="kw-2">mut </span>m = <span class="macro">matrix!</span>[
+    <span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>;
+    <span class="number">4</span>, <span class="number">7</span>, <span class="number">6</span>;
+];
+<span class="kw">let </span>row = m.row_mut(<span class="number">1</span>);
+row[<span class="number">1</span>] = <span class="number">5</span>;
+<span class="macro">assert_eq!</span>(m.column(<span class="number">1</span>), <span class="kw-2">&amp;</span>[<span class="number">2</span>, <span class="number">5</span>]);</code></pre></div><h3 id="iteration"><a class="doc-anchor" href="#iteration">§</a>Iteration</h3>
+<p>Element-wise, column-major order iteration is provided using the following
+methods.</p>
+<ul>
+<li><a href="struct.Matrix.html#method.into_iter" title="method vectrix::Matrix::into_iter"><code>.into_iter()</code></a> → consumes the matrix and returns
+an owned iterator over each element.</li>
+<li><a href="struct.Matrix.html#method.iter" title="method vectrix::Matrix::iter"><code>.iter()</code></a> → returns an iterator over a reference to
+each element.</li>
+<li><a href="struct.Matrix.html#method.iter_mut" title="method vectrix::Matrix::iter_mut"><code>.iter_mut()</code></a> → returns an iterator over a mutable
+reference to each element.</li>
+</ul>
+<p>Iteration over rows and columns is provide using the following methods.</p>
+<ul>
+<li><a href="struct.Matrix.html#method.iter_rows" title="method vectrix::Matrix::iter_rows"><code>.iter_rows()</code></a> → returns an iterator over a
+reference to each row.</li>
+<li><a href="struct.Matrix.html#method.iter_rows_mut" title="method vectrix::Matrix::iter_rows_mut"><code>.iter_rows_mut()</code></a> → returns an iterator over
+mutable reference to each row.</li>
+<li><a href="struct.Matrix.html#method.iter_columns" title="method vectrix::Matrix::iter_columns"><code>.iter_columns()</code></a> → returns an iterator over a
+reference to each column.</li>
+<li><a href="struct.Matrix.html#method.iter_columns_mut" title="method vectrix::Matrix::iter_columns_mut"><code>.iter_columns_mut()</code></a> → returns an
+iterator over a mutable reference to each column.</li>
+</ul>
+<h4 id="slice-representation"><a class="doc-anchor" href="#slice-representation">§</a>Slice representation</h4>
+<p>A slice view of the underlying data is provided using
+<a href="struct.Matrix.html#method.as_slice" title="method vectrix::Matrix::as_slice"><code>.as_slice()</code></a> and
+<a href="struct.Matrix.html#method.as_mut_slice" title="method vectrix::Matrix::as_mut_slice"><code>.as_mut_slice()</code></a>.</p>
+
+<div class="example-wrap"><pre class="rust rust-example-rendered"><code><span class="kw">let </span><span class="kw-2">mut </span>m = <span class="macro">matrix!</span>[
+    <span class="number">1</span>, <span class="number">3</span>, <span class="number">5</span>;
+    <span class="number">2</span>, <span class="number">3</span>, <span class="number">6</span>;
+];
+m.as_mut_slice()[<span class="number">3</span>] = <span class="number">4</span>;
+<span class="macro">assert_eq!</span>(m.as_slice(), <span class="kw-2">&amp;</span>[<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>, <span class="number">5</span>, <span class="number">6</span>]);</code></pre></div><h3 id="debug"><a class="doc-anchor" href="#debug">§</a>Debug</h3>
+<p>The <a href="https://doc.rust-lang.org/nightly/core/fmt/trait.Debug.html" title="trait core::fmt::Debug"><code>Debug</code></a> implementation will print out vectors as
+lists and matrices as a list of lists in column-major order.</p>
+
+<div class="example-wrap"><pre class="rust rust-example-rendered"><code><span class="kw">let </span>v = <span class="macro">vector!</span>[<span class="number">1.1</span>, <span class="number">2.0</span>];
+<span class="kw">let </span>m = <span class="macro">matrix!</span>[<span class="number">1</span>, <span class="number">2</span>; <span class="number">3</span>, <span class="number">4</span>];
+<span class="macro">println!</span>(<span class="string">"vector: {:.2?}"</span>, v);
+<span class="macro">println!</span>(<span class="string">"matrix: {:?}"</span>, m);</code></pre></div>
+<p>This will output:</p>
+<div class="example-wrap"><pre class="language-text"><code>vector: [1.10, 2.00]
+matrix: [[1, 3], [2, 4]]</code></pre></div><h3 id="display"><a class="doc-anchor" href="#display">§</a>Display</h3>
+<p>The <a href="https://doc.rust-lang.org/nightly/core/fmt/trait.Display.html" title="trait core::fmt::Display"><code>Display</code></a> implementation will print out the
+matrix in the traditional box bracket format. Precision is supported as well
+as most of the other formatting traits like
+<a href="https://doc.rust-lang.org/nightly/core/fmt/trait.LowerHex.html" title="trait core::fmt::LowerHex"><code>LowerHex</code></a>.</p>
+
+<div class="example-wrap"><pre class="rust rust-example-rendered"><code><span class="kw">let </span>cv = <span class="macro">vector!</span>[<span class="number">1.1</span>, <span class="number">2.0</span>];
+<span class="kw">let </span>rv = <span class="macro">row_vector!</span>[<span class="number">1.1</span>, <span class="number">2.0</span>];
+<span class="kw">let </span>m = <span class="macro">matrix!</span>[<span class="number">1</span>, <span class="number">2</span>; <span class="number">3</span>, <span class="number">4</span>];
+<span class="macro">println!</span>(<span class="string">"column vector: {:.2}"</span>, cv);
+<span class="macro">println!</span>(<span class="string">"row vector: {:.1}"</span>, rv);
+<span class="macro">println!</span>(<span class="string">"matrix: {:b}"</span>, m);</code></pre></div>
+<p>This will output:</p>
+<div class="example-wrap"><pre class="language-text"><code>column vector:
+ ┌      ┐
+ │ 1.10 │
+ │ 2.00 │
+ └      ┘
+
+row vector:
+ ┌          ┐
+ │ 1.1  2.0 │
+ └          ┘
+
+matrix:
+ ┌         ┐
+ │  1   10 │
+ │ 11  100 │
+ └         ┘</code></pre></div><h3 id="operations"><a class="doc-anchor" href="#operations">§</a>Operations</h3>
+<p><a href="struct.Matrix.html" title="struct vectrix::Matrix"><code>Matrix</code></a> implements many built-in operators. With scalar operands almost
+all operators are implemented and they simply apply the operation to each
+element in the matrix. Unary operators will do the equivalent. In the
+following example each element in the matrix is multiplied by 2.</p>
+
+<div class="example-wrap"><pre class="rust rust-example-rendered"><code><span class="kw">let </span>m = <span class="macro">matrix!</span>[
+    <span class="number">1</span>, -<span class="number">3</span>;
+    <span class="number">3</span>, -<span class="number">7</span>;
+];
+<span class="kw">let </span>exp = <span class="macro">matrix!</span>[
+    <span class="number">2</span>, -<span class="number">6</span>;
+    <span class="number">6</span>, -<span class="number">14</span>;
+];
+<span class="macro">assert_eq!</span>(m * <span class="number">2</span>, exp);</code></pre></div>
+<p><a href="struct.Matrix.html" title="struct vectrix::Matrix"><code>Matrix</code></a> supports addition and subtraction with same size matrices for
+element-wise addition and subtraction. In the following example a matrix
+is added to itself.</p>
+
+<div class="example-wrap"><pre class="rust rust-example-rendered"><code><span class="kw">let </span>m = <span class="macro">matrix!</span>[
+    <span class="number">1</span>, -<span class="number">3</span>;
+    <span class="number">3</span>, -<span class="number">7</span>;
+];
+<span class="kw">let </span>exp = <span class="macro">matrix!</span>[
+    <span class="number">2</span>, -<span class="number">6</span>;
+    <span class="number">6</span>, -<span class="number">14</span>;
+];
+<span class="macro">assert_eq!</span>(m + m, exp);</code></pre></div></div></details><h2 id="macros-1" class="section-header">Macros<a href="#macros-1" class="anchor">§</a></h2><dl class="item-table"><dt><a class="macro" href="macro.matrix.html" title="macro vectrix::matrix">matrix</a></dt><dd>A macro for composing matrices.</dd><dt><a class="macro" href="macro.row_vector.html" title="macro vectrix::row_vector">row_<wbr>vector</a></dt><dd>A macro for composing row vectors.</dd><dt><a class="macro" href="macro.vector.html" title="macro vectrix::vector">vector</a></dt><dd>A macro for composing vectors.</dd></dl><h2 id="structs" class="section-header">Structs<a href="#structs" class="anchor">§</a></h2><dl class="item-table"><dt><a class="struct" href="struct.Column.html" title="struct vectrix::Column">Column</a></dt><dd>A column in a <a href="struct.Matrix.html" title="struct vectrix::Matrix"><code>Matrix</code></a>.</dd><dt><a class="struct" href="struct.IntoIter.html" title="struct vectrix::IntoIter">Into<wbr>Iter</a></dt><dd>An iterator that moves out of a matrix.</dd><dt><a class="struct" href="struct.IterColumns.html" title="struct vectrix::IterColumns">Iter<wbr>Columns</a></dt><dd>An iterator over the columns in a matrix.</dd><dt><a class="struct" href="struct.IterColumnsMut.html" title="struct vectrix::IterColumnsMut">Iter<wbr>Columns<wbr>Mut</a></dt><dd>A mutable iterator over the columns in a matrix.</dd><dt><a class="struct" href="struct.IterRows.html" title="struct vectrix::IterRows">Iter<wbr>Rows</a></dt><dd>An iterator over the rows in a matrix.</dd><dt><a class="struct" href="struct.IterRowsMut.html" title="struct vectrix::IterRowsMut">Iter<wbr>Rows<wbr>Mut</a></dt><dd>A mutable iterator over the rows in a matrix.</dd><dt><a class="struct" href="struct.Matrix.html" title="struct vectrix::Matrix">Matrix</a></dt><dd>Represents a matrix with constant <code>M</code> rows and constant <code>N</code> columns.</dd><dt><a class="struct" href="struct.Row.html" title="struct vectrix::Row">Row</a></dt><dd>A row in a <a href="struct.Matrix.html" title="struct vectrix::Matrix"><code>Matrix</code></a>.</dd></dl><h2 id="traits" class="section-header">Traits<a href="#traits" class="anchor">§</a></h2><dl class="item-table"><dt><a class="trait" href="trait.Abs.html" title="trait vectrix::Abs">Abs</a></dt><dd>Defines the absolute value for a type.</dd><dt><a class="trait" href="trait.MatrixIndex.html" title="trait vectrix::MatrixIndex">Matrix<wbr>Index</a></dt><dd>A helper trait used for indexing operations.</dd><dt><a class="trait" href="trait.One.html" title="trait vectrix::One">One</a></dt><dd>Defines a multiplicative identity element for a type.</dd><dt><a class="trait" href="trait.Zero.html" title="trait vectrix::Zero">Zero</a></dt><dd>Defines a additive identity element for a type.</dd></dl><h2 id="types-1" class="section-header">Type Aliases<a href="#types-1" class="anchor">§</a></h2><dl class="item-table"><dt><a class="type" href="type.RowVector.html" title="type vectrix::RowVector">RowVector</a></dt><dd>A matrix with one row and <code>N</code> columns.</dd><dt><a class="type" href="type.Vector.html" title="type vectrix::Vector">Vector</a></dt><dd>A matrix with one column and <code>M</code> rows.</dd></dl><script type="text/json" id="notable-traits-data">{"IterColumns<'_, T, M, N>":"<h3>Notable traits for <code><a class=\"struct\" href=\"struct.IterColumns.html\" title=\"struct vectrix::IterColumns\">IterColumns</a>&lt;'a, T, M, N&gt;</code></h3><pre><code><div class=\"where\">impl&lt;'a, T, const M: <a class=\"primitive\" href=\"https://doc.rust-lang.org/nightly/std/primitive.usize.html\">usize</a>, const N: <a class=\"primitive\" href=\"https://doc.rust-lang.org/nightly/std/primitive.usize.html\">usize</a>&gt; <a class=\"trait\" href=\"https://doc.rust-lang.org/nightly/core/iter/traits/iterator/trait.Iterator.html\" title=\"trait core::iter::traits::iterator::Iterator\">Iterator</a> for <a class=\"struct\" href=\"struct.IterColumns.html\" title=\"struct vectrix::IterColumns\">IterColumns</a>&lt;'a, T, M, N&gt;</div><div class=\"where\">    type <a href=\"https://doc.rust-lang.org/nightly/core/iter/traits/iterator/trait.Iterator.html#associatedtype.Item\" class=\"associatedtype\">Item</a> = &amp;'a <a class=\"struct\" href=\"struct.Column.html\" title=\"struct vectrix::Column\">Column</a>&lt;T, M, N&gt;;</div>","IterColumnsMut<'_, T, M, N>":"<h3>Notable traits for <code><a class=\"struct\" href=\"struct.IterColumnsMut.html\" title=\"struct vectrix::IterColumnsMut\">IterColumnsMut</a>&lt;'a, T, M, N&gt;</code></h3><pre><code><div class=\"where\">impl&lt;'a, T, const M: <a class=\"primitive\" href=\"https://doc.rust-lang.org/nightly/std/primitive.usize.html\">usize</a>, const N: <a class=\"primitive\" href=\"https://doc.rust-lang.org/nightly/std/primitive.usize.html\">usize</a>&gt; <a class=\"trait\" href=\"https://doc.rust-lang.org/nightly/core/iter/traits/iterator/trait.Iterator.html\" title=\"trait core::iter::traits::iterator::Iterator\">Iterator</a> for <a class=\"struct\" href=\"struct.IterColumnsMut.html\" title=\"struct vectrix::IterColumnsMut\">IterColumnsMut</a>&lt;'a, T, M, N&gt;</div><div class=\"where\">    type <a href=\"https://doc.rust-lang.org/nightly/core/iter/traits/iterator/trait.Iterator.html#associatedtype.Item\" class=\"associatedtype\">Item</a> = &amp;'a mut <a class=\"struct\" href=\"struct.Column.html\" title=\"struct vectrix::Column\">Column</a>&lt;T, M, N&gt;;</div>","IterRows<'_, T, M, N>":"<h3>Notable traits for <code><a class=\"struct\" href=\"struct.IterRows.html\" title=\"struct vectrix::IterRows\">IterRows</a>&lt;'a, T, M, N&gt;</code></h3><pre><code><div class=\"where\">impl&lt;'a, T, const M: <a class=\"primitive\" href=\"https://doc.rust-lang.org/nightly/std/primitive.usize.html\">usize</a>, const N: <a class=\"primitive\" href=\"https://doc.rust-lang.org/nightly/std/primitive.usize.html\">usize</a>&gt; <a class=\"trait\" href=\"https://doc.rust-lang.org/nightly/core/iter/traits/iterator/trait.Iterator.html\" title=\"trait core::iter::traits::iterator::Iterator\">Iterator</a> for <a class=\"struct\" href=\"struct.IterRows.html\" title=\"struct vectrix::IterRows\">IterRows</a>&lt;'a, T, M, N&gt;</div><div class=\"where\">    type <a href=\"https://doc.rust-lang.org/nightly/core/iter/traits/iterator/trait.Iterator.html#associatedtype.Item\" class=\"associatedtype\">Item</a> = &amp;'a <a class=\"struct\" href=\"struct.Row.html\" title=\"struct vectrix::Row\">Row</a>&lt;T, M, N&gt;;</div>","IterRowsMut<'_, T, M, N>":"<h3>Notable traits for <code><a class=\"struct\" href=\"struct.IterRowsMut.html\" title=\"struct vectrix::IterRowsMut\">IterRowsMut</a>&lt;'a, T, M, N&gt;</code></h3><pre><code><div class=\"where\">impl&lt;'a, T, const M: <a class=\"primitive\" href=\"https://doc.rust-lang.org/nightly/std/primitive.usize.html\">usize</a>, const N: <a class=\"primitive\" href=\"https://doc.rust-lang.org/nightly/std/primitive.usize.html\">usize</a>&gt; <a class=\"trait\" href=\"https://doc.rust-lang.org/nightly/core/iter/traits/iterator/trait.Iterator.html\" title=\"trait core::iter::traits::iterator::Iterator\">Iterator</a> for <a class=\"struct\" href=\"struct.IterRowsMut.html\" title=\"struct vectrix::IterRowsMut\">IterRowsMut</a>&lt;'a, T, M, N&gt;</div><div class=\"where\">    type <a href=\"https://doc.rust-lang.org/nightly/core/iter/traits/iterator/trait.Iterator.html#associatedtype.Item\" class=\"associatedtype\">Item</a> = &amp;'a mut <a class=\"struct\" href=\"struct.Row.html\" title=\"struct vectrix::Row\">Row</a>&lt;T, M, N&gt;;</div>"}</script></section></div></main></body></html>

@@ -1,0 +1,9 @@
+(function() {
+    var implementors = Object.fromEntries([["stride",[["impl&lt;T, const S: <a class=\"primitive\" href=\"https://doc.rust-lang.org/nightly/core/primitive.usize.html\">usize</a>&gt; !<a class=\"trait\" href=\"https://doc.rust-lang.org/nightly/core/marker/trait.Sized.html\" title=\"trait core::marker::Sized\">Sized</a> for <a class=\"struct\" href=\"stride/struct.Stride.html\" title=\"struct stride::Stride\">Stride</a>&lt;T, S&gt;",1,["stride::Stride"]]]],["vectrix",[["impl&lt;T, const M: <a class=\"primitive\" href=\"https://doc.rust-lang.org/nightly/std/primitive.usize.html\">usize</a>, const N: <a class=\"primitive\" href=\"https://doc.rust-lang.org/nightly/std/primitive.usize.html\">usize</a>&gt; !<a class=\"trait\" href=\"https://doc.rust-lang.org/nightly/core/marker/trait.Sized.html\" title=\"trait core::marker::Sized\">Sized</a> for <a class=\"struct\" href=\"vectrix/struct.Column.html\" title=\"struct vectrix::Column\">Column</a>&lt;T, M, N&gt;",1,["vectrix::view::Column"]],["impl&lt;T, const M: <a class=\"primitive\" href=\"https://doc.rust-lang.org/nightly/std/primitive.usize.html\">usize</a>, const N: <a class=\"primitive\" href=\"https://doc.rust-lang.org/nightly/std/primitive.usize.html\">usize</a>&gt; !<a class=\"trait\" href=\"https://doc.rust-lang.org/nightly/core/marker/trait.Sized.html\" title=\"trait core::marker::Sized\">Sized</a> for <a class=\"struct\" href=\"vectrix/struct.Row.html\" title=\"struct vectrix::Row\">Row</a>&lt;T, M, N&gt;",1,["vectrix::view::Row"]]]]]);
+    if (window.register_implementors) {
+        window.register_implementors(implementors);
+    } else {
+        window.pending_implementors = implementors;
+    }
+})()
+//{"start":57,"fragment_lengths":[415,1052]}

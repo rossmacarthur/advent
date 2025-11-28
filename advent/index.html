@@ -1,0 +1,50 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="This crate contains a runner and benchmarker for Advent of Code solutions with free Christmas trees 🎄."><title>advent - Rust</title><script>if(window.location.protocol!=="file:")document.head.insertAdjacentHTML("beforeend","SourceSerif4-Regular-6b053e98.ttf.woff2,FiraSans-Italic-81dc35de.woff2,FiraSans-Regular-0fe48ade.woff2,FiraSans-MediumItalic-ccf7e434.woff2,FiraSans-Medium-e1aa3f0a.woff2,SourceCodePro-Regular-8badfe75.ttf.woff2,SourceCodePro-Semibold-aa29a496.ttf.woff2".split(",").map(f=>`<link rel="preload" as="font" type="font/woff2"href="../static.files/${f}">`).join(""))</script><link rel="stylesheet" href="../static.files/normalize-9960930a.css"><link rel="stylesheet" href="../static.files/rustdoc-ca0dd0c4.css"><meta name="rustdoc-vars" data-root-path="../" data-static-root-path="../static.files/" data-current-crate="advent" data-themes="" data-resource-suffix="" data-rustdoc-version="1.93.0-nightly (0df64c578 2025-11-17)" data-channel="nightly" data-search-js="search-680b2199.js" data-stringdex-js="stringdex-a3946164.js" data-settings-js="settings-c38705f0.js" ><script src="../static.files/storage-e2aeef58.js"></script><script defer src="../crates.js"></script><script defer src="../static.files/main-a410ff4d.js"></script><noscript><link rel="stylesheet" href="../static.files/noscript-263c88ec.css"></noscript><link rel="alternate icon" type="image/png" href="../static.files/favicon-32x32-eab170b8.png"><link rel="icon" type="image/svg+xml" href="../static.files/favicon-044be391.svg"></head><body class="rustdoc mod crate"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><rustdoc-topbar><h2><a href="#">Crate advent</a></h2></rustdoc-topbar><nav class="sidebar"><div class="sidebar-crate"><h2><a href="../advent/index.html">advent</a><span class="version">0.2.0</span></h2></div><div class="sidebar-elems"><ul class="block"><li><a id="all-types" href="all.html">All Items</a></li></ul><section id="rustdoc-toc"><h3><a href="#">Sections</a></h3><ul class="block top-toc"><li><a href="#getting-started" title="Getting started">Getting started</a></li><li><a href="#features" title="Features">Features</a></li><li><a href="#cli" title="CLI">CLI</a></li></ul><h3><a href="#reexports">Crate Items</a></h3><ul class="block"><li><a href="#reexports" title="Re-exports">Re-exports</a></li><li><a href="#modules" title="Modules">Modules</a></li><li><a href="#structs" title="Structs">Structs</a></li><li><a href="#functions" title="Functions">Functions</a></li></ul></section><div id="rustdoc-modnav"></div></div></nav><div class="sidebar-resizer" title="Drag to resize sidebar"></div><main><div class="width-limiter"><section id="main-content" class="content"><div class="main-heading"><h1>Crate <span>advent</span>&nbsp;<button id="copy-path" title="Copy item path to clipboard">Copy item path</button></h1><rustdoc-toolbar></rustdoc-toolbar><span class="sub-heading"><a class="src" href="../src/advent/lib.rs.html#1-364">Source</a> </span></div><details class="toggle top-doc" open><summary class="hideme"><span>Expand description</span></summary><div class="docblock"><p>This crate contains a runner and benchmarker for Advent of Code solutions
+with free Christmas trees 🎄.</p>
+<h2 id="getting-started"><a class="doc-anchor" href="#getting-started">§</a>Getting started</h2>
+<p>Add this crate to your Cargo manifest for your solution.</p>
+<div class="example-wrap"><pre class="language-toml"><code>advent = { git = &quot;https://github.com/rossmacarthur/advent&quot;, tag = &quot;0.2.0&quot; }</code></pre></div>
+<p>Then use the following as your main function.</p>
+
+<div class="example-wrap"><pre class="rust rust-example-rendered"><code><span class="kw">fn </span>main() {
+    <span class="kw">let </span>solution = advent::new(|| {
+        <span class="comment">// parse input, return impl Clone
+    </span>})
+    .part(|input| {
+        <span class="comment">// part 1 solution using input, return impl Display
+    </span>})
+    .part(|input| {
+        <span class="comment">// part 2 solution using input, return impl Display
+    </span>})
+    .build();
+    solution.cli()
+}</code></pre></div>
+<p><a href="struct.Solution.html#method.cli" title="method advent::Solution::cli"><code>cli()</code></a> will instantiate a command line interface and run
+the program. Ordinary runs will run each part once and output the answers.
+Passing <code>--bench</code> to the program will perform a benchmark.</p>
+<p>✨ That’s all! You’re free to structure your program however else you want.</p>
+<h2 id="features"><a class="doc-anchor" href="#features">§</a>Features</h2>
+<p>There are also some optional features which pull in some other crates.</p>
+<ul>
+<li><strong><code>festive</code></strong> enables some festive ascii art and changes the default
+output to <code>--output festive</code></li>
+<li><strong><code>json</code></strong> supports JSON output using <code>--output json</code>, useful for
+collecting benchmark information</li>
+<li><strong><code>prelude</code></strong> re-exports my prelude crate that can be imported using
+<div class="example-wrap"><pre class="rust rust-example-rendered"><code><span class="kw">use </span>advent::prelude::<span class="kw-2">*</span>;</code></pre></div></li>
+</ul>
+<p>They can be enabled in your Cargo manifest like this:</p>
+<div class="example-wrap"><pre class="language-toml"><code>[dependencies]
+advent = { git = &quot;https://github.com/rossmacarthur/advent&quot;, features = [&quot;festive&quot;, &quot;json&quot;] }</code></pre></div><h2 id="cli"><a class="doc-anchor" href="#cli">§</a>CLI</h2>
+<p>The command line interface looks like this.</p>
+<div class="example-wrap"><pre class="language-text"><code>Usage: example [--bench] [--output &lt;output&gt;]
+
+Run the program.
+
+Options:
+  --bench           whether to benchmark
+  --output          the output style
+  --help            display usage information</code></pre></div>
+<p>The output style can be <code>boring</code>, <code>festive</code>, or <code>json</code>. To use json this
+crate requires the <code>json</code> feature to be set.</p>
+</div></details><h2 id="reexports" class="section-header">Re-exports<a href="#reexports" class="anchor">§</a></h2><dl class="item-table reexports"><dt id="reexport.prelude"><code>pub use <a class="mod" href="../prelude/index.html" title="mod prelude">prelude</a>;</code></dt></dl><h2 id="modules" class="section-header">Modules<a href="#modules" class="anchor">§</a></h2><dl class="item-table"><dt><a class="mod" href="summary/index.html" title="mod advent::summary">summary</a></dt></dl><h2 id="structs" class="section-header">Structs<a href="#structs" class="anchor">§</a></h2><dl class="item-table"><dt><a class="struct" href="struct.Builder.html" title="struct advent::Builder">Builder</a></dt><dd>A builder for a <a href="struct.Solution.html" title="struct advent::Solution"><code>Solution</code></a>.</dd><dt><a class="struct" href="struct.Solution.html" title="struct advent::Solution">Solution</a></dt><dd>A runner and benchmarker for an Advent of Code solution.</dd></dl><h2 id="functions" class="section-header">Functions<a href="#functions" class="anchor">§</a></h2><dl class="item-table"><dt><a class="fn" href="fn.new.html" title="fn advent::new">new</a></dt><dd>Returns a new builder for a new Advent of Code run or benchmark using the
+given parse function.</dd></dl></section></div></main></body></html>

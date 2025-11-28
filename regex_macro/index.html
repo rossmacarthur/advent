@@ -1,0 +1,33 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="This crate contains a little macro to generate a lazy `Regex` and remove some boilerplate when compiling regex expressions."><title>regex_macro - Rust</title><script>if(window.location.protocol!=="file:")document.head.insertAdjacentHTML("beforeend","SourceSerif4-Regular-6b053e98.ttf.woff2,FiraSans-Italic-81dc35de.woff2,FiraSans-Regular-0fe48ade.woff2,FiraSans-MediumItalic-ccf7e434.woff2,FiraSans-Medium-e1aa3f0a.woff2,SourceCodePro-Regular-8badfe75.ttf.woff2,SourceCodePro-Semibold-aa29a496.ttf.woff2".split(",").map(f=>`<link rel="preload" as="font" type="font/woff2"href="../static.files/${f}">`).join(""))</script><link rel="stylesheet" href="../static.files/normalize-9960930a.css"><link rel="stylesheet" href="../static.files/rustdoc-ca0dd0c4.css"><meta name="rustdoc-vars" data-root-path="../" data-static-root-path="../static.files/" data-current-crate="regex_macro" data-themes="" data-resource-suffix="" data-rustdoc-version="1.93.0-nightly (0df64c578 2025-11-17)" data-channel="nightly" data-search-js="search-680b2199.js" data-stringdex-js="stringdex-a3946164.js" data-settings-js="settings-c38705f0.js" ><script src="../static.files/storage-e2aeef58.js"></script><script defer src="../crates.js"></script><script defer src="../static.files/main-a410ff4d.js"></script><noscript><link rel="stylesheet" href="../static.files/noscript-263c88ec.css"></noscript><link rel="alternate icon" type="image/png" href="../static.files/favicon-32x32-eab170b8.png"><link rel="icon" type="image/svg+xml" href="../static.files/favicon-044be391.svg"></head><body class="rustdoc mod crate"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><rustdoc-topbar><h2><a href="#">Crate regex_macro</a></h2></rustdoc-topbar><nav class="sidebar"><div class="sidebar-crate"><h2><a href="../regex_macro/index.html">regex_<wbr>macro</a><span class="version">0.3.0</span></h2></div><div class="sidebar-elems"><ul class="block"><li><a id="all-types" href="all.html">All Items</a></li></ul><section id="rustdoc-toc"><h3><a href="#">Sections</a></h3><ul class="block top-toc"><li><a href="#usage" title="Usage">Usage</a><ul><li><a href="#before" title="Before">Before</a></li><li><a href="#after" title="After">After</a></li></ul></li></ul><h3><a href="#macros">Crate Items</a></h3><ul class="block"><li><a href="#macros" title="Macros">Macros</a></li><li><a href="#types" title="Type Aliases">Type Aliases</a></li></ul></section><div id="rustdoc-modnav"></div></div></nav><div class="sidebar-resizer" title="Drag to resize sidebar"></div><main><div class="width-limiter"><section id="main-content" class="content"><div class="main-heading"><h1>Crate <span>regex_<wbr>macro</span>&nbsp;<button id="copy-path" title="Copy item path to clipboard">Copy item path</button></h1><rustdoc-toolbar></rustdoc-toolbar><span class="sub-heading"><a class="src" href="../src/regex_macro/lib.rs.html#1-95">Source</a> </span></div><details class="toggle top-doc" open><summary class="hideme"><span>Expand description</span></summary><div class="docblock"><p>This crate contains a little macro to generate a lazy
+<a href="../regex/struct.Regex.html"><code>Regex</code></a> and remove some boilerplate when
+compiling regex expressions.</p>
+<h2 id="usage"><a class="doc-anchor" href="#usage">§</a>Usage</h2>
+<p>Since it is an anti-pattern to compile the same regular expression in a loop
+this means for most regex expressions you need to store them in a
+<a href="https://doc.rust-lang.org/nightly/std/sync/lazy_lock/struct.LazyLock.html" title="struct std::sync::lazy_lock::LazyLock"><code>LazyLock</code></a> in a static. But this can get a bit tiresome with many regex
+expressions. This crate provides a <a href="macro.regex.html" title="macro regex_macro::regex"><code>regex!</code></a> macro that will store the
+compiled regex in a global static and return a reference to it.</p>
+<h4 id="before"><a class="doc-anchor" href="#before">§</a>Before</h4>
+<div class="example-wrap"><pre class="rust rust-example-rendered"><code><span class="kw">use </span>std::sync::LazyLock;
+<span class="kw">use </span>regex::Regex;
+
+<span class="comment">// only compiled once, by storing in a static
+</span><span class="kw">static </span>HEX_PATTERN: LazyLock&lt;Regex&gt; = LazyLock::new(|| {
+   Regex::new(<span class="string">"[0-9a-f]+"</span>).expect(<span class="string">"invalid regex"</span>)
+});
+
+<span class="kw">for </span>item <span class="kw">in </span>my_iter {
+    <span class="kw">if </span>HEX_PATTERN.is_match(item) {
+       <span class="comment">// frobnicate
+    </span>}
+}</code></pre></div><h4 id="after"><a class="doc-anchor" href="#after">§</a>After</h4>
+<div class="example-wrap"><pre class="rust rust-example-rendered"><code><span class="kw">use </span>regex_macro::regex;
+
+<span class="kw">for </span>item <span class="kw">in </span>my_iter {
+    <span class="comment">// this is still only compiled once!
+    </span><span class="kw">if </span><span class="macro">regex!</span>(<span class="string">"[0-9a-f]+"</span>).is_match(item) {
+       <span class="comment">// frobnicate
+    </span>}
+}</code></pre></div>
+<p>Isn’t that much nicer?</p>
+</div></details><h2 id="macros" class="section-header">Macros<a href="#macros" class="anchor">§</a></h2><dl class="item-table"><dt><a class="macro" href="macro.lazy_regex.html" title="macro regex_macro::lazy_regex">lazy_<wbr>regex</a></dt><dd>Returns a lazy regex.</dd><dt><a class="macro" href="macro.regex.html" title="macro regex_macro::regex">regex</a></dt><dd>Creates a static regex and returns a reference to it.</dd></dl><h2 id="types" class="section-header">Type Aliases<a href="#types" class="anchor">§</a></h2><dl class="item-table"><dt><a class="type" href="type.LazyRegex.html" title="type regex_macro::LazyRegex">Lazy<wbr>Regex</a></dt><dd>Convenient type alias for a lazy regex.</dd></dl></section></div></main></body></html>

@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"fn":["new"],"mod":["summary"],"struct":["Builder","Solution"]};

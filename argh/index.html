@@ -1,0 +1,272 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Derive-based argument parsing optimized for code size and conformance to the Fuchsia commandline tools specification"><title>argh - Rust</title><script>if(window.location.protocol!=="file:")document.head.insertAdjacentHTML("beforeend","SourceSerif4-Regular-6b053e98.ttf.woff2,FiraSans-Italic-81dc35de.woff2,FiraSans-Regular-0fe48ade.woff2,FiraSans-MediumItalic-ccf7e434.woff2,FiraSans-Medium-e1aa3f0a.woff2,SourceCodePro-Regular-8badfe75.ttf.woff2,SourceCodePro-Semibold-aa29a496.ttf.woff2".split(",").map(f=>`<link rel="preload" as="font" type="font/woff2"href="../static.files/${f}">`).join(""))</script><link rel="stylesheet" href="../static.files/normalize-9960930a.css"><link rel="stylesheet" href="../static.files/rustdoc-ca0dd0c4.css"><meta name="rustdoc-vars" data-root-path="../" data-static-root-path="../static.files/" data-current-crate="argh" data-themes="" data-resource-suffix="" data-rustdoc-version="1.93.0-nightly (0df64c578 2025-11-17)" data-channel="nightly" data-search-js="search-680b2199.js" data-stringdex-js="stringdex-a3946164.js" data-settings-js="settings-c38705f0.js" ><script src="../static.files/storage-e2aeef58.js"></script><script defer src="../crates.js"></script><script defer src="../static.files/main-a410ff4d.js"></script><noscript><link rel="stylesheet" href="../static.files/noscript-263c88ec.css"></noscript><link rel="alternate icon" type="image/png" href="../static.files/favicon-32x32-eab170b8.png"><link rel="icon" type="image/svg+xml" href="../static.files/favicon-044be391.svg"></head><body class="rustdoc mod crate"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><rustdoc-topbar><h2><a href="#">Crate argh</a></h2></rustdoc-topbar><nav class="sidebar"><div class="sidebar-crate"><h2><a href="../argh/index.html">argh</a><span class="version">0.1.13</span></h2></div><div class="sidebar-elems"><ul class="block"><li><a id="all-types" href="all.html">All Items</a></li></ul><section id="rustdoc-toc"><h3><a href="#">Sections</a></h3><ul class="block top-toc"><li><a href="#basic-example" title="Basic Example">Basic Example</a></li></ul><h3><a href="#structs">Crate Items</a></h3><ul class="block"><li><a href="#structs" title="Structs">Structs</a></li><li><a href="#enums" title="Enums">Enums</a></li><li><a href="#traits" title="Traits">Traits</a></li><li><a href="#functions" title="Functions">Functions</a></li><li><a href="#types" title="Type Aliases">Type Aliases</a></li><li><a href="#derives" title="Derive Macros">Derive Macros</a></li></ul></section><div id="rustdoc-modnav"></div></div></nav><div class="sidebar-resizer" title="Drag to resize sidebar"></div><main><div class="width-limiter"><section id="main-content" class="content"><div class="main-heading"><h1>Crate <span>argh</span>&nbsp;<button id="copy-path" title="Copy item path to clipboard">Copy item path</button></h1><rustdoc-toolbar></rustdoc-toolbar><span class="sub-heading"><a class="src" href="../src/argh/lib.rs.html#5-1251">Source</a> </span></div><details class="toggle top-doc" open><summary class="hideme"><span>Expand description</span></summary><div class="docblock"><p>Derive-based argument parsing optimized for code size and conformance
+to the Fuchsia commandline tools specification</p>
+<p>The public API of this library consists primarily of the <code>FromArgs</code>
+derive and the <code>from_env</code> function, which can be used to produce
+a top-level <code>FromArgs</code> type from the current program’s commandline
+arguments.</p>
+<h3 id="basic-example"><a class="doc-anchor" href="#basic-example">§</a>Basic Example</h3>
+<div class="example-wrap"><pre class="rust rust-example-rendered"><code><span class="kw">use </span>argh::FromArgs;
+
+<span class="attr">#[derive(FromArgs)]
+</span><span class="doccomment">/// Reach new heights.
+</span><span class="kw">struct </span>GoUp {
+    <span class="doccomment">/// whether or not to jump
+    </span><span class="attr">#[argh(switch, short = <span class="string">'j'</span>)]
+    </span>jump: bool,
+
+    <span class="doccomment">/// how high to go
+    </span><span class="attr">#[argh(option)]
+    </span>height: usize,
+
+    <span class="doccomment">/// an optional nickname for the pilot
+    </span><span class="attr">#[argh(option)]
+    </span>pilot_nickname: <span class="prelude-ty">Option</span>&lt;String&gt;,
+}
+
+<span class="kw">let </span>up: GoUp = argh::from_env();</code></pre></div>
+<p><code>./some_bin --help</code> will then output the following:</p>
+<div class="example-wrap"><pre class="language-bash"><code>Usage: cmdname [-j] --height &lt;height&gt; [--pilot-nickname &lt;pilot-nickname&gt;]
+
+Reach new heights.
+
+Options:
+  -j, --jump        whether or not to jump
+  --height          how high to go
+  --pilot-nickname  an optional nickname for the pilot
+  --help, help      display usage information</code></pre></div>
+<p>The resulting program can then be used in any of these ways:</p>
+<ul>
+<li><code>./some_bin --height 5</code></li>
+<li><code>./some_bin -j --height 5</code></li>
+<li><code>./some_bin --jump --height 5 --pilot-nickname Wes</code></li>
+</ul>
+<p>Switches, like <code>jump</code>, are optional and will be set to true if provided.</p>
+<p>Options, like <code>height</code> and <code>pilot_nickname</code>, can be either required,
+optional, or repeating, depending on whether they are contained in an
+<code>Option</code> or a <code>Vec</code>. Default values can be provided using the
+<code>#[argh(default = "&lt;your_code_here&gt;")]</code> attribute, and in this case an
+option is treated as optional.</p>
+
+<div class="example-wrap"><pre class="rust rust-example-rendered"><code><span class="kw">use </span>argh::FromArgs;
+
+<span class="kw">fn </span>default_height() -&gt; usize {
+    <span class="number">5
+</span>}
+
+<span class="attr">#[derive(FromArgs)]
+</span><span class="doccomment">/// Reach new heights.
+</span><span class="attr">#[argh(help_triggers(<span class="string">"-h"</span>, <span class="string">"--help"</span>, <span class="string">"help"</span>))]
+</span><span class="kw">struct </span>GoUp {
+    <span class="doccomment">/// an optional nickname for the pilot
+    </span><span class="attr">#[argh(option)]
+    </span>pilot_nickname: <span class="prelude-ty">Option</span>&lt;String&gt;,
+
+    <span class="doccomment">/// an optional height
+    </span><span class="attr">#[argh(option, default = <span class="string">"default_height()"</span>)]
+    </span>height: usize,
+
+    <span class="doccomment">/// an optional direction which is "up" by default
+    </span><span class="attr">#[argh(option, default = <span class="string">"String::from(\"only up\")"</span>)]
+    </span>direction: String,
+}
+
+<span class="kw">fn </span>main() {
+    <span class="kw">let </span>up: GoUp = argh::from_env();
+}</code></pre></div>
+<p>Custom option types can be deserialized so long as they implement the
+<code>FromArgValue</code> trait (automatically implemented for all <code>FromStr</code> types).
+If more customized parsing is required, you can supply a custom
+<code>fn(&amp;str) -&gt; Result&lt;T, String&gt;</code> using the <code>from_str_fn</code> attribute:</p>
+
+<div class="example-wrap"><pre class="rust rust-example-rendered"><code>
+<span class="attr">#[derive(FromArgs)]
+</span><span class="doccomment">/// Goofy thing.
+</span><span class="kw">struct </span>FiveStruct {
+    <span class="doccomment">/// always five
+    </span><span class="attr">#[argh(option, from_str_fn(always_five))]
+    </span>five: usize,
+}
+
+<span class="kw">fn </span>always_five(_value: <span class="kw-2">&amp;</span>str) -&gt; <span class="prelude-ty">Result</span>&lt;usize, String&gt; {
+    <span class="prelude-val">Ok</span>(<span class="number">5</span>)
+}</code></pre></div>
+<p>Positional arguments can be declared using <code>#[argh(positional)]</code>.
+These arguments will be parsed in order of their declaration in
+the structure:</p>
+
+<div class="example-wrap"><pre class="rust rust-example-rendered"><code><span class="kw">use </span>argh::FromArgs;
+<span class="attr">#[derive(FromArgs, PartialEq, Debug)]
+</span><span class="doccomment">/// A command with positional arguments.
+</span><span class="kw">struct </span>WithPositional {
+    <span class="attr">#[argh(positional)]
+    </span>first: String,
+}</code></pre></div>
+<p>The last positional argument may include a default, or be wrapped in
+<code>Option</code> or <code>Vec</code> to indicate an optional or repeating positional argument.</p>
+<p>If your final positional argument has the <code>greedy</code> option on it, it will consume
+any arguments after it as if a <code>--</code> were placed before the first argument to
+match the greedy positional:</p>
+
+<div class="example-wrap"><pre class="rust rust-example-rendered"><code><span class="kw">use </span>argh::FromArgs;
+<span class="attr">#[derive(FromArgs, PartialEq, Debug)]
+</span><span class="doccomment">/// A command with a greedy positional argument at the end.
+</span><span class="kw">struct </span>WithGreedyPositional {
+    <span class="doccomment">/// some stuff
+    </span><span class="attr">#[argh(option)]
+    </span>stuff: <span class="prelude-ty">Option</span>&lt;String&gt;,
+    <span class="attr">#[argh(positional, greedy)]
+    </span>all_the_rest: Vec&lt;String&gt;,
+}</code></pre></div>
+<p>Now if you pass <code>--stuff Something</code> after a positional argument, it will
+be consumed by <code>all_the_rest</code> instead of setting the <code>stuff</code> field.</p>
+<p>Note that <code>all_the_rest</code> won’t be listed as a positional argument in the
+long text part of help output (and it will be listed at the end of the usage
+line as <code>[all_the_rest...]</code>), and it’s up to the caller to append any
+extra help output for the meaning of the captured arguments. This is to
+enable situations where some amount of argument processing needs to happen
+before the rest of the arguments can be interpreted, and shouldn’t be used
+for regular use as it might be confusing.</p>
+<p>Subcommands are also supported. To use a subcommand, declare a separate
+<code>FromArgs</code> type for each subcommand as well as an enum that cases
+over each command:</p>
+
+<div class="example-wrap"><pre class="rust rust-example-rendered"><code>
+<span class="attr">#[derive(FromArgs, PartialEq, Debug)]
+</span><span class="doccomment">/// Top-level command.
+</span><span class="kw">struct </span>TopLevel {
+    <span class="attr">#[argh(subcommand)]
+    </span>nested: MySubCommandEnum,
+}
+
+<span class="attr">#[derive(FromArgs, PartialEq, Debug)]
+#[argh(subcommand)]
+</span><span class="kw">enum </span>MySubCommandEnum {
+    One(SubCommandOne),
+    Two(SubCommandTwo),
+}
+
+<span class="attr">#[derive(FromArgs, PartialEq, Debug)]
+</span><span class="doccomment">/// First subcommand.
+</span><span class="attr">#[argh(subcommand, name = <span class="string">"one"</span>)]
+</span><span class="kw">struct </span>SubCommandOne {
+    <span class="attr">#[argh(option)]
+    </span><span class="doccomment">/// how many x
+    </span>x: usize,
+}
+
+<span class="attr">#[derive(FromArgs, PartialEq, Debug)]
+</span><span class="doccomment">/// Second subcommand.
+</span><span class="attr">#[argh(subcommand, name = <span class="string">"two"</span>)]
+</span><span class="kw">struct </span>SubCommandTwo {
+    <span class="attr">#[argh(switch)]
+    </span><span class="doccomment">/// whether to fooey
+    </span>fooey: bool,
+}</code></pre></div>
+<p>You can also discover subcommands dynamically at runtime. To do this,
+declare subcommands as usual and add a variant to the enum with the
+<code>dynamic</code> attribute. Instead of deriving <code>FromArgs</code>, the value inside the
+dynamic variant should implement <code>DynamicSubCommand</code>.</p>
+
+<div class="example-wrap"><pre class="rust rust-example-rendered"><code>
+<span class="attr">#[derive(FromArgs, PartialEq, Debug)]
+</span><span class="doccomment">/// Top-level command.
+</span><span class="kw">struct </span>TopLevel {
+    <span class="attr">#[argh(subcommand)]
+    </span>nested: MySubCommandEnum,
+}
+
+<span class="attr">#[derive(FromArgs, PartialEq, Debug)]
+#[argh(subcommand)]
+</span><span class="kw">enum </span>MySubCommandEnum {
+    Normal(NormalSubCommand),
+    <span class="attr">#[argh(dynamic)]
+    </span>Dynamic(Dynamic),
+}
+
+<span class="attr">#[derive(FromArgs, PartialEq, Debug)]
+</span><span class="doccomment">/// Normal subcommand.
+</span><span class="attr">#[argh(subcommand, name = <span class="string">"normal"</span>)]
+</span><span class="kw">struct </span>NormalSubCommand {
+    <span class="attr">#[argh(option)]
+    </span><span class="doccomment">/// how many x
+    </span>x: usize,
+}
+
+<span class="doccomment">/// Dynamic subcommand.
+</span><span class="attr">#[derive(PartialEq, Debug)]
+</span><span class="kw">struct </span>Dynamic {
+    name: String
+}
+
+<span class="kw">impl </span>DynamicSubCommand <span class="kw">for </span>Dynamic {
+    <span class="kw">fn </span>commands() -&gt; <span class="kw-2">&amp;</span><span class="lifetime">'static </span>[<span class="kw-2">&amp;</span><span class="lifetime">'static </span>CommandInfo] {
+        <span class="kw">static </span>RET: OnceCell&lt;Vec&lt;<span class="kw-2">&amp;</span><span class="lifetime">'static </span>CommandInfo&gt;&gt; = OnceCell::new();
+        RET.get_or_init(|| {
+            <span class="kw">let </span><span class="kw-2">mut </span>commands = Vec::new();
+
+            <span class="comment">// argh needs the `CommandInfo` structs we generate to be valid
+            // for the static lifetime. We can allocate the structures on
+            // the heap with `Box::new` and use `Box::leak` to get a static
+            // reference to them. We could also just use a constant
+            // reference, but only because this is a synthetic example; the
+            // point of using dynamic commands is to have commands you
+            // don't know about until runtime!
+            </span>commands.push(<span class="kw-2">&amp;*</span>Box::leak(Box::new(CommandInfo {
+                name: <span class="string">"dynamic_command"</span>,
+                description: <span class="string">"A dynamic command"</span>,
+            })));
+
+            commands
+        })
+    }
+
+    <span class="kw">fn </span>try_redact_arg_values(
+        command_name: <span class="kw-2">&amp;</span>[<span class="kw-2">&amp;</span>str],
+        args: <span class="kw-2">&amp;</span>[<span class="kw-2">&amp;</span>str],
+    ) -&gt; <span class="prelude-ty">Option</span>&lt;<span class="prelude-ty">Result</span>&lt;Vec&lt;String&gt;, EarlyExit&gt;&gt; {
+        <span class="kw">for </span>command <span class="kw">in </span><span class="self">Self</span>::commands() {
+            <span class="kw">if </span>command_name.last() == <span class="prelude-val">Some</span>(<span class="kw-2">&amp;</span>command.name) {
+                <span class="comment">// Process arguments and redact values here.
+                </span><span class="kw">if </span>!args.is_empty() {
+                    <span class="kw">return </span><span class="prelude-val">Some</span>(<span class="prelude-val">Err</span>(<span class="string">"Our example dynamic command never takes arguments!"
+                                    </span>.to_string().into()));
+                }
+                <span class="kw">return </span><span class="prelude-val">Some</span>(<span class="prelude-val">Ok</span>(Vec::new()))
+            }
+        }
+        <span class="prelude-val">None
+    </span>}
+
+    <span class="kw">fn </span>try_from_args(command_name: <span class="kw-2">&amp;</span>[<span class="kw-2">&amp;</span>str], args: <span class="kw-2">&amp;</span>[<span class="kw-2">&amp;</span>str]) -&gt; <span class="prelude-ty">Option</span>&lt;<span class="prelude-ty">Result</span>&lt;<span class="self">Self</span>, EarlyExit&gt;&gt; {
+        <span class="kw">for </span>command <span class="kw">in </span><span class="self">Self</span>::commands() {
+            <span class="kw">if </span>command_name.last() == <span class="prelude-val">Some</span>(<span class="kw-2">&amp;</span>command.name) {
+                <span class="kw">if </span>!args.is_empty() {
+                    <span class="kw">return </span><span class="prelude-val">Some</span>(<span class="prelude-val">Err</span>(<span class="string">"Our example dynamic command never takes arguments!"
+                                    </span>.to_string().into()));
+                }
+                <span class="kw">return </span><span class="prelude-val">Some</span>(<span class="prelude-val">Ok</span>(Dynamic { name: command.name.to_string() }))
+            }
+        }
+        <span class="prelude-val">None
+    </span>}
+}</code></pre></div>
+<p>Programs that are run from an environment such as cargo may find it
+useful to have positional arguments present in the structure but
+omitted from the usage output. This can be accomplished by adding
+the <code>hidden_help</code> attribute to that argument:</p>
+
+<div class="example-wrap"><pre class="rust rust-example-rendered"><code>
+<span class="attr">#[derive(FromArgs)]
+</span><span class="doccomment">/// Cargo arguments
+</span><span class="kw">struct </span>CargoArgs {
+    <span class="comment">// Cargo puts the command name invoked into the first argument,
+    // so we don't want this argument to show up in the usage text.
+    </span><span class="attr">#[argh(positional, hidden_help)]
+    </span>command: String,
+    <span class="doccomment">/// an option used for internal debugging
+    </span><span class="attr">#[argh(option, hidden_help)]
+    </span>internal_debugging: String,
+    <span class="attr">#[argh(positional)]
+    </span>real_first_arg: String,
+}</code></pre></div></div></details><h2 id="structs" class="section-header">Structs<a href="#structs" class="anchor">§</a></h2><dl class="item-table"><dt><a class="struct" href="struct.EarlyExit.html" title="struct argh::EarlyExit">Early<wbr>Exit</a></dt><dd>Information to display to the user about why a <code>FromArgs</code> construction exited early.</dd><dt><a class="struct" href="struct.ErrorCodeInfo.html" title="struct argh::ErrorCodeInfo">Error<wbr>Code<wbr>Info</a></dt><dd>Information about a documented error code.</dd><dt><a class="struct" href="struct.FlagInfo.html" title="struct argh::FlagInfo">Flag<wbr>Info</a></dt><dd>Information about a flag or option.</dd><dt><a class="struct" href="struct.PositionalInfo.html" title="struct argh::PositionalInfo">Positional<wbr>Info</a></dt><dd>Information about positional arguments</dd></dl><h2 id="enums" class="section-header">Enums<a href="#enums" class="anchor">§</a></h2><dl class="item-table"><dt><a class="enum" href="enum.FlagInfoKind.html" title="enum argh::FlagInfoKind">Flag<wbr>Info<wbr>Kind</a></dt><dd>The kind of flags.</dd><dt><a class="enum" href="enum.Optionality.html" title="enum argh::Optionality">Optionality</a></dt><dd>The optionality defines the requirements related
+to the presence of the argument on the command line.</dd></dl><h2 id="traits" class="section-header">Traits<a href="#traits" class="anchor">§</a></h2><dl class="item-table"><dt><a class="trait" href="trait.ArgsInfo.html" title="trait argh::ArgsInfo">Args<wbr>Info</a></dt><dd>Structured information about the command line arguments.</dd><dt><a class="trait" href="trait.DynamicSubCommand.html" title="trait argh::DynamicSubCommand">Dynamic<wbr>SubCommand</a></dt><dd>Trait implemented by values returned from a dynamic subcommand handler.</dd><dt><a class="trait" href="trait.Flag.html" title="trait argh::Flag">Flag</a></dt><dd>A type which can be the receiver of a <code>Flag</code>.</dd><dt><a class="trait" href="trait.FromArgValue.html" title="trait argh::FromArgValue">From<wbr>ArgValue</a></dt><dd>Types which can be constructed from a single commandline value.</dd><dt><a class="trait" href="trait.FromArgs.html" title="trait argh::FromArgs">From<wbr>Args</a></dt><dd>Types which can be constructed from a set of commandline arguments.</dd><dt><a class="trait" href="trait.SubCommand.html" title="trait argh::SubCommand">SubCommand</a></dt><dd>A <code>FromArgs</code> implementation that represents a single subcommand.</dd><dt><a class="trait" href="trait.SubCommands.html" title="trait argh::SubCommands">SubCommands</a></dt><dd>A <code>FromArgs</code> implementation that can parse into one or more subcommands.</dd><dt><a class="trait" href="trait.TopLevelCommand.html" title="trait argh::TopLevelCommand">TopLevel<wbr>Command</a></dt><dd>A top-level <code>FromArgs</code> implementation that is not a subcommand.</dd></dl><h2 id="functions" class="section-header">Functions<a href="#functions" class="anchor">§</a></h2><dl class="item-table"><dt><a class="fn" href="fn.cargo_from_env.html" title="fn argh::cargo_from_env">cargo_<wbr>from_<wbr>env</a></dt><dd>Create a <code>FromArgs</code> type from the current process’s <code>env::args</code>.</dd><dt><a class="fn" href="fn.from_env.html" title="fn argh::from_env">from_<wbr>env</a></dt><dd>Create a <code>FromArgs</code> type from the current process’s <code>env::args</code>.</dd></dl><h2 id="types" class="section-header">Type Aliases<a href="#types" class="anchor">§</a></h2><dl class="item-table"><dt><a class="type" href="type.CommandInfo.html" title="type argh::CommandInfo">Command<wbr>Info</a></dt><dd>Information about a particular command used for output.</dd><dt><a class="type" href="type.CommandInfoWithArgs.html" title="type argh::CommandInfoWithArgs">Command<wbr>Info<wbr>With<wbr>Args</a></dt><dd>Information about the command including the options and arguments.</dd><dt><a class="type" href="type.SubCommandInfo.html" title="type argh::SubCommandInfo">SubCommand<wbr>Info</a></dt><dd>Information about a subcommand.</dd></dl><h2 id="derives" class="section-header">Derive Macros<a href="#derives" class="anchor">§</a></h2><dl class="item-table"><dt><a class="derive" href="derive.ArgsInfo.html" title="derive argh::ArgsInfo">Args<wbr>Info</a></dt><dd>Entrypoint for <code>#[derive(ArgsInfo)]</code>.</dd><dt><a class="derive" href="derive.FromArgs.html" title="derive argh::FromArgs">From<wbr>Args</a></dt><dd>Entrypoint for <code>#[derive(FromArgs)]</code>.</dd></dl></section></div></main></body></html>

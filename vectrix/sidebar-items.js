@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"macro":["matrix","row_vector","vector"],"struct":["Column","IntoIter","IterColumns","IterColumnsMut","IterRows","IterRowsMut","Matrix","Row"],"trait":["Abs","MatrixIndex","One","Zero"],"type":["RowVector","Vector"]};

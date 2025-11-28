@@ -1,0 +1,60 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="This crate implements Fuzzy Searching with trigrams"><title>rust_fuzzy_search - Rust</title><script>if(window.location.protocol!=="file:")document.head.insertAdjacentHTML("beforeend","SourceSerif4-Regular-6b053e98.ttf.woff2,FiraSans-Italic-81dc35de.woff2,FiraSans-Regular-0fe48ade.woff2,FiraSans-MediumItalic-ccf7e434.woff2,FiraSans-Medium-e1aa3f0a.woff2,SourceCodePro-Regular-8badfe75.ttf.woff2,SourceCodePro-Semibold-aa29a496.ttf.woff2".split(",").map(f=>`<link rel="preload" as="font" type="font/woff2"href="../static.files/${f}">`).join(""))</script><link rel="stylesheet" href="../static.files/normalize-9960930a.css"><link rel="stylesheet" href="../static.files/rustdoc-ca0dd0c4.css"><meta name="rustdoc-vars" data-root-path="../" data-static-root-path="../static.files/" data-current-crate="rust_fuzzy_search" data-themes="" data-resource-suffix="" data-rustdoc-version="1.93.0-nightly (0df64c578 2025-11-17)" data-channel="nightly" data-search-js="search-680b2199.js" data-stringdex-js="stringdex-a3946164.js" data-settings-js="settings-c38705f0.js" ><script src="../static.files/storage-e2aeef58.js"></script><script defer src="../crates.js"></script><script defer src="../static.files/main-a410ff4d.js"></script><noscript><link rel="stylesheet" href="../static.files/noscript-263c88ec.css"></noscript><link rel="alternate icon" type="image/png" href="../static.files/favicon-32x32-eab170b8.png"><link rel="icon" type="image/svg+xml" href="../static.files/favicon-044be391.svg"></head><body class="rustdoc mod crate"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><rustdoc-topbar><h2><a href="#">Crate rust_fuzzy_search</a></h2></rustdoc-topbar><nav class="sidebar"><div class="sidebar-crate"><h2><a href="../rust_fuzzy_search/index.html">rust_<wbr>fuzzy_<wbr>search</a><span class="version">0.1.1</span></h2></div><div class="sidebar-elems"><ul class="block"><li><a id="all-types" href="all.html">All Items</a></li></ul><section id="rustdoc-toc"><h3><a href="#functions">Crate Items</a></h3><ul class="block"><li><a href="#functions" title="Functions">Functions</a></li></ul></section><div id="rustdoc-modnav"></div></div></nav><div class="sidebar-resizer" title="Drag to resize sidebar"></div><main><div class="width-limiter"><section id="main-content" class="content"><div class="main-heading"><h1>Crate <span>rust_<wbr>fuzzy_<wbr>search</span>&nbsp;<button id="copy-path" title="Copy item path to clipboard">Copy item path</button></h1><rustdoc-toolbar></rustdoc-toolbar><span class="sub-heading"><a class="src" href="../src/rust_fuzzy_search/lib.rs.html#1-333">Source</a> </span></div><details class="toggle top-doc" open><summary class="hideme"><span>Expand description</span></summary><div class="docblock"><p>This crate implements Fuzzy Searching with trigrams</p>
+<p>Fuzzy searching allows to compare strings by similarity rather than by equality:<br />
+Similar strings will get a high score (close to <code>1.0f32</code>) while dissimilar strings will get a lower score (closer to <code>0.0f32</code>).</p>
+<p>Fuzzy searching tolerates changes in word order:<br />
+ex. <code>"John Dep"</code> and <code>"Dep John"</code> will get a high score.</p>
+<p>The crate exposes 5 main functions:</p>
+<ul>
+<li><a href="fn.fuzzy_compare.html" title="fn rust_fuzzy_search::fuzzy_compare">fuzzy_compare</a> will take 2 strings and return a score representing how similar those strings are.</li>
+<li><a href="fn.fuzzy_search.html" title="fn rust_fuzzy_search::fuzzy_search">fuzzy_search</a> applies <a href="fn.fuzzy_compare.html" title="fn rust_fuzzy_search::fuzzy_compare">fuzzy_compare</a> to a list of strings and returns a list of tuples: (word, score).</li>
+<li><a href="fn.fuzzy_search_sorted.html" title="fn rust_fuzzy_search::fuzzy_search_sorted">fuzzy_search_sorted</a> is similar to <a href="fn.fuzzy_search.html" title="fn rust_fuzzy_search::fuzzy_search">fuzzy_search</a> but orders the output in descending order.</li>
+<li><a href="fn.fuzzy_search_threshold.html" title="fn rust_fuzzy_search::fuzzy_search_threshold">fuzzy_search_threshold</a> will take an additional <code>f32</code> as input and returns only tuples with score greater than the threshold.</li>
+<li><a href="fn.fuzzy_search_best_n.html" title="fn rust_fuzzy_search::fuzzy_search_best_n">fuzzy_search_best_n</a> will take an additional <code>usize</code> arguments and returns the first <code>n</code> tuples.</li>
+</ul>
+<p>The Algorithm used is taken from : <a href="https://dev.to/kaleman15/fuzzy-searching-with-postgresql-97o">https://dev.to/kaleman15/fuzzy-searching-with-postgresql-97o</a></p>
+<p>Basic idea:</p>
+<ol>
+<li>
+<p>From both strings extracts all groups of 3 adjacent letters.<br />
+(<code>"House"</code> becomes <code>['  H', ' Ho', 'Hou', 'ous', 'use', 'se ']</code>).<br />
+Note the 2 spaces added to the head of the string and the one on the tail, used to make the algorithm work on zero length words.</p>
+</li>
+<li>
+<p>Then counts the number of trigrams of the first words that are also present on the second word and divide by the number of trigrams of the first word.\</p>
+</li>
+</ol>
+<p>Example: Comparing 2 strings</p>
+
+<div class="example-wrap"><pre class="rust rust-example-rendered"><code><span class="kw">fn </span>test () {
+   <span class="kw">use </span>rust_fuzzy_search::fuzzy_compare;
+   <span class="kw">let </span>score : f32 = fuzzy_compare(<span class="string">"kolbasobulko"</span>, <span class="string">"kolbasobulko"</span>);
+   <span class="macro">println!</span>(<span class="string">"score = {:?}"</span>, score);
+}</code></pre></div>
+<p>Example: Comparing a string with a list of strings and retrieving only the best matches</p>
+
+<div class="example-wrap"><pre class="rust rust-example-rendered"><code><span class="kw">fn </span>test() {
+    <span class="kw">use </span>rust_fuzzy_search::fuzzy_search_best_n;
+    <span class="kw">let </span>s = <span class="string">"bulko"</span>;
+    <span class="kw">let </span>list : Vec&lt;<span class="kw-2">&amp;</span>str&gt; = <span class="macro">vec!</span>[
+        <span class="string">"kolbasobulko"</span>,
+        <span class="string">"sandviĉo"</span>,
+        <span class="string">"ŝatas"</span>,
+        <span class="string">"domo"</span>,
+        <span class="string">"emuo"</span>,
+        <span class="string">"fabo"</span>,
+        <span class="string">"fazano"
+    </span>];
+    <span class="kw">let </span>n : usize = <span class="number">3</span>;
+    <span class="kw">let </span>res : Vec&lt;(<span class="kw-2">&amp;</span>str, f32)&gt; = fuzzy_search_best_n(s,<span class="kw-2">&amp;</span>list, n);
+    <span class="kw">for </span>(_word, score) <span class="kw">in </span>res {
+        <span class="macro">println!</span>(<span class="string">"{:?}"</span>,score)
+    }
+}</code></pre></div>
+<p>Example: if you have a <code>Vec</code> of <code>String</code>s you need to convert it to a list of <code>&amp;str</code></p>
+
+<div class="example-wrap"><pre class="rust rust-example-rendered"><code><span class="kw">fn </span>works_with_strings() {
+    <span class="kw">use </span>rust_fuzzy_search::fuzzy_search;
+    <span class="kw">let </span>s = String::from(<span class="string">"varma"</span>);
+    <span class="kw">let </span>list: Vec&lt;String&gt; = <span class="macro">vec!</span>[String::from(<span class="string">"varma vetero"</span>), String::from(<span class="string">"varma ĉokolado"</span>)];
+    fuzzy_search(<span class="kw-2">&amp;</span>s, <span class="kw-2">&amp;</span>list.iter().map(String::as_ref).collect::&lt;Vec&lt;<span class="kw-2">&amp;</span>str&gt;&gt;());
+}</code></pre></div></div></details><h2 id="functions" class="section-header">Functions<a href="#functions" class="anchor">§</a></h2><dl class="item-table"><dt><a class="fn" href="fn.fuzzy_compare.html" title="fn rust_fuzzy_search::fuzzy_compare">fuzzy_<wbr>compare</a></dt><dd>Use this function to compare 2 strings.</dd><dt><a class="fn" href="fn.fuzzy_search.html" title="fn rust_fuzzy_search::fuzzy_search">fuzzy_<wbr>search</a></dt><dd>Use this function to compare a string (<code>&amp;str</code>) with all elements of a list.</dd><dt><a class="fn" href="fn.fuzzy_search_best_n.html" title="fn rust_fuzzy_search::fuzzy_search_best_n">fuzzy_<wbr>search_<wbr>best_<wbr>n</a></dt><dd>This function is similar to <a href="fn.fuzzy_search_sorted.html" title="fn rust_fuzzy_search::fuzzy_search_sorted">fuzzy_search_sorted</a> but keeps only the <code>n</code> best items, those with a better match.</dd><dt><a class="fn" href="fn.fuzzy_search_sorted.html" title="fn rust_fuzzy_search::fuzzy_search_sorted">fuzzy_<wbr>search_<wbr>sorted</a></dt><dd>This function is similar to <a href="fn.fuzzy_search.html" title="fn rust_fuzzy_search::fuzzy_search">fuzzy_search</a> but sorts the result in descending order (the best matches are placed at the beginning).</dd><dt><a class="fn" href="fn.fuzzy_search_threshold.html" title="fn rust_fuzzy_search::fuzzy_search_threshold">fuzzy_<wbr>search_<wbr>threshold</a></dt><dd>This function is similar to <a href="fn.fuzzy_search.html" title="fn rust_fuzzy_search::fuzzy_search">fuzzy_search</a> but filters out element with a score lower than the specified one.</dd></dl></section></div></main></body></html>
