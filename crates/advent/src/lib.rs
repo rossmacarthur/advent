@@ -6,7 +6,7 @@
 //! Add this crate to your Cargo manifest for your solution.
 //!
 //! ```toml
-//! advent = { git = "https://github.com/rossmacarthur/advent", tag = "0.1.0" }
+//! advent = { git = "https://github.com/rossmacarthur/advent", tag = "0.2.0" }
 //! ```
 //!
 //! Then use the following as your main function.
