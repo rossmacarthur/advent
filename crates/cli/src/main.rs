@@ -166,16 +166,17 @@ fn open(year: u32, day: u32, args: &[String]) -> Result<()> {
 
 fn check_input(year: u32, day: u32) -> Result<()> {
     // Only try download if the puzzle has actually been released
-    let now = time::OffsetDateTime::now_utc();
-    let puzzle = time::PrimitiveDateTime::new(
-        time::Date::from_calendar_date(year as i32, time::Month::December, day as u8)?,
-        time::Time::from_hms(5, 0, 0)?,
-    )
-    .assume_utc();
+    let now = jiff::Timestamp::now();
+    let puzzle = jiff::civil::DateTime::new(year as i16, 12, day as i8, 5, 0, 0, 0)?
+        .in_tz("UTC")?
+        .timestamp();
     if now < puzzle {
+        let avail = (puzzle - now)
+            .round(jiff::SpanRound::new().smallest(jiff::Unit::Second))?
+            .to_duration(jiff::SpanRelativeTo::days_are_24_hours())?;
         warning(
             "Unavailable",
-            format!("puzzle input (year: {year:04}, day: {day:02})"),
+            format!("puzzle {year:04}/{day:02} input, wait {avail:#}"),
         );
         return Ok(());
     }
