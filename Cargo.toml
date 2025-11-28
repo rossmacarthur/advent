@@ -8,6 +8,12 @@ elided-lifetimes-in-paths = "warn"
 many_single_char_names = "allow"
 unwrap_or_default = "allow"
 
+[workspace.package]
+authors = ["Ross MacArthur <ross@macarthur.io>"]
+edition = "2024"
+repository = "https://github.com/rossmacarthur/advent"
+license = "MIT OR Apache-2.0"
+
 [workspace.dependencies]
 ahash = "0.8.6"
 anyhow = "1.0.75"
