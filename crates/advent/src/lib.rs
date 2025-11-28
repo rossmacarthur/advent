@@ -6,30 +6,33 @@
 //! Add this crate to your Cargo manifest for your solution.
 //!
 //! ```toml
-//! advent = { git = "https://github.com/rossmacarthur/advent" }
+//! advent = { git = "https://github.com/rossmacarthur/advent", tag = "0.1.0" }
 //! ```
 //!
 //! Then use the following as your main function.
 //!
 //! ```
-//! # fn parse_input() { }
-//! # fn part1(_: ()) -> String { todo!() }
-//! # fn part2(_: ()) -> String { todo!() }
+//! # #![allow(clippy::needless_doctest_main)]
 //! fn main() {
-//!     let solution = advent::new(parse_input).part(part1).part(part2).build();
+//!     let solution = advent::new(|| {
+//!         // parse input, return impl Clone
+//! #       vec![1, 2]
+//!     })
+//!     .part(|input| {
+//!         // part 1 solution using input, return impl Display
+//! #       input[0]
+//!     })
+//!     .part(|input| {
+//!         // part 2 solution using input, return impl Display
+//! #       input[1]
+//!     })
+//!     .build();
 //!     solution.cli()
 //! }
 //! ```
 //!
-//! **Where**
-//!
-//! - `parse_input` is a function that returns any type `I` implementing
-//!   `Clone`.
-//! - Each part function takes `I` as an argument and returns something
-//!   implementing `Display`.
-//!
-//! Finally, `cli()` will instantiate a command line interface and run the
-//! program. Ordinary runs will run each part once and output the answers.
+//! [`cli()`][Solution::cli] will instantiate a command line interface and run
+//! the program. Ordinary runs will run each part once and output the answers.
 //! Passing `--bench` to the program will perform a benchmark.
 //!
 //! ✨ That's all! You're free to structure your program however else you want.
