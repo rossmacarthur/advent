@@ -128,6 +128,16 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "9330f8b2ff13f34540b44e946ef35111825727b38d33286ef986142615121801"
 
 [[package]]
+name = "count-imports"
+version = "0.0.0"
+dependencies = [
+ "anyhow",
+ "serde",
+ "syn",
+ "toml",
+]
+
+[[package]]
 name = "curl"
 version = "0.4.49"
 source = "registry+https://github.com/rust-lang/crates.io-index"
