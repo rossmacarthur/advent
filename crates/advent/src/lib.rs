@@ -82,6 +82,7 @@ pub mod summary;
 
 use std::fmt::Display;
 use std::hint;
+use std::panic;
 use std::panic::UnwindSafe;
 use std::time::{Duration, Instant};
 
@@ -197,21 +198,7 @@ where
                 Some(PartFilter::Part(part)) if part != i => continue,
                 _ => {}
             }
-
-            let input = input.clone();
-
-            let (result, elapsed) = {
-                let t0 = Instant::now();
-                let result = std::panic::catch_unwind(move || f(input));
-                let t1 = Instant::now();
-                let elapsed = (t1 - t0).as_secs_f64();
-                let result = match result {
-                    Ok(result) => result.to_string(),
-                    Err(_) => "🚨👻🚨".to_owned(),
-                };
-                (result, elapsed)
-            };
-
+            let (result, elapsed) = run_with_input(input.clone(), f);
             runs.push(Run {
                 name,
                 result,
@@ -284,6 +271,23 @@ where
             _ => summary.print(),
         }
     }
+}
+
+fn run_with_input<F, I, O>(input: I, f: F) -> (String, f64)
+where
+    I: Clone + UnwindSafe,
+    F: Fn(I) -> O + UnwindSafe,
+    O: Display,
+{
+    let t0 = Instant::now();
+    let result = panic::catch_unwind(move || f(input));
+    let t1 = Instant::now();
+    let elapsed = (t1 - t0).as_secs_f64();
+    let result = match result {
+        Ok(result) => result.to_string(),
+        Err(_) => "🚨👻🚨".to_owned(),
+    };
+    (result, elapsed)
 }
 
 fn bench<F, O>(f: F) -> summary::Stats
