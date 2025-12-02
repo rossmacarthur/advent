@@ -1,5 +1,3 @@
-use std::hash::Hash;
-
 use advent::prelude::*;
 
 fn default_input() -> (i64, Vector2) {

@@ -1,5 +1,3 @@
-use std::collections::HashMap;
-
 use advent::prelude::*;
 
 fn parse_input(input: &str) -> Vec<u64> {
