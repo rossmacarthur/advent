@@ -184,14 +184,20 @@ where
     I: Clone + UnwindSafe,
 {
     /// Consumes this struct and runs the parts.
-    pub fn run(self) -> Summary {
+    pub fn run(self, filter: Option<PartFilter>) -> Summary {
         let Self { parse, parts, .. } = self;
 
         let mut runs = Vec::new();
 
         // Time each part
         let input = (parse)();
-        for (name, f) in parts {
+        for (i, (name, f)) in parts.into_iter().enumerate() {
+            match filter {
+                Some(PartFilter::Parse) => continue,
+                Some(PartFilter::Part(part)) if part != i => continue,
+                _ => {}
+            }
+
             let input = input.clone();
 
             let (result, elapsed) = {
@@ -218,21 +224,28 @@ where
 
     /// Consumes this struct and benchmarks the parts.
     #[must_use]
-    pub fn bench(self) -> Summary {
+    pub fn bench(self, filter: Option<PartFilter>) -> Summary {
         let Self { parse, parts } = self;
 
         let mut benches = Vec::new();
 
         // Benchmark the parsing
-        let stats = bench(&parse);
-        benches.push(Bench {
-            name: "Parse".to_owned(),
-            stats,
-        });
+        if !matches!(filter, Some(PartFilter::Part(_))) {
+            let stats = bench(&parse);
+            benches.push(Bench {
+                name: "Parse".to_owned(),
+                stats,
+            });
+        }
 
         // Benchmark each part
         let input = (parse)();
-        for (name, f) in parts {
+        for (i, (name, f)) in parts.into_iter().enumerate() {
+            match filter {
+                Some(PartFilter::Parse) => continue,
+                Some(PartFilter::Part(part)) if part != i => continue,
+                _ => {}
+            }
             let stats = bench_with_input(input.clone(), &f);
             benches.push(Bench { name, stats });
         }
@@ -242,7 +255,11 @@ where
 
     /// Parses the command line arguments and executes the run or benchmark.
     pub fn cli(self) {
-        let Opt { bench, output } = argh::from_env();
+        let Opt {
+            bench,
+            part,
+            output,
+        } = argh::from_env();
 
         #[cfg(feature = "festive")]
         if let Output::Festive = output {
@@ -256,9 +273,9 @@ where
                     Paint::yellow("Note: using --bench without --release").bold()
                 );
             }
-            self.bench()
+            self.bench(part)
         } else {
-            self.run()
+            self.run(part)
         };
 
         match output {
@@ -310,9 +327,31 @@ struct Opt {
     /// whether to benchmark
     #[argh(switch)]
     bench: bool,
+    /// only run the given part
+    #[argh(option)]
+    part: Option<PartFilter>,
     /// the output style (boring, festive, json)
     #[argh(option, default = "default_output()")]
     output: Output,
+}
+
+#[derive(Debug)]
+pub enum PartFilter {
+    Parse,
+    Part(usize),
+}
+
+impl argh::FromArgValue for PartFilter {
+    fn from_arg_value(value: &str) -> Result<Self, String> {
+        if value.eq_ignore_ascii_case("parse") {
+            Ok(PartFilter::Parse)
+        } else {
+            match value.parse::<usize>() {
+                Ok(n) => Ok(PartFilter::Part(n.saturating_sub(1))),
+                Err(_) => Err("expected `parse` or a part number".into()),
+            }
+        }
+    }
 }
 
 #[cfg(feature = "festive")]
