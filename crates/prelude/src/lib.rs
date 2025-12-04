@@ -75,13 +75,13 @@ where
         .collect()
 }
 
-/// Parses a 2D map that uses '.' for spaces and '#' for walls as a set of the
-/// the '#' points.
+/// Parses a 2D map that uses '.' for spaces and '#'/'@' for walls as a set of
+/// the the wall points.
 pub fn parse_map_set(input: &str) -> HashSet<Vector2> {
     let map: HashMap<_, _> = parse_map(input, |c| match c {
-        '#' => Some(()),
+        '#' | '@' => Some(()),
         '.' => None,
-        c => panic!("unrecognized character `{c}`"),
+        c => panic!("unexpected character `{c}`"),
     });
     map.into_iter().filter_map(|(k, v)| v.map(|_| k)).collect()
 }
